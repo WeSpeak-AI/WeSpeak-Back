@@ -1,4 +1,4 @@
-package backend.cowrite.common.snowflake;
+package backend.core.infra;
 
 import java.util.random.RandomGenerator;
 
