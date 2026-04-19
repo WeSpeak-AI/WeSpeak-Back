@@ -1,17 +1,14 @@
-package backend.core.domain.userbook;
+package backend.core.domain.uservoca;
 
 import backend.core.domain.user.User;
 import backend.core.domain.voca.VocaBook;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Table(name = "user_voca_book")
+@Table(name = "user_voca_books")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
 public class UserVocaBook {
@@ -24,6 +21,6 @@ public class UserVocaBook {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vocaBook_id", nullable = false)
-    private VocaBook vacaBook;
+    @JoinColumn(name = "voca_book_id", nullable = false)
+    private VocaBook vocaBook;
 }
