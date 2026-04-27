@@ -31,13 +31,13 @@ import java.util.List;
 public class JwtGlobalFilter implements GlobalFilter, Ordered {
 
     private final JwtTokenProvider jwtTokenProvider;
-
-    // JWT 검증 없이 통과시킬 경로 (startsWith 기준)
     private static final List<String> PUBLIC_PATHS = List.of(
             "/api/auth/login",
             "/api/auth/register",
+            "/api/auth/isDuplicate",
             "/api/oauth2"
     );
+    private static final String ADMIN_PATH_PREFIX = "/api/admin";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -56,11 +56,18 @@ public class JwtGlobalFilter implements GlobalFilter, Ordered {
         }
 
         String username = jwtTokenProvider.getUsernameFromToken(token);
+        String role = jwtTokenProvider.getRoleFromToken(token);
 
-        // downstream 서비스에 유저 정보를 헤더로 전달
+        if (path.startsWith(ADMIN_PATH_PREFIX) && !"ADMIN".equals(role)) {
+            log.warn("Access denied for path: {}, role: {}", path, role);
+            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+            return exchange.getResponse().setComplete();
+        }
+
         ServerWebExchange mutatedExchange = exchange.mutate()
                 .request(exchange.getRequest().mutate()
                         .header("X-Username", username)
+                        .header("X-Role", role)
                         .build())
                 .build();
 
