@@ -17,16 +17,19 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
-
     @Enumerated(EnumType.STRING)
     private Level level;
 
     private String category;
-    private int estimatedMinutes;
+    private int totalPages;
 
     public enum Level {
         BEGINNER, INTERMEDIATE, ADVANCED
+    }
+
+    public void update(String title, Level level, String category) {
+        this.title = title;
+        this.level = level;
+        this.category = category;
     }
 }
