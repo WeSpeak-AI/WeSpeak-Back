@@ -1,5 +1,6 @@
 package backend.core.domain.conversation;
 
+import backend.core.domain.topic.Topic;
 import backend.core.domain.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "conversation_sessions")
+@Table(name = "conversation_sessions", indexes = @Index(columnList = "user_id"))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -21,21 +22,27 @@ public class Conversation {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false)
-    private String topic;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
 
-    @Column(nullable = false)
-    private String details;
-
-    @Enumerated(EnumType.STRING)
-    private Difficulty difficulty;
-
-    private int durationSeconds;
     private LocalDateTime startedAt;
     private LocalDateTime endedAt;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Status status = Status.ACTIVE;
+
+    public void close() {
+        this.status = Status.CLOSED;
+        this.endedAt = LocalDateTime.now();
+    }
 
     public enum Difficulty {
         BEGINNER, INTERMEDIATE, ADVANCED
+    }
+
+    public enum Status {
+        ACTIVE, CLOSED
     }
 }
