@@ -23,4 +23,10 @@ public class UserBook {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
+
+    private int currentPage;
+
+    public void updateCurrentPage(int pageNumber) {
+        this.currentPage = pageNumber;
+    }
 }
