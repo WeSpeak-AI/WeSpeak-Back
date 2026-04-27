@@ -29,6 +29,16 @@ public class VocaBook {
     private int totalDays;
 
     public enum Category {
-        BASIC, INTERMEDIATE, HARD, TOEIC, MY_LIST
+        BASIC, INTERMEDIATE, HARD, TOEIC
     }
+
+    public void update(String title, Category category, String description) {
+        this.title = title;
+        this.category = category;
+        this.description = description;
+    }
+
+    public void incrementTotalDays() { this.totalDays++; }
+
+    public void decrementTotalDays() { this.totalDays--; }
 }
