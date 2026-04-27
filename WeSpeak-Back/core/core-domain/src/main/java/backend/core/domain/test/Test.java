@@ -5,8 +5,10 @@ import backend.core.domain.voca.VocaBook;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "test")
+@Table(name = "test", indexes = @Index(columnList = "user_id, voca_book_id"))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -25,8 +27,17 @@ public class Test {
     private VocaBook vocaBook;
 
     @Column(nullable = false)
+    private LocalDateTime testedAt;
+
+    @Column(nullable = false)
     private int startDay;
 
     @Column(nullable = false)
     private int endDay;
+
+    @Column(nullable = false)
+    private int score;
+
+    @Column(nullable = false)
+    private int totalWords;
 }
