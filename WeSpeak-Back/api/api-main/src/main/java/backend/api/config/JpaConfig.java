@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @EnableJpaAuditing
-@EntityScan(basePackages = "backend.core.domain")
-@EnableJpaRepositories(basePackages = {"backend.module", "backend.core.infra.repository"})
+@EntityScan(basePackages = {"backend.core.domain", "backend.core.common.outboxmessagerelay"})
+@EnableJpaRepositories(basePackages = {"backend.module", "backend.core.infra.repository", "backend.core.common.outboxmessagerelay"})
 public class JpaConfig {
 }
