@@ -1,13 +1,12 @@
 package backend.core.domain.user;
 
-import backend.core.domain.uservoca.UserVocaBook;
+import backend.core.common.exception.BusinessException;
+import backend.core.common.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -38,6 +37,8 @@ public class User {
     private int streak;
     private LocalDate lastStudiedAt;
 
+    private int mediaTicket;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -63,6 +64,17 @@ public class User {
             this.streak = 1;
         }
         this.lastStudiedAt = today;
+    }
+
+    public void addTicket(int amount) {
+        this.mediaTicket += amount;
+    }
+
+    public void consumeTicket() {
+        if (this.mediaTicket <= 0) {
+            throw new BusinessException(ErrorCode.INSUFFICIENT_TICKET);
+        }
+        this.mediaTicket--;
     }
 
     public enum Role {
