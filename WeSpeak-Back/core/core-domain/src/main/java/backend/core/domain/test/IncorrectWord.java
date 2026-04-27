@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "incorrect_word")
+@Table(name = "incorrect_word", indexes = @Index(columnList = "test_id"))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
