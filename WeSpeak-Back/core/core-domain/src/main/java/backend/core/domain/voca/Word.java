@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "words")
+@Table(name = "words", indexes = {@Index(columnList = "voca_book_day_id"), @Index(columnList = "term")})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -31,4 +31,12 @@ public class Word {
     private String example;
 
     private String imageUrl;
+
+    public void update(String term, String meaning, String phonetic, String example, String imageUrl) {
+        this.term = term;
+        this.meaning = meaning;
+        this.phonetic = phonetic;
+        this.example = example;
+        this.imageUrl = imageUrl;
+    }
 }
