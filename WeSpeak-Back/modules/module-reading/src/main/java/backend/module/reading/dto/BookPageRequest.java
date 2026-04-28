@@ -1,12 +1,17 @@
 package backend.module.reading.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ReadingRequest {
+public class BookPageRequest {
+
     @NotNull
-    Long bookId;
+    private Integer pageNumber;
+
+    @NotBlank
+    private String content;
 }
