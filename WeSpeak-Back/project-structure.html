@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeSpeak Backend — Project Structure</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3354;
+    --primary: #7c6ff7;
+    --primary-pale: #1e1b40;
+    --green: #4ade80;
+    --green-pale: #0f2e1a;
+    --coral: #f87171;
+    --coral-pale: #2d1212;
+    --yellow: #fbbf24;
+    --yellow-pale: #2d2006;
+    --cyan: #22d3ee;
+    --cyan-pale: #0a2530;
+    --mint: #34d399;
+    --mint-pale: #0a2820;
+    --g300: #9ca3af;
+    --g400: #6b7280;
+    --g500: #4b5563;
+    --white: #f9fafb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Pretendard', sans-serif;
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-pale);
+    border: 1px solid var(--primary);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #a78bfa, #7c6ff7, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .header p {
+    color: var(--g300);
+    font-size: 15px;
+  }
+
+  /* Flow */
+  .flow-section {
+    max-width: 900px;
+    margin: 0 auto 48px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--g400);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .flow-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .flow-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 14px;
+    padding: 14px 20px;
+    min-width: 130px;
+    text-align: center;
+    border: 1.5px solid;
+  }
+  .flow-box.client  { background: var(--surface2); border-color: var(--border); }
+  .flow-box.gateway { background: var(--coral-pale); border-color: var(--coral); }
+  .flow-box.main    { background: var(--primary-pale); border-color: var(--primary); }
+  .flow-box.db      { background: var(--green-pale); border-color: var(--green); }
+  .flow-box.redis   { background: var(--coral-pale); border-color: #f97316; }
+
+  .flow-label { font-size: 13px; font-weight: 700; }
+  .flow-sub   { font-size: 11px; opacity: 0.65; font-family: 'JetBrains Mono', monospace; }
+  .flow-box.gateway .flow-label { color: var(--coral); }
+  .flow-box.main .flow-label    { color: var(--primary); }
+  .flow-box.db .flow-label      { color: var(--green); }
+  .flow-box.redis .flow-label   { color: #f97316; }
+  .flow-box.client .flow-label  { color: var(--white); }
+
+  .flow-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 0 6px;
+  }
+  .flow-arrow-line {
+    width: 40px;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+  }
+  .flow-arrow-line::after {
+    content: '▶';
+    position: absolute;
+    right: -6px;
+    top: -7px;
+    font-size: 10px;
+    color: var(--g400);
+  }
+  .flow-arrow-label {
+    font-size: 10px;
+    color: var(--g400);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  /* Main grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .card-title { font-size: 14px; font-weight: 700; }
+  .card-sub   { font-size: 11px; color: var(--g400); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+  .card-body { padding: 16px 20px; }
+
+  /* File tree */
+  .file-tree { display: flex; flex-direction: column; gap: 5px; }
+  .file-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--g300);
+    padding: 3px 0;
+  }
+  .file-row.indent1 { padding-left: 16px; }
+  .file-row.indent2 { padding-left: 32px; }
+  .file-row.indent3 { padding-left: 48px; }
+  .file-icon { font-size: 13px; flex-shrink: 0; }
+  .file-name { color: var(--white); }
+  .file-name.dim { color: var(--g400); }
+  .file-badge {
+    margin-left: auto;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 100px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* Color themes per card */
+  .theme-purple .card-header { border-left: 3px solid var(--primary); }
+  .theme-purple .card-icon   { background: var(--primary-pale); }
+  .theme-purple .card-title  { color: var(--primary); }
+  .theme-purple .file-badge  { background: var(--primary-pale); color: var(--primary); }
+
+  .theme-green .card-header { border-left: 3px solid var(--green); }
+  .theme-green .card-icon   { background: var(--green-pale); }
+  .theme-green .card-title  { color: var(--green); }
+  .theme-green .file-badge  { background: var(--green-pale); color: var(--green); }
+
+  .theme-coral .card-header { border-left: 3px solid var(--coral); }
+  .theme-coral .card-icon   { background: var(--coral-pale); }
+  .theme-coral .card-title  { color: var(--coral); }
+  .theme-coral .file-badge  { background: var(--coral-pale); color: var(--coral); }
+
+  .theme-cyan .card-header { border-left: 3px solid var(--cyan); }
+  .theme-cyan .card-icon   { background: var(--cyan-pale); }
+  .theme-cyan .card-title  { color: var(--cyan); }
+  .theme-cyan .file-badge  { background: var(--cyan-pale); color: var(--cyan); }
+
+  .theme-yellow .card-header { border-left: 3px solid var(--yellow); }
+  .theme-yellow .card-icon   { background: var(--yellow-pale); }
+  .theme-yellow .card-title  { color: var(--yellow); }
+  .theme-yellow .file-badge  { background: var(--yellow-pale); color: var(--yellow); }
+
+  .theme-mint .card-header { border-left: 3px solid var(--mint); }
+  .theme-mint .card-icon   { background: var(--mint-pale); }
+  .theme-mint .card-title  { color: var(--mint); }
+  .theme-mint .file-badge  { background: var(--mint-pale); color: var(--mint); }
+
+  /* Dependency map */
+  .dep-section {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 28px;
+  }
+  .dep-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  @media (max-width: 700px) { .dep-grid { grid-template-columns: 1fr 1fr; } }
+
+  .dep-item {
+    border-radius: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+  }
+  .dep-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .dep-arrow { font-size: 11px; color: var(--g400); margin-bottom: 4px; }
+  .dep-deps { display: flex; flex-direction: column; gap: 3px; }
+  .dep-dep {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--g300);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .dep-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  /* API table */
+  .api-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 28px;
+  }
+  .api-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  .api-table th {
+    text-align: left;
+    font-size: 11px;
+    color: var(--g400);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .api-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .api-table tr:last-child td { border-bottom: none; }
+  .method-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    min-width: 52px;
+    text-align: center;
+  }
+  .GET    { background: #0f2e1a; color: #4ade80; }
+  .POST   { background: #1a1b40; color: #818cf8; }
+  .PUT    { background: #2d2006; color: #fbbf24; }
+  .DELETE { background: #2d1212; color: #f87171; }
+  .path-cell {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--white);
+  }
+  .desc-cell { color: var(--g300); font-size: 13px; }
+  .module-tag {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .lock-icon { color: var(--g500); font-size: 12px; }
+  .public-icon { color: var(--green); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-badge">🛠 Backend Architecture</div>
+  <h1>WeSpeak Backend</h1>
+  <p>Modular Monolith + API Gateway · Spring Boot 4.0.4 · Java 21</p>
+</div>
+
+<!-- Request Flow -->
+<div class="flow-section">
+  <div class="section-title">Request Flow</div>
+  <div class="flow-row">
+    <div class="flow-box client">
+      <div class="flow-label">📱 Client</div>
+      <div class="flow-sub">React Native</div>
+    </div>
+    <div class="flow-arrow">
+      <div class="flow-arrow-line"></div>
+      <div class="flow-arrow-label">HTTPS</div>
+    </div>
+    <div class="flow-box gateway">
+      <div class="flow-label">🔐 API Gateway</div>
+      <div class="flow-sub">:8080</div>
+    </div>
+    <div class="flow-arrow">
+      <div class="flow-arrow-line"></div>
+      <div class="flow-arrow-label">X-Username</div>
+    </div>
+    <div class="flow-box main">
+      <div class="flow-label">⚡ API Main</div>
+      <div class="flow-sub">:9000</div>
+    </div>
+    <div class="flow-arrow">
+      <div class="flow-arrow-line"></div>
+      <div class="flow-arrow-label">JPA / Redis</div>
+    </div>
+    <div class="flow-box db">
+      <div class="flow-label">🗄 MySQL</div>
+      <div class="flow-sub">:3306</div>
+    </div>
+    <div class="flow-arrow">
+      <div class="flow-arrow-line"></div>
+    </div>
+    <div class="flow-box redis">
+      <div class="flow-label">⚡ Redis</div>
+      <div class="flow-sub">:6379</div>
+    </div>
+  </div>
+</div>
+
+<!-- Module Cards -->
+<div class="section-title" style="max-width:1100px;margin:0 auto 16px;">Module Structure</div>
+<div class="grid">
+
+  <!-- api-gateway -->
+  <div class="card theme-coral">
+    <div class="card-header">
+      <div class="card-icon">🔐</div>
+      <div>
+        <div class="card-title">api-gateway</div>
+        <div class="card-sub">api/api-gateway · :8080</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📄</span><span class="file-name">GatewayApplication.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">📁</span><span class="file-name dim">config/</span></div>
+        <div class="file-row indent2"><span class="file-icon">☕</span><span class="file-name">AppProperties.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">📁</span><span class="file-name dim">filter/</span></div>
+        <div class="file-row indent2"><span class="file-icon">☕</span><span class="file-name">JwtGlobalFilter.java</span><span class="file-badge">핵심</span></div>
+        <div class="file-row indent1"><span class="file-icon">📁</span><span class="file-name dim">jwt/</span></div>
+        <div class="file-row indent2"><span class="file-icon">☕</span><span class="file-name">JwtTokenProvider.java</span></div>
+        <div class="file-row"><span class="file-icon">⚙️</span><span class="file-name">application.yml</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- api-main -->
+  <div class="card theme-purple">
+    <div class="card-header">
+      <div class="card-icon">⚡</div>
+      <div>
+        <div class="card-title">api-main</div>
+        <div class="card-sub">api/api-main · :9000</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📄</span><span class="file-name">ApiMainApplication.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">📁</span><span class="file-name dim">config/</span></div>
+        <div class="file-row indent2"><span class="file-icon">☕</span><span class="file-name">SecurityConfig.java</span><span class="file-badge">핵심</span></div>
+        <div class="file-row"><span class="file-icon">⚙️</span><span class="file-name">application.yml</span></div>
+        <div class="file-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+          <span style="font-size:11px;color:var(--g400);font-family:'JetBrains Mono',monospace;">모든 module-* 조합</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- core-common -->
+  <div class="card theme-yellow">
+    <div class="card-header">
+      <div class="card-icon">🔧</div>
+      <div>
+        <div class="card-title">core-common</div>
+        <div class="card-sub">core/core-common</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">response/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ApiResponse.java</span><span class="file-badge">공통</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">exception/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ErrorCode.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">BusinessException.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">GlobalExceptionHandler.java</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- core-domain -->
+  <div class="card theme-cyan">
+    <div class="card-header">
+      <div class="card-icon">🗂</div>
+      <div>
+        <div class="card-title">core-domain</div>
+        <div class="card-sub">core/core-domain · JPA Entity</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">user/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">User.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">voca/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">VocaBook.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">Word.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">writing/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">Essay.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">reading/ · conversation/</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- core-infra -->
+  <div class="card theme-mint">
+    <div class="card-header">
+      <div class="card-icon">🏗</div>
+      <div>
+        <div class="card-title">core-infra</div>
+        <div class="card-sub">core/core-infra · DB 설정</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">config/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">JpaConfig.java</span><span class="file-badge">MySQL</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">RedisConfig.java</span><span class="file-badge">Redis</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- module-auth -->
+  <div class="card theme-green">
+    <div class="card-header">
+      <div class="card-icon">🔑</div>
+      <div>
+        <div class="card-title">module-auth</div>
+        <div class="card-sub">modules/module-auth</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">controller/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">AuthController.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">service/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">AuthService.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">AuthServiceImpl.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">jwt/ · repository/ · dto/</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- module-user -->
+  <div class="card theme-purple">
+    <div class="card-header">
+      <div class="card-icon">👤</div>
+      <div>
+        <div class="card-title">module-user</div>
+        <div class="card-sub">modules/module-user</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">controller/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">UserController.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">service/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">UserService.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">UserServiceImpl.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">repository/ · dto/</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- module-voca -->
+  <div class="card theme-cyan">
+    <div class="card-header">
+      <div class="card-icon">📚</div>
+      <div>
+        <div class="card-title">module-voca</div>
+        <div class="card-sub">modules/module-voca</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">controller/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">VocaController.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">service/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">VocaService.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">VocaServiceImpl.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">repository/ · dto/</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- module-writing -->
+  <div class="card theme-coral">
+    <div class="card-header">
+      <div class="card-icon">✏️</div>
+      <div>
+        <div class="card-title">module-writing</div>
+        <div class="card-sub">modules/module-writing · Claude API</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">controller/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">WritingController.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">service/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">WritingService.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">AiCorrectionService.java</span><span class="file-badge">AI</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">AiCorrectionServiceImpl.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">repository/ · dto/</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- module-reading -->
+  <div class="card theme-mint">
+    <div class="card-header">
+      <div class="card-icon">📖</div>
+      <div>
+        <div class="card-title">module-reading</div>
+        <div class="card-sub">modules/module-reading</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">controller/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ReadingController.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">service/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ReadingService.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ReadingServiceImpl.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">repository/ · dto/</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- module-conversation -->
+  <div class="card theme-yellow">
+    <div class="card-header">
+      <div class="card-icon">💬</div>
+      <div>
+        <div class="card-title">module-conversation</div>
+        <div class="card-sub">modules/module-conversation</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="file-tree">
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">controller/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ConversationController.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">service/</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ConversationService.java</span></div>
+        <div class="file-row indent1"><span class="file-icon">☕</span><span class="file-name">ConversationServiceImpl.java</span></div>
+        <div class="file-row"><span class="file-icon">📁</span><span class="file-name dim">repository/ · dto/</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Dependency Map -->
+<div class="dep-section">
+  <div class="section-title">Dependency Direction</div>
+  <div style="font-size:12px;color:var(--g400);margin-bottom:4px;">각 모듈이 의존하는 하위 모듈 목록 (단방향, 역방향 의존 금지)</div>
+  <div class="dep-grid">
+    <div class="dep-item">
+      <div class="dep-name" style="color:var(--primary)">api-main</div>
+      <div class="dep-arrow">depends on ↓</div>
+      <div class="dep-deps">
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--coral)"></div>api-gateway (별도 앱)</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--green)"></div>module-auth</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--primary)"></div>module-user</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--cyan)"></div>module-voca</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--coral)"></div>module-writing</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--mint)"></div>module-reading</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--yellow)"></div>module-conversation</div>
+      </div>
+    </div>
+    <div class="dep-item">
+      <div class="dep-name" style="color:var(--green)">module-auth</div>
+      <div class="dep-arrow">depends on ↓</div>
+      <div class="dep-deps">
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--yellow)"></div>core-common</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--cyan)"></div>core-domain</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--mint)"></div>core-infra</div>
+      </div>
+    </div>
+    <div class="dep-item">
+      <div class="dep-name" style="color:var(--coral)">module-writing</div>
+      <div class="dep-arrow">depends on ↓</div>
+      <div class="dep-deps">
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--yellow)"></div>core-common</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--cyan)"></div>core-domain</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--mint)"></div>core-infra</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--coral)"></div>Claude API (HTTP)</div>
+      </div>
+    </div>
+    <div class="dep-item">
+      <div class="dep-name" style="color:var(--mint)">core-infra</div>
+      <div class="dep-arrow">depends on ↓</div>
+      <div class="dep-deps">
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--yellow)"></div>core-common</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--cyan)"></div>core-domain</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--green)"></div>MySQL (runtime)</div>
+        <div class="dep-dep"><div class="dep-dot" style="background:var(--coral)"></div>Redis</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- API Endpoints -->
+<div class="api-section" style="margin-top:20px;">
+  <div class="section-title">API Endpoints</div>
+  <table class="api-table">
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Path</th>
+        <th>설명</th>
+        <th>모듈</th>
+        <th>Auth</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="method-badge POST">POST</span></td>
+        <td class="path-cell">/api/auth/register</td>
+        <td class="desc-cell">회원가입</td>
+        <td><span class="module-tag" style="background:var(--green-pale);color:var(--green)">auth</span></td>
+        <td><span class="public-icon">🔓 Public</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge POST">POST</span></td>
+        <td class="path-cell">/api/auth/login</td>
+        <td class="desc-cell">로그인 → JWT 반환</td>
+        <td><span class="module-tag" style="background:var(--green-pale);color:var(--green)">auth</span></td>
+        <td><span class="public-icon">🔓 Public</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge GET">GET</span></td>
+        <td class="path-cell">/api/users/me</td>
+        <td class="desc-cell">내 프로필 조회</td>
+        <td><span class="module-tag" style="background:var(--primary-pale);color:var(--primary)">user</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge GET">GET</span></td>
+        <td class="path-cell">/api/voca/books</td>
+        <td class="desc-cell">단어장 목록</td>
+        <td><span class="module-tag" style="background:var(--cyan-pale);color:var(--cyan)">voca</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge GET">GET</span></td>
+        <td class="path-cell">/api/voca/books/{id}/days/{day}/words</td>
+        <td class="desc-cell">Day별 단어 목록</td>
+        <td><span class="module-tag" style="background:var(--cyan-pale);color:var(--cyan)">voca</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge POST">POST</span></td>
+        <td class="path-cell">/api/writing/essays</td>
+        <td class="desc-cell">에세이 저장</td>
+        <td><span class="module-tag" style="background:var(--coral-pale);color:var(--coral)">writing</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge GET">GET</span></td>
+        <td class="path-cell">/api/writing/essays</td>
+        <td class="desc-cell">내 에세이 목록</td>
+        <td><span class="module-tag" style="background:var(--coral-pale);color:var(--coral)">writing</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge POST">POST</span></td>
+        <td class="path-cell">/api/writing/essays/{id}/correction</td>
+        <td class="desc-cell">Claude AI 교정 요청</td>
+        <td><span class="module-tag" style="background:var(--coral-pale);color:var(--coral)">writing</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge GET">GET</span></td>
+        <td class="path-cell">/api/reading/books</td>
+        <td class="desc-cell">지문 라이브러리</td>
+        <td><span class="module-tag" style="background:var(--mint-pale);color:var(--mint)">reading</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge GET">GET</span></td>
+        <td class="path-cell">/api/reading/books/{id}</td>
+        <td class="desc-cell">지문 상세 조회</td>
+        <td><span class="module-tag" style="background:var(--mint-pale);color:var(--mint)">reading</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge GET">GET</span></td>
+        <td class="path-cell">/api/conversation/topics</td>
+        <td class="desc-cell">토픽 목록</td>
+        <td><span class="module-tag" style="background:var(--yellow-pale);color:var(--yellow)">conv</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+      <tr>
+        <td><span class="method-badge POST">POST</span></td>
+        <td class="path-cell">/api/conversation/sessions</td>
+        <td class="desc-cell">대화 세션 시작</td>
+        <td><span class="module-tag" style="background:var(--yellow-pale);color:var(--yellow)">conv</span></td>
+        <td><span class="lock-icon">🔒 JWT</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>
