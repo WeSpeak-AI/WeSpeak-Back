@@ -1,0 +1,24 @@
+rootProject.name = 'wespeak-back'
+
+// core
+include 'core:core-common'
+include 'core:core-domain'
+include 'core:core-infra'
+include 'core:core-jwt'
+include 'core:core-data-serializer'
+include 'core:core-event'
+include 'core:core-webclient'
+include 'core:core-outbox-message-relay'
+
+// modules
+include 'modules:module-auth'
+include 'modules:module-user'
+include 'modules:module-voca'
+include 'modules:module-writing'
+include 'modules:module-reading'
+include 'modules:module-conversation'
+include 'modules:module-searchword'
+
+// api
+include 'api:api-gateway'
+include 'api:api-main'
