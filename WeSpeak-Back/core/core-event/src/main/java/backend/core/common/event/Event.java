@@ -1,6 +1,6 @@
-package backend.cowrite.common.event;
+package backend.core.common.event;
 
-import backend.cowrite.common.dataserializer.DataSerializer;
+import backend.core.common.dataserializer.DataSerializer;
 import lombok.Getter;
 
 @Getter

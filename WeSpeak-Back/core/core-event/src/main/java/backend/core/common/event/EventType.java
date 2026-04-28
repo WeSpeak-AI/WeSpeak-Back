@@ -1,7 +1,7 @@
-package backend.cowrite.common.event;
+package backend.core.common.event;
 
-import backend.cowrite.common.event.payload.DocumentSaveEventPayload;
-import backend.cowrite.common.event.payload.DocumentUpdateEventPayload;
+import backend.core.common.event.payload.AiCorrectionEventPayload;
+import backend.core.common.event.payload.StudyCompletedEventPayload;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,14 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public enum EventType {
 
-    UPDATE(DocumentUpdateEventPayload.class, Topic.UPDATE),
-    SAVE(DocumentSaveEventPayload.class, Topic.SAVE);
+    AI_CORRECTION(AiCorrectionEventPayload.class, Topic.WRITING),
+    STUDY_COMPLETED(StudyCompletedEventPayload.class, Topic.USER);
+
 
     private final Class<? extends EventPayload> payloadClass;
     private final String topic;
 
     public static class Topic {
-        public static final String UPDATE = "content-update";
-        public static final String SAVE = "content-save";
+        public static final String WRITING = "writing";
+        public static final String USER = "user";
     }
 }

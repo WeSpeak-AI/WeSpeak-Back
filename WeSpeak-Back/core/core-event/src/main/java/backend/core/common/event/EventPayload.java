@@ -1,4 +1,4 @@
-package backend.cowrite.common.event;
+package backend.core.common.event;
 
 public interface EventPayload {
 }

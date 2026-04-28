@@ -1,7 +1,8 @@
-package kuke.board.articleread.service.event.handler;
+package backend.core.common.event.handler;
 
-import kuke.board.common.event.Event;
-import kuke.board.common.event.EventPayload;
+
+import backend.core.common.event.Event;
+import backend.core.common.event.EventPayload;
 
 public interface EventHandler<T extends EventPayload> {
     void handle(Event<T> event);
