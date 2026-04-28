@@ -26,14 +26,24 @@ public class JwtTokenProvider{
         this.secretKey = buildSigningKey(secret);
     }
 
-    public String generateToken(String email) {
+    public String generateToken(String email, String role) {
         Date now = new Date();
         return Jwts.builder()
                 .subject(email)
+                .claim("role", role)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + expirationMs))
                 .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
+    }
+
+    public String getRoleFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("role", String.class);
     }
 
     private SecretKey buildSigningKey(String secret) {
