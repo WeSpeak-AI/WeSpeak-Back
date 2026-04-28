@@ -2,6 +2,8 @@ package backend.module.reading.dto;
 
 import backend.core.domain.reading.Book;
 import backend.core.domain.userbook.UserBook;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,6 +11,7 @@ import lombok.Getter;
 @Builder
 public class ReadingBookPreviewResponse {
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long bookId;
     private String title;
     private String level;

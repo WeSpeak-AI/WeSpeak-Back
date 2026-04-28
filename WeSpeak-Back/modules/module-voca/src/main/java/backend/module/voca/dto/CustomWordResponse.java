@@ -1,9 +1,11 @@
 package backend.module.voca.dto;
 
 import backend.core.domain.customvoca.CustomWord;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 public record CustomWordResponse(
-        Long customWordId,
+        @JsonSerialize(using = ToStringSerializer.class) Long customWordId,
         String term,
         String meaning,
         String phonetic,

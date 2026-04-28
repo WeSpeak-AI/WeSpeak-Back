@@ -1,6 +1,8 @@
 package backend.module.voca.dto;
 
 import backend.core.domain.voca.VocaBook;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,6 +10,7 @@ import lombok.Getter;
 @Builder
 public class VocaBookResponse {
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long vocaBookId;
     private String title;
     private String category;

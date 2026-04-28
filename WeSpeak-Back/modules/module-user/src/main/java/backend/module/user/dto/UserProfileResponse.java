@@ -1,6 +1,8 @@
 package backend.module.user.dto;
 
 import backend.core.domain.user.User;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class UserProfileResponse {
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
     private String email;
     private String nickname;

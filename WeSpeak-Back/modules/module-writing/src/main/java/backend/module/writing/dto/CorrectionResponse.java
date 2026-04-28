@@ -1,6 +1,8 @@
 package backend.module.writing.dto;
 
 import backend.core.domain.writing.Essay;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,6 +10,7 @@ import lombok.Getter;
 @Builder
 public class CorrectionResponse {
 
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long essayId;
     private String topic;
     private String originalContent;
