@@ -1,0 +1,8 @@
+dependencies {
+    implementation project(':core:core-common')
+    implementation project(':core:core-domain')
+    implementation project(':core:core-infra')
+    implementation project(':core:core-outbox-message-relay')
+    implementation project(':core:core-webclient')
+
+}
