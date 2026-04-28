@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class EssayResponse {
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long essayId;
+    private String essayId;
     private String topic;
     private String content;
     private String type;
@@ -22,7 +21,7 @@ public class EssayResponse {
 
     public static EssayResponse from(Essay essay) {
         return EssayResponse.builder()
-                .essayId(essay.getEssayId())
+                .essayId(String.valueOf(essay.getEssayId()))
                 .topic(essay.getTopic())
                 .content(essay.getContent())
                 .type(essay.getType().name())

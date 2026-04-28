@@ -10,8 +10,7 @@ import lombok.Getter;
 @Builder
 public class WordResponse {
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long wordId;
+    private String wordId;
     private String term;
     private String meaning;
     private String phonetic;
@@ -19,7 +18,7 @@ public class WordResponse {
 
     public static WordResponse from(Word word) {
         return WordResponse.builder()
-                .wordId(word.getWordId())
+                .wordId(String.valueOf(word.getWordId()))
                 .term(word.getTerm())
                 .meaning(word.getMeaning())
                 .example(word.getExample())

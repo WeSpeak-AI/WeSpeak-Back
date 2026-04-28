@@ -9,8 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TopicResponse {
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long topicId;
+    private String topicId;
     private String title;
     private String difficulty;
     private String emoji;
@@ -18,7 +17,7 @@ public class TopicResponse {
 
     public static TopicResponse from(Topic topic) {
         return TopicResponse.builder()
-                .topicId(topic.getTopicId())
+                .topicId(String.valueOf(topic.getTopicId()))
                 .title(topic.getTitle())
                 .difficulty(topic.getDifficulty())
                 .emoji(topic.getEmoji())

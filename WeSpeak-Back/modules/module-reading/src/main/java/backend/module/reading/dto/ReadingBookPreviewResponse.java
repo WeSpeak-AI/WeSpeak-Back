@@ -11,8 +11,7 @@ import lombok.Getter;
 @Builder
 public class ReadingBookPreviewResponse {
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long bookId;
+    private String bookId;
     private String title;
     private String level;
     private String category;
@@ -21,7 +20,7 @@ public class ReadingBookPreviewResponse {
 
     public static ReadingBookPreviewResponse from(Book book) {
         return ReadingBookPreviewResponse.builder()
-                .bookId(book.getBookId())
+                .bookId(String.valueOf(book.getBookId()))
                 .title(book.getTitle())
                 .level(book.getLevel().name())
                 .category(book.getCategory())
@@ -33,7 +32,7 @@ public class ReadingBookPreviewResponse {
         return ReadingBookPreviewResponse.builder()
                 .currentPage(userBook.getCurrentPage())
                 .totalPage(book.getTotalPages())
-                .bookId(book.getBookId())
+                .bookId(String.valueOf(book.getBookId()))
                 .title(book.getTitle())
                 .level(book.getLevel().name())
                 .category(book.getCategory())

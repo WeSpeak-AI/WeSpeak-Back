@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void rewardTicket(String email) {
         User user = findByEmail(email);
-        user.addTicket(1);
+        user.addTicket(3);
     }
 
     private User findByEmail(String email) {

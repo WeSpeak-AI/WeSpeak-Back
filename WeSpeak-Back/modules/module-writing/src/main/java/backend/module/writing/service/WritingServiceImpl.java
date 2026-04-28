@@ -16,12 +16,14 @@ import backend.module.writing.dto.EssayRequest;
 import backend.module.writing.dto.EssayResponse;
 import backend.module.writing.repository.EssayRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -76,6 +78,7 @@ public class WritingServiceImpl implements WritingService {
 
     @Override
     public CorrectionResponse getMyEssay(Long essayId) {
+        log.debug("[getMyEssay] searching essayId={}", essayId);
         Essay essay = essayRepository.findById(essayId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ESSAY_NOT_FOUND));
 

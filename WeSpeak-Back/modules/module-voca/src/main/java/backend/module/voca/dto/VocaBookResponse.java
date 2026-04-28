@@ -10,8 +10,7 @@ import lombok.Getter;
 @Builder
 public class VocaBookResponse {
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long vocaBookId;
+    private String vocaBookId;
     private String title;
     private String category;
     private String description;
@@ -19,7 +18,7 @@ public class VocaBookResponse {
 
     public static VocaBookResponse from(VocaBook book) {
         return VocaBookResponse.builder()
-                .vocaBookId(book.getVocaBookId())
+                .vocaBookId(String.valueOf(book.getVocaBookId()))
                 .title(book.getTitle())
                 .category(book.getCategory().name())
                 .description(book.getDescription())

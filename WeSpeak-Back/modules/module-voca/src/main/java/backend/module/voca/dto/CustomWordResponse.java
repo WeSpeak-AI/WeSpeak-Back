@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 public record CustomWordResponse(
-        @JsonSerialize(using = ToStringSerializer.class) Long customWordId,
+        String customWordId,
         String term,
         String meaning,
         String phonetic,
@@ -14,7 +14,7 @@ public record CustomWordResponse(
 ) {
     public static CustomWordResponse from(CustomWord word) {
         return new CustomWordResponse(
-                word.getCustomWordId(),
+                String.valueOf(word.getCustomWordId()),
                 word.getTerm(),
                 word.getMeaning(),
                 word.getPhonetic(),

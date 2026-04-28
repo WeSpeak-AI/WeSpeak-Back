@@ -7,6 +7,7 @@ import backend.module.writing.dto.EssayResponse;
 import backend.module.writing.service.WritingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/writing")
 @RequiredArgsConstructor
+@Slf4j
 public class WritingController {
 
     private final WritingService writingService;
@@ -42,6 +44,7 @@ public class WritingController {
 
     @GetMapping("/essays/{essayId}")
     public ApiResponse<CorrectionResponse> getMyEssay(@PathVariable("essayId") Long essayId) {
+        log.info("[WritingController.getMyEssay()] essayId = {}", essayId);
         return ApiResponse.ok(writingService.getMyEssay(essayId));
     }
 }

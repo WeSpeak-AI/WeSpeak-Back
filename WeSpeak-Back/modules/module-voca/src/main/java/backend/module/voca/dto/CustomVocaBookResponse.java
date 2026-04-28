@@ -8,14 +8,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record CustomVocaBookResponse(
-        @JsonSerialize(using = ToStringSerializer.class) Long customVocaBookId,
+        String customVocaBookId,
         int wordCount,
         LocalDateTime createdAt,
         List<CustomWordResponse> words
 ) {
     public static CustomVocaBookResponse from(CustomVocaBook book) {
         return new CustomVocaBookResponse(
-                book.getCustomVocaBookId(),
+                String.valueOf(book.getCustomVocaBookId()),
                 book.getWords().size(),
                 book.getCreatedAt(),
                 book.getWords().stream().map(CustomWordResponse::from).toList()

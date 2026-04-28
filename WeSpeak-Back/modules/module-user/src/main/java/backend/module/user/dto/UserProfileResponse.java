@@ -12,8 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class UserProfileResponse {
 
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long userId;
+    private String userId;
     private String email;
     private String nickname;
     private int xp;
@@ -23,7 +22,7 @@ public class UserProfileResponse {
 
     public static UserProfileResponse from(User user) {
         return UserProfileResponse.builder()
-                .userId(user.getUserId())
+                .userId(String.valueOf(user.getUserId()))
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .xp(user.getXp())
