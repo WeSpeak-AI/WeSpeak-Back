@@ -22,15 +22,15 @@ public class ReadingController {
     private final ReadingService readingService;
 
     @GetMapping("/books")
-    public ApiResponse<Page<ReadingBookPreviewResponse>> getAllBooks(@RequestParam(defaultValue = "0") int page,
-                                                                     @RequestParam(defaultValue = "20") int size) {
+    public ApiResponse<Page<ReadingBookPreviewResponse>> getAllBooks(@RequestParam(name = "page", defaultValue = "0") int page,
+                                                                     @RequestParam(name = "size", defaultValue = "20") int size) {
         return ApiResponse.ok(readingService.getAllBooks(page, size));
     }
 
     @GetMapping("/books/{level}")
     public ApiResponse<Page<ReadingBookPreviewResponse>> getBooksByLevel(@PathVariable("level") Level level,
-                                                                         @RequestParam(defaultValue = "0") int page,
-                                                                         @RequestParam(defaultValue = "20") int size) {
+                                                                         @RequestParam(name = "page", defaultValue = "0") int page,
+                                                                         @RequestParam(name = "size", defaultValue = "20") int size) {
         return ApiResponse.ok(readingService.getBooksByLevel(level, page, size));
     }
 

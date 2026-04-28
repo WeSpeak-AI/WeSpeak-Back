@@ -22,8 +22,8 @@ public class VocaController {
 
     @GetMapping("/books")
     public ApiResponse<Page<VocaBookResponse>> getAllVocas(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size
     ) {
         return ApiResponse.ok(vocaService.getAllVocas(page, size));
     }
@@ -31,8 +31,8 @@ public class VocaController {
     @GetMapping("/books/category/{category}")
     public ApiResponse<Page<VocaBookResponse>> getVocasByCategory(
             @PathVariable("category") Category category,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size
     ) {
         return ApiResponse.ok(vocaService.getVocasByCategory(category, page, size));
     }
