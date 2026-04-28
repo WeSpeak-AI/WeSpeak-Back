@@ -1,4 +1,4 @@
-package backend.cowrite.common.outboxmessagerelay;
+package backend.core.common.outboxmessagerelay;
 
 import lombok.Getter;
 import lombok.ToString;

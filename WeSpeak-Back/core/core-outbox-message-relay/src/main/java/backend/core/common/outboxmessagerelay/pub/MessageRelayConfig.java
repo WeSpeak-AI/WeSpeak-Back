@@ -1,4 +1,4 @@
-package backend.cowrite.common.outboxmessagerelay.pub;
+package backend.core.common.outboxmessagerelay.pub;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 
 @Configuration
 @EnableScheduling
-@ComponentScan("backend.cowrite.common.outboxmessagerelay")
+@ComponentScan("backend.core.common.outboxmessagerelay")
 @EnableAsync
 public class MessageRelayConfig {
     @Value("${spring.kafka.bootstrap-servers}")

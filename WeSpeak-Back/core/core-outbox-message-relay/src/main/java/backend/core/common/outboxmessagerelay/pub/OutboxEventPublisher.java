@@ -1,11 +1,11 @@
-package backend.cowrite.common.outboxmessagerelay.pub;
+package backend.core.common.outboxmessagerelay.pub;
 
-import backend.cowrite.common.event.Event;
-import backend.cowrite.common.event.EventPayload;
-import backend.cowrite.common.event.EventType;
-import backend.cowrite.common.outboxmessagerelay.Outbox;
-import backend.cowrite.common.outboxmessagerelay.OutboxEvent;
-import backend.cowrite.common.snowflake.Snowflake;
+import backend.core.common.event.Event;
+import backend.core.common.event.EventPayload;
+import backend.core.common.event.EventType;
+import backend.core.common.outboxmessagerelay.Outbox;
+import backend.core.common.outboxmessagerelay.OutboxEvent;
+import backend.core.infra.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -13,18 +13,16 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class OutboxEventPublisher {
-    private final Snowflake outBoxIdSnowflake = new Snowflake();
-    private final Snowflake eventIdSnowflake = new Snowflake();
+    private final Snowflake snowflake;
     private final ApplicationEventPublisher applicationEventPublisher;
 
-    public void publish(EventType eventType, EventPayload eventPayload, Long documentId) {
+    public void publish(EventType eventType, EventPayload eventPayload) {
         Outbox outbox = Outbox.create(
-                outBoxIdSnowflake.nextId(),
+                snowflake.nextId(),
                 eventType,
                 Event.createEvent(
-                        eventIdSnowflake.nextId(), eventType, eventPayload
-                ).toJson(),
-                documentId
+                        snowflake.nextId(), eventType, eventPayload
+                ).toJson()
         );
         OutboxEvent outboxEvent = OutboxEvent.createOutboxEventByOutbox(outbox);
         applicationEventPublisher.publishEvent(outboxEvent);

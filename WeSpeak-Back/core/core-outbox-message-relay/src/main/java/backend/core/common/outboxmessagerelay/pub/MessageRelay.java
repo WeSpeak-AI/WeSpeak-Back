@@ -1,8 +1,8 @@
-package backend.cowrite.common.outboxmessagerelay.pub;
+package backend.core.common.outboxmessagerelay.pub;
 
-import backend.cowrite.common.outboxmessagerelay.Outbox;
-import backend.cowrite.common.outboxmessagerelay.OutboxEvent;
-import backend.cowrite.common.outboxmessagerelay.OutboxRepository;
+import backend.core.common.outboxmessagerelay.Outbox;
+import backend.core.common.outboxmessagerelay.OutboxEvent;
+import backend.core.common.outboxmessagerelay.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +41,6 @@ public class MessageRelay {
         try {
             messageRelayKafkaTemplate.send(
                     outbox.getEventType().getTopic(),
-                    outbox.getDocumentId().toString(),
                     outbox.getPayload()
             ).get(1, TimeUnit.SECONDS);
             outboxRepository.delete(outbox);

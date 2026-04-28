@@ -1,6 +1,6 @@
-package backend.cowrite.common.outboxmessagerelay;
+package backend.core.common.outboxmessagerelay;
 
-import backend.cowrite.common.event.EventType;
+import backend.core.common.event.EventType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,14 +23,12 @@ public class Outbox {
     private EventType eventType;
     private String payload; //eventPayload
     private LocalDateTime createdAt;
-    private Long documentId;
 
-    public static Outbox create(Long outboxId, EventType eventType, String payload, Long documentId) {
+    public static Outbox create(Long outboxId, EventType eventType, String payload) {
         Outbox outbox = new Outbox();
         outbox.outboxId = outboxId;
         outbox.eventType = eventType;
         outbox.payload = payload;
-        outbox.documentId = documentId;
         outbox.createdAt = LocalDateTime.now();
         return outbox;
     }

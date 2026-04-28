@@ -1,10 +1,13 @@
+plugins {
+    id 'java-library'
+}
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.kafka:spring-kafka'
+    api 'org.springframework.kafka:spring-kafka'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    implementation project(':global:snowflake')
-    implementation project(':global:event')
-    implementation project(':global:data-serializer')
+    implementation project(':core:core-infra')
+    api project(':core:core-event')
+    implementation project(':core:core-data-serializer')
 }
