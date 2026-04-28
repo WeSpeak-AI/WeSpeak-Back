@@ -11,5 +11,6 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // Redis (의존성만 추가, 구현은 추후)
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    api 'org.springframework.boot:spring-boot-starter-data-redis'
+
 }
