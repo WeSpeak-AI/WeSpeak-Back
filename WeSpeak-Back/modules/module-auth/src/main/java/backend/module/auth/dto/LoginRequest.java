@@ -7,9 +7,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UsernameDuplicateCheckRequest {
+public class LoginRequest {
 
-    @Email(message = "올바른 이메일 형식이어야 합니다.")
+    @Email
     @NotBlank
     private String email;
+
+    @NotBlank
+    private String password;
 }
