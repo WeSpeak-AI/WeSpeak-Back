@@ -1,0 +1,26 @@
+package backend.module.voca.dto;
+
+import backend.core.domain.voca.Word;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class WordResponse {
+
+    private Long wordId;
+    private String term;
+    private String meaning;
+    private String phonetic;
+    private String example;
+
+    public static WordResponse from(Word word) {
+        return WordResponse.builder()
+                .wordId(word.getWordId())
+                .term(word.getTerm())
+                .meaning(word.getMeaning())
+                .example(word.getExample())
+                .phonetic(word.getPhonetic())
+                .build();
+    }
+}

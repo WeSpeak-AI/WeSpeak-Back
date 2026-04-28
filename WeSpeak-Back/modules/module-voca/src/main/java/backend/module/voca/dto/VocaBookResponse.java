@@ -1,30 +1,26 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.uservoca.UserVocaBook;
 import backend.core.domain.voca.VocaBook;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class MyVocaBookResponse {
+public class VocaBookResponse {
 
     private Long vocaBookId;
     private String title;
     private String category;
     private String description;
     private int totalDays;
-    private int currentDay;
 
-    public static MyVocaBookResponse from(UserVocaBook userVocaBook) {
-        VocaBook book = userVocaBook.getVocaBook();
-        return MyVocaBookResponse.builder()
+    public static VocaBookResponse from(VocaBook book) {
+        return VocaBookResponse.builder()
                 .vocaBookId(book.getVocaBookId())
                 .title(book.getTitle())
                 .category(book.getCategory().name())
                 .description(book.getDescription())
                 .totalDays(book.getTotalDays())
-                .currentDay(userVocaBook.getCurrentDay())
                 .build();
     }
 }
