@@ -16,7 +16,7 @@ public class StudyCompletedEventConsumer {
     private final StreakUpdateService streakUpdateService;
 
     @KafkaListener(topics = {
-        EventType.Topic.USER
+        EventType.EventTopic.USER
     })
     public void listen(String message, Acknowledgment ack) {
         Event<EventPayload> event = Event.fromJson(message);

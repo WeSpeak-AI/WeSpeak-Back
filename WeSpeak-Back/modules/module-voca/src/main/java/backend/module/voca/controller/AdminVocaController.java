@@ -70,4 +70,10 @@ public class AdminVocaController {
         adminVocaService.deleteWord(wordId);
         return ApiResponse.ok();
     }
+
+    @PostMapping("/voca/ai-generate")
+    public ApiResponse<Void> aiGenerate(@Valid @RequestBody VocaBookRequest request) {
+        adminVocaService.aiGenerate(request);
+        return ApiResponse.ok();
+    }
 }

@@ -18,14 +18,21 @@ public class Topic {
 
     private String difficulty;
 
+    private String content;
+
     private String emoji;
 
     private String color;
 
-    public void update(String title, String difficulty, String emoji, String color) {
+    public void update(String title, String difficulty, String content, String emoji, String color) {
         this.title = title;
         this.difficulty = difficulty;
+        this.content = content;
         this.emoji = emoji;
         this.color = color;
+    }
+
+    public void applyContent(String aiedContent) {
+        this.content = aiedContent;
     }
 }

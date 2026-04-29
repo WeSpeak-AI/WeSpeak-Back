@@ -1,7 +1,10 @@
 package backend.module.voca.service;
 
+import backend.core.common.event.EventType;
+import backend.core.common.event.payload.VocaGenerationEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
+import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
 import backend.core.domain.voca.VocaBook;
 import backend.core.domain.voca.VocaBookDay;
 import backend.core.domain.voca.Word;
@@ -25,6 +28,7 @@ public class AdminVocaServiceImpl implements AdminVocaService {
     private final VocaBookDayRepository vocaBookDayRepository;
     private final WordRepository wordRepository;
     private final Snowflake snowflake;
+    private final OutboxEventPublisher outboxEventPublisher;
 
     @Override
     @Transactional
@@ -117,5 +121,23 @@ public class AdminVocaServiceImpl implements AdminVocaService {
         Word word = wordRepository.findById(wordId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.WORD_NOT_FOUND));
         wordRepository.delete(word);
+    }
+
+    @Override
+    @Transactional
+    public void aiGenerate(VocaBookRequest request) {
+        VocaBook vocaBook = vocaBookRepository.save(VocaBook.builder()
+                .vocaBookId(snowflake.nextId())
+                .title(request.getTitle())
+                .category(request.getCategory())
+                .description(request.getDescription())
+                .build());
+        outboxEventPublisher.publish(EventType.VOCA_GENERATION, VocaGenerationEventPayload.builder()
+                .vocaId(vocaBook.getVocaBookId())
+                .title(vocaBook.getTitle())
+                .category(vocaBook.getCategory().name())
+                .description(vocaBook.getDescription())
+                .numberOfDays(request.getNumberOfDays())
+                .build());
     }
 }

@@ -14,4 +14,5 @@ public interface AdminVocaService {
     Long createWord(Long vocaBookDayId, WordRequest request);
     void updateWord(Long wordId, WordRequest request);
     void deleteWord(Long wordId);
+    void aiGenerate(VocaBookRequest request);
 }

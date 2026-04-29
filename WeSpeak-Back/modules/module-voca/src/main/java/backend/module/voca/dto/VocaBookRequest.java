@@ -18,4 +18,6 @@ public class VocaBookRequest {
 
     @NotBlank
     private String description;
+
+    private int numberOfDays;
 }

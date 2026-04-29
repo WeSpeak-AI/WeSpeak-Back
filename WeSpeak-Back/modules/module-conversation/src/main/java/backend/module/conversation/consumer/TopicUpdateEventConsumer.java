@@ -1,4 +1,4 @@
-package backend.module.writing.consumer;
+package backend.module.conversation.consumer;
 
 import backend.core.common.event.Event;
 import backend.core.common.event.EventPayload;
@@ -12,23 +12,22 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AiCorrectionEventConsumer {
-    private final AiCorrectionService aiCorrectionService;
+public class TopicUpdateEventConsumer {
+    private final TopicUpdateService topicUpdateService;
 
     @KafkaListener(topics = {
-        EventType.EventTopic.WRITING
+            EventType.EventTopic.TOPIC
     })
     public void listen(String message, Acknowledgment ack) {
         try {
             Event<EventPayload> event = Event.fromJson(message);
             if (event != null) {
-                aiCorrectionService.handleEvent(event);
+                topicUpdateService.handleEvent(event);
             }
         } catch (Exception e) {
-            log.error("[AiCorrectionEventConsumer.listen] message={}", message, e);
+            log.error("[TopicUpdateEventConsumer.listen] message={}", message, e);
         } finally {
             ack.acknowledge();
         }
     }
-
 }

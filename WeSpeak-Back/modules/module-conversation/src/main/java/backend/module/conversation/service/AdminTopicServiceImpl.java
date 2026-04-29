@@ -1,14 +1,19 @@
 package backend.module.conversation.service;
 
+import backend.core.common.event.EventType;
+import backend.core.common.event.payload.TopicUpdateEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
+import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
 import backend.core.domain.topic.Topic;
 import backend.core.infra.Snowflake;
 import backend.core.infra.repository.TopicRepository;
 import backend.module.conversation.dto.TopicRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +22,8 @@ public class AdminTopicServiceImpl implements AdminTopicService {
 
     private final TopicRepository topicRepository;
     private final Snowflake snowflake;
+    private final OutboxEventPublisher outboxEventPublisher;
+
 
     @Override
     @Transactional
@@ -25,10 +32,17 @@ public class AdminTopicServiceImpl implements AdminTopicService {
                 .topicId(snowflake.nextId())
                 .title(request.getTitle())
                 .difficulty(request.getDifficulty())
+                .content(request.getContent())
                 .emoji(request.getEmoji())
                 .color(request.getColor())
                 .build();
-        return topicRepository.save(topic).getTopicId();
+
+        Topic saved = topicRepository.save(topic);
+        outboxEventPublisher.publish(EventType.TOPIC_UPDATE, TopicUpdateEventPayload.builder()
+                        .topicId(saved.getTopicId())
+                        .content(saved.getContent())
+                        .build());
+        return saved.getTopicId();
     }
 
     @Override
@@ -36,7 +50,7 @@ public class AdminTopicServiceImpl implements AdminTopicService {
     public void updateTopic(Long topicId, TopicRequest request) {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.TOPIC_NOT_FOUND));
-        topic.update(request.getTitle(), request.getDifficulty(), request.getEmoji(), request.getColor());
+        topic.update(request.getTitle(), request.getDifficulty(), request.getContent(), request.getEmoji(), request.getColor());
     }
 
     @Override

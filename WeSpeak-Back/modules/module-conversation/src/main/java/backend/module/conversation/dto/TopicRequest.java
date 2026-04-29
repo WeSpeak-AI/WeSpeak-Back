@@ -15,6 +15,9 @@ public class TopicRequest {
     private String difficulty;
 
     @NotBlank
+    private String content;
+
+    @NotBlank
     private String emoji;
 
     @NotBlank
