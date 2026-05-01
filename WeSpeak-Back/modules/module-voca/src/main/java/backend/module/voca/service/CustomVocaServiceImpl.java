@@ -6,11 +6,11 @@ import backend.core.domain.customvoca.CustomVocaBook;
 import backend.core.domain.customvoca.CustomWord;
 import backend.core.domain.user.User;
 import backend.core.infra.Snowflake;
+import backend.core.infra.repository.CustomVocaBookRepository;
 import backend.core.infra.repository.UserRepository;
 import backend.module.voca.dto.CustomVocaBookResponse;
 import backend.module.voca.dto.CustomWordRequest;
 import backend.module.voca.dto.CustomWordResponse;
-import backend.core.infra.repository.CustomVocaBookRepository;
 import backend.module.voca.repository.CustomWordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,11 +31,10 @@ public class CustomVocaServiceImpl implements CustomVocaService {
     @Override
     @Transactional
     public CustomVocaBookResponse getMyCustomVocaBook(String email) {
-        User user = findUser(email);
-        CustomVocaBook book = customVocaBookRepository.findByUser(user)
+        CustomVocaBook book = customVocaBookRepository.findByUserEmail(email)
                 .orElseGet(() -> customVocaBookRepository.save(CustomVocaBook.builder()
                         .customVocaBookId(snowflake.nextId())
-                        .user(user)
+                        .user(findUser(email))
                         .build()));
         return CustomVocaBookResponse.from(book);
     }
@@ -58,8 +57,7 @@ public class CustomVocaServiceImpl implements CustomVocaService {
 
     @Override
     public List<CustomWordResponse> getWords(String email) {
-        User user = findUser(email);
-        CustomVocaBook book = customVocaBookRepository.findByUser(user)
+        CustomVocaBook book = customVocaBookRepository.findByUserEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_VOCA_BOOK_NOT_FOUND));
         return customWordRepository.findByCustomVocaBook_CustomVocaBookId(book.getCustomVocaBookId()).stream()
                 .map(CustomWordResponse::from)
@@ -69,9 +67,7 @@ public class CustomVocaServiceImpl implements CustomVocaService {
     @Override
     @Transactional
     public CustomWordResponse updateWord(String email, Long customWordId, CustomWordRequest request) {
-        validateWordOwnership(email, customWordId);
-        CustomWord word = customWordRepository.findById(customWordId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_WORD_NOT_FOUND));
+        CustomWord word = validateWordOwnership(email, customWordId);
         word.update(request.term(), request.meaning(), request.phonetic(), request.example(), request.imageUrl());
         return CustomWordResponse.from(word);
     }
@@ -79,9 +75,7 @@ public class CustomVocaServiceImpl implements CustomVocaService {
     @Override
     @Transactional
     public void deleteWord(String email, Long customWordId) {
-        validateWordOwnership(email, customWordId);
-        CustomWord word = customWordRepository.findById(customWordId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_WORD_NOT_FOUND));
+        CustomWord word = validateWordOwnership(email, customWordId);
         customWordRepository.delete(word);
     }
 
@@ -91,22 +85,19 @@ public class CustomVocaServiceImpl implements CustomVocaService {
     }
 
     private CustomVocaBook getOrCreateBook(String email) {
-        User user = findUser(email);
-        return customVocaBookRepository.findByUser(user)
+        return customVocaBookRepository.findByUserEmail(email)
                 .orElseGet(() -> customVocaBookRepository.save(CustomVocaBook.builder()
                         .customVocaBookId(snowflake.nextId())
-                        .user(user)
+                        .user(findUser(email))
                         .build()));
     }
 
-    private void validateWordOwnership(String email, Long customWordId) {
-        User user = findUser(email);
-        CustomVocaBook book = customVocaBookRepository.findByUser(user)
-                .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_VOCA_BOOK_NOT_FOUND));
-        CustomWord word = customWordRepository.findById(customWordId)
+    private CustomWord validateWordOwnership(String email, Long customWordId) {
+        CustomWord word = customWordRepository.findByIdWithBookAndUser(customWordId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_WORD_NOT_FOUND));
-        if (!word.getCustomVocaBook().getCustomVocaBookId().equals(book.getCustomVocaBookId())) {
+        if (!word.getCustomVocaBook().getUser().getEmail().equals(email)) {
             throw new BusinessException(ErrorCode.CUSTOM_VOCA_BOOK_ACCESS_DENIED);
         }
+        return word;
     }
 }
