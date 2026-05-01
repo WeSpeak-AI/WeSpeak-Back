@@ -39,8 +39,7 @@ public class TopicUpdateHandler implements EventHandler<TopicUpdateEventPayload>
                         "difficulty", payload.getDifficulty()
                 ))
                 .retrieve()
-                .bodyToMono(TopicnResponse.class)
-                .map(TopicnResponse::getResult)
+                .bodyToMono(String.class)
                 .block();
 
         Topic topic = topicRepository.findById(payload.getTopicId())
@@ -51,11 +50,5 @@ public class TopicUpdateHandler implements EventHandler<TopicUpdateEventPayload>
     @Override
     public boolean supports(Event<TopicUpdateEventPayload> event) {
         return EventType.TOPIC_UPDATE == event.getEventType();
-    }
-
-    private record TopicnResponse(String result) {
-        public String getResult() {
-            return result;
-        }
     }
 }
