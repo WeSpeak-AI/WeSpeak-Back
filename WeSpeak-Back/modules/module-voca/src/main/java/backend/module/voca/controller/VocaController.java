@@ -9,6 +9,7 @@ import backend.module.voca.dto.WordResponse;
 import backend.module.voca.service.VocaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -60,5 +61,11 @@ public class VocaController {
             @PathVariable("dayNumber") int dayNumber
     ) {
         return ApiResponse.ok(vocaService.getWordsByDay(email, bookId, dayNumber));
+    }
+
+    @DeleteMapping("/books/{bookId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMyVoca(@PathVariable("bookId") Long bookId, @RequestHeader("X-Username") String email) {
+        vocaService.deleteMyVoca(bookId, email);
     }
 }

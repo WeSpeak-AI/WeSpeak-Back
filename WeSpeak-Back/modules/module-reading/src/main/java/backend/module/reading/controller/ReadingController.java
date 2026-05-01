@@ -54,5 +54,10 @@ public class ReadingController {
         return ApiResponse.ok(readingService.getPage(email, bookId, pageNumber));
     }
 
+    @DeleteMapping("/books/{bookId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMyBook(@PathVariable("bookId") Long bookId, @RequestHeader("X-username") String email) {
+        readingService.deleteMyBook(bookId, email);
+    }
 
 }
