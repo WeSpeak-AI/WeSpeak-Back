@@ -30,6 +30,9 @@ public enum ErrorCode {
     ALREADY_STARTED_VOCA(HttpStatus.CONFLICT, "V003", "이미 시작한 단어장입니다."),
     VOCA_BOOK_DAY_NOT_FOUND(HttpStatus.NOT_FOUND, "V004", "단어장 Day를 찾을 수 없습니다."),
 
+    // UserVoca
+    USER_VOCA_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "UV001", "유저의 단어장을 찾을 수 없습니다."),
+
     // Custom Voca
     CUSTOM_VOCA_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "CV001", "커스텀 단어장을 찾을 수 없습니다."),
     CUSTOM_WORD_NOT_FOUND(HttpStatus.NOT_FOUND, "CV002", "커스텀 단어를 찾을 수 없습니다."),
@@ -46,6 +49,7 @@ public enum ErrorCode {
     // Reading
     READING_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "지문을 찾을 수 없습니다."),
     READING_BOOK_IN_USE(HttpStatus.CONFLICT, "R002", "해당 지문을 이용 중인 사용자가 있어 삭제할 수 없습니다."),
+    USER_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "R003", "유저의 책을 찾을 수 없습니다."),
 
     // Conversation
     CONVERSATION_NOT_FOUND(HttpStatus.NOT_FOUND, "CN001", "대화 내용을 찾을 수 없습니다."),
