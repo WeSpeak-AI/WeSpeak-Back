@@ -44,6 +44,17 @@ public class WritingServiceImpl implements WritingService {
 
     @Override
     @Transactional
+    public void deleteMyEssay(String email, Long essayId) {
+        Essay essay = essayRepository.findByIdWithUser(essayId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.ESSAY_NOT_FOUND));
+        if (!essay.getUser().getEmail().equals(email)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN);
+        }
+        essayRepository.delete(essay);
+    }
+
+    @Override
+    @Transactional
     public EssayResponse save(String email, EssayRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -69,14 +80,13 @@ public class WritingServiceImpl implements WritingService {
 
     @Override
     public List<EssayResponse> getMyEssays(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        return essayRepository.findByUserOrderByCreatedAtDesc(user).stream()
+        return essayRepository.findByUserEmailOrderByCreatedAtDesc(email).stream()
                 .map(EssayResponse::from)
                 .toList();
     }
 
     @Override
+    @Transactional
     public CorrectionResponse getMyEssay(Long essayId) {
         log.debug("[getMyEssay] searching essayId={}", essayId);
         Essay essay = essayRepository.findById(essayId)
