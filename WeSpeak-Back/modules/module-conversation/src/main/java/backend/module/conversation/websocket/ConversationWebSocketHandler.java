@@ -2,25 +2,22 @@ package backend.module.conversation.websocket;
 
 import backend.core.common.dataserializer.DataSerializer;
 import backend.core.domain.conversation.Conversation;
-import backend.core.webclient.stt.SttService;
-import backend.core.webclient.tts.TtsService;
+import backend.module.conversation.dto.AiChatResponse;
 import backend.module.conversation.repository.ConversationMessageRepository;
 import backend.module.conversation.service.ConversationMessageService;
 import backend.module.conversation.service.ConversationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -34,10 +31,8 @@ public class ConversationWebSocketHandler extends AbstractWebSocketHandler {
     private final ConversationMessageService conversationMessageService;
     private final ConversationMessageRepository conversationMessageRepository;
     private final ConversationService conversationService;
-    @Qualifier("aiWebClient")
-    private final WebClient aiWebClient;
-    private final TtsService ttsService;
-    private final SttService sttService;
+    private final AiClient aiClient;
+
     private static final String REDIS_KEY = "conversation:history:";
 
     @Override
@@ -50,35 +45,27 @@ public class ConversationWebSocketHandler extends AbstractWebSocketHandler {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
         String sessionId = extractSessionId(session);
         String redisKey = REDIS_KEY + sessionId;
         Conversation conversation = conversationService.getConversation(sessionId);
 
         byte[] audioBytes = message.getPayload().array();
-        String userMessage = sttService.transcribe(audioBytes);
-        conversationMessageService.saveUserMessageToDB(conversation, userMessage);
-
         List<Map<String, String>> history = DataSerializer.deserialize(getHistory(redisKey, conversation), List.class);
-        history.add(Map.of("role", "user", "content", userMessage));
 
-        String aiResponse = aiWebClient.post()
-                .uri("/chat")
-                .bodyValue(Map.of("messages", history))
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        AiChatResponse response = aiClient.chat(audioBytes, history);
 
-        conversationMessageService.saveAiMessageToDB(conversation, aiResponse);
-        history.add(Map.of("role", "assistant", "content", aiResponse));
+        conversationMessageService.saveUserMessageToDB(conversation, response.userText());
+        conversationMessageService.saveAiMessageToDB(conversation, response.aiText());
+
+        history.add(Map.of("role", "user", "content", response.userText()));
+        history.add(Map.of("role", "assistant", "content", response.aiText()));
         redisTemplate.opsForValue().set(redisKey, DataSerializer.serialize(history));
 
-        session.sendMessage(new TextMessage(userMessage));
-        session.sendMessage(new TextMessage(aiResponse));
-
-        ByteArrayOutputStream audioStream = new ByteArrayOutputStream();
-        ttsService.stream(aiResponse, audioStream);
-        session.sendMessage(new BinaryMessage(audioStream.toByteArray()));
+        session.sendMessage(new TextMessage(response.userText()));
+        session.sendMessage(new TextMessage(response.aiText()));
+        session.sendMessage(new BinaryMessage(Base64.getDecoder().decode(response.audioData())));
     }
 
     @Override
@@ -90,7 +77,7 @@ public class ConversationWebSocketHandler extends AbstractWebSocketHandler {
     private String getHistory(String redisKey, Conversation conversation) {
         Object cached = redisTemplate.opsForValue().get(redisKey);
         if (cached != null) {
-            return  (String) cached;
+            return (String) cached;
         }
 
         List<Map<String, String>> history = conversationMessageRepository

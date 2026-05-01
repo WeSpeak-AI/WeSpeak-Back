@@ -15,4 +15,6 @@ public interface ConversationService {
     Conversation getConversation(String sessionId);
 
     void closeSession(Long conversationId);
+
+    void deleteConversation(Long conversationId, String email);
 }

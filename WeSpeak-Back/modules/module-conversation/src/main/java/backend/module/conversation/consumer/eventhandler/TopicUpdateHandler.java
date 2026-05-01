@@ -33,7 +33,11 @@ public class TopicUpdateHandler implements EventHandler<TopicUpdateEventPayload>
 
         String correctionResult = aiWebClient.post()
                 .uri("/topic")
-                .bodyValue(Map.of("content", payload.getContent()))
+                .bodyValue(Map.of(
+                        "title", payload.getTitle(),
+                        "content", payload.getContent(),
+                        "difficulty", payload.getDifficulty()
+                ))
                 .retrieve()
                 .bodyToMono(TopicnResponse.class)
                 .map(TopicnResponse::getResult)

@@ -40,6 +40,8 @@ public class AdminTopicServiceImpl implements AdminTopicService {
         Topic saved = topicRepository.save(topic);
         outboxEventPublisher.publish(EventType.TOPIC_UPDATE, TopicUpdateEventPayload.builder()
                         .topicId(saved.getTopicId())
+                        .title(saved.getTitle())
+                        .difficulty(saved.getDifficulty())
                         .content(saved.getContent())
                         .build());
         return saved.getTopicId();

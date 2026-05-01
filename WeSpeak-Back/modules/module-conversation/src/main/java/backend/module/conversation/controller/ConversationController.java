@@ -37,4 +37,10 @@ public class ConversationController {
         conversationService.closeSession(conversationId);
         return ApiResponse.ok();
     }
+
+    @DeleteMapping("/sessions/{conversationId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMyConversation(@PathVariable("conversationId") Long conversationId, @RequestHeader("X-username") String email) {
+        conversationService.deleteConversation(conversationId, email);
+    }
 }

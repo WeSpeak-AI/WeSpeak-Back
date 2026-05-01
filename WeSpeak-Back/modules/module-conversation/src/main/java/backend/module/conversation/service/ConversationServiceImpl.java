@@ -8,6 +8,7 @@ import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
 import backend.core.domain.conversation.Conversation;
 import backend.core.domain.topic.Topic;
 import backend.core.domain.user.User;
+import backend.core.domain.userbook.UserBook;
 import backend.core.infra.Snowflake;
 import backend.core.infra.repository.TopicRepository;
 import backend.core.infra.repository.UserRepository;
@@ -68,7 +69,7 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     @Transactional
     public void closeSession(Long conversationId) {
-        Conversation conversation = conversationRepository.findById(conversationId)
+        Conversation conversation = conversationRepository.findByIdWithUser(conversationId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CONVERSATION_NOT_FOUND));
         conversation.close();
         redisTemplate.delete("conversation:history:" + conversationId);
@@ -76,5 +77,13 @@ public class ConversationServiceImpl implements ConversationService {
                 .email(conversation.getUser().getEmail())
                 .studiedAt(LocalDate.now())
                 .build());
+    }
+
+    @Override
+    @Transactional
+    public void deleteConversation(Long conversationId, String email) {
+        Conversation conversation = conversationRepository.findByIdWithUser(conversationId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CONVERSATION_NOT_FOUND));
+        conversationRepository.delete(conversation);
     }
 }

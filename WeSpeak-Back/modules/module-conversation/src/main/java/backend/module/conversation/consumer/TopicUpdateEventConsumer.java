@@ -24,10 +24,10 @@ public class TopicUpdateEventConsumer {
             if (event != null) {
                 topicUpdateService.handleEvent(event);
             }
+            ack.acknowledge();
         } catch (Exception e) {
             log.error("[TopicUpdateEventConsumer.listen] message={}", message, e);
-        } finally {
-            ack.acknowledge();
+            throw e;
         }
     }
 }
