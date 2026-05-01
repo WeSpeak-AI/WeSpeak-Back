@@ -23,4 +23,5 @@ public interface VocaService {
 
     List<WordResponse> getWordsByDay(String email, Long bookId, int dayNumber);
 
+    void deleteMyVoca(Long bookId, String email);
 }
