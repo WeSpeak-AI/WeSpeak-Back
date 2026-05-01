@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TopicUpdateEventPayload implements EventPayload {
     private Long topicId;
+    private String title;
+    private String difficulty;
     private String content;
 }
