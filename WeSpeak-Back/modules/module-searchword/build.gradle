@@ -1,4 +1,8 @@
+apply plugin: 'org.springframework.boot'
+
 dependencies {
     implementation project(':core:core-common')
     implementation project(':core:core-webclient')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }

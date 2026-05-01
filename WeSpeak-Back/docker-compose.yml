@@ -1,0 +1,206 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: wespeak-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: wespeak-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: wespeak-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: unless-stopped
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: wespeak-kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
+
+  wespeak-ai:
+    build:
+      context: ../WeSpeak-AI
+    container_name: wespeak-ai
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../WeSpeak-AI/.env
+    environment:
+      OLLAMA_BASE_URL: http://host-gateway:11434
+    extra_hosts:
+      - "host-gateway:host-gateway"
+    volumes:
+      - whisper-models:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # ─── Spring Microservices ──────────────────────────────────────────────────
+
+  x-service-common: &service-common
+    build:
+      context: .
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
+      wespeak-ai:
+        condition: service_started
+    environment: &common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wespeak?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      AI_SERVER_URL: http://wespeak-ai:8000
+      TOKEN_SECRET: ${TOKEN_SECRET:-xG0DFZb7UoyqpZy6d02S9X-AkpRFSQ39Y5aXvssuF6YjS5_5b3lZNhEebf9E9f7oG8x1Pj0d_2S2r7LZokdHkQ==}
+    restart: unless-stopped
+
+  auth-service:
+    <<: *service-common
+    container_name: wespeak-auth
+    build:
+      context: .
+      args:
+        MODULE_PATH: modules/module-auth
+    ports:
+      - "9001:9001"
+
+  user-service:
+    <<: *service-common
+    container_name: wespeak-user
+    build:
+      context: .
+      args:
+        MODULE_PATH: modules/module-user
+    ports:
+      - "9002:9002"
+
+  voca-service:
+    <<: *service-common
+    container_name: wespeak-voca
+    build:
+      context: .
+      args:
+        MODULE_PATH: modules/module-voca
+    ports:
+      - "9003:9003"
+
+  writing-service:
+    <<: *service-common
+    container_name: wespeak-writing
+    build:
+      context: .
+      args:
+        MODULE_PATH: modules/module-writing
+    ports:
+      - "9004:9004"
+
+  reading-service:
+    <<: *service-common
+    container_name: wespeak-reading
+    build:
+      context: .
+      args:
+        MODULE_PATH: modules/module-reading
+    ports:
+      - "9005:9005"
+
+  conversation-service:
+    <<: *service-common
+    container_name: wespeak-conversation
+    build:
+      context: .
+      args:
+        MODULE_PATH: modules/module-conversation
+    ports:
+      - "9006:9006"
+
+  search-service:
+    container_name: wespeak-search
+    build:
+      context: .
+      args:
+        MODULE_PATH: modules/module-searchword
+    ports:
+      - "9007:9007"
+    environment:
+      AI_SERVER_URL: http://wespeak-ai:8000
+    depends_on:
+      - wespeak-ai
+    restart: unless-stopped
+
+  api-gateway:
+    container_name: wespeak-api-gateway
+    build:
+      context: .
+      args:
+        MODULE_PATH: api/api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - user-service
+      - voca-service
+      - writing-service
+      - reading-service
+      - conversation-service
+      - search-service
+    environment:
+      TOKEN_SECRET: ${TOKEN_SECRET:-xG0DFZb7UoyqpZy6d02S9X-AkpRFSQ39Y5aXvssuF6YjS5_5b3lZNhEebf9E9f7oG8x1Pj0d_2S2r7LZokdHkQ==}
+      AUTH_SERVICE_URL: http://auth-service:9001
+      USER_SERVICE_URL: http://user-service:9002
+      VOCA_SERVICE_URL: http://voca-service:9003
+      WRITING_SERVICE_URL: http://writing-service:9004
+      READING_SERVICE_URL: http://reading-service:9005
+      CONVERSATION_SERVICE_URL: http://conversation-service:9006
+      SEARCH_SERVICE_URL: http://search-service:9007
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+  redis-data:
+  whisper-models:

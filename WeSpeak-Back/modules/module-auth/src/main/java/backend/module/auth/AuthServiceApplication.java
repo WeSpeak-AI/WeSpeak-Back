@@ -1,4 +1,4 @@
-package backend.api;
+package backend.module.auth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,9 +8,8 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 @SpringBootApplication(scanBasePackages = "backend")
-public class ApiMainApplication {
-
+public class AuthServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ApiMainApplication.class, args);
+        SpringApplication.run(AuthServiceApplication.class, args);
     }
 }
