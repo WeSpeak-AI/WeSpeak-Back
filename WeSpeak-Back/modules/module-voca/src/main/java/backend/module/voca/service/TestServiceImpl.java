@@ -134,15 +134,10 @@ public class TestServiceImpl implements TestService{
 
     @Override
     public List<TestRecordPreview> getTestRecordPreviews(String email, Long bookId) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        VocaBook vocaBook = vocaBookRepository.findById(bookId)
-                .orElseThrow(()-> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
-
-        List<Test> tests = testRepository.findByUserAndVocaBook(user, vocaBook);
-
-        return tests.stream()
+        if (!vocaBookRepository.existsById(bookId)) {
+            throw new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND);
+        }
+        return testRepository.findByUserEmailAndVocaBookVocaBookId(email, bookId).stream()
                 .map(TestRecordPreview::from)
                 .toList();
     }
@@ -160,5 +155,15 @@ public class TestServiceImpl implements TestService{
                 .map(WordResultResponse::fromIncorrect)
                 .forEach(results::add);
         return results;
+    }
+
+    @Override
+    @Transactional
+    public void deleteMyTest(String email, Long testId) {
+        Test test = testRepository.findByTestIdAndUserEmail(testId, email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.TEST_NOT_FOUND));
+        correctWordRepository.deleteByTestId(testId);
+        incorrectWordRepository.deleteByTestId(testId);
+        testRepository.delete(test);
     }
 }
