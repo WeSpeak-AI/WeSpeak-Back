@@ -15,4 +15,6 @@ public interface TestService {
     List<TestRecordPreview> getTestRecordPreviews(String email, Long bookId);
 
     List<WordResultResponse> getIncorrectResult(Long testId);
+
+    void deleteMyTest(String email, Long testId);
 }
