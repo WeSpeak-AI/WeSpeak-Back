@@ -8,7 +8,6 @@ import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
 import backend.core.domain.user.User;
 import backend.core.domain.uservoca.UserVocaBook;
 import backend.core.domain.voca.VocaBook;
-import backend.core.domain.voca.VocaBookDay;
 import backend.core.infra.Snowflake;
 import backend.core.infra.repository.UserRepository;
 import backend.module.voca.dto.MyVocaBookResponse;
@@ -57,26 +56,23 @@ public class VocaServiceImpl implements VocaService {
     @Override
     @Transactional
     public void startVoca(String email, Long bookId) {
+        if (userVocaBookRepository.existsByUserEmailAndVocaBookVocaBookId(email, bookId)) {
+            throw new BusinessException(ErrorCode.ALREADY_STARTED_VOCA);
+        }
         VocaBook vocaBook = vocaBookRepository.findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        if(!checkIfVocaBookExists(user, vocaBook)) {
-            userVocaBookRepository.save(UserVocaBook.builder()
-                    .userBookId(snowflake.nextId())
-                    .user(user)
-                    .vocaBook(vocaBook)
-                    .build());
-        }
+        userVocaBookRepository.save(UserVocaBook.builder()
+                .userBookId(snowflake.nextId())
+                .user(user)
+                .vocaBook(vocaBook)
+                .build());
     }
 
     @Override
     public List<MyVocaBookResponse> getMyVocas(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        return userVocaBookRepository.findByUser(user).stream()
+        return userVocaBookRepository.findByUserEmail(email).stream()
                 .map(MyVocaBookResponse::from)
                 .toList();
     }
@@ -100,11 +96,11 @@ public class VocaServiceImpl implements VocaService {
                 .toList();
     }
 
-    private boolean checkIfVocaBookExists(User user, VocaBook vocaBook) {
-        if (userVocaBookRepository.existsByUserAndVocaBook(user, vocaBook)) {
-            throw new BusinessException(ErrorCode.ALREADY_STARTED_VOCA);
-        }
-        return false;
+    @Override
+    @Transactional
+    public void deleteMyVoca(Long bookId, String email) {
+        UserVocaBook userVocaBook = userVocaBookRepository.findByUserEmailAndVocaBookVocaBookId(email, bookId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_VOCA_BOOK_NOT_FOUND));
+        userVocaBookRepository.delete(userVocaBook);
     }
-
 }
