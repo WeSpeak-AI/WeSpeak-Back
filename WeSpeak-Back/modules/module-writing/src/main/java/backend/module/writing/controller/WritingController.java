@@ -47,4 +47,10 @@ public class WritingController {
         log.info("[WritingController.getMyEssay()] essayId = {}", essayId);
         return ApiResponse.ok(writingService.getMyEssay(essayId));
     }
+
+    @DeleteMapping("/essays/{essayId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMyEssay(@PathVariable("essayId") Long essayId, @RequestHeader("X-Username") String email) {
+        writingService.deleteMyEssay(email, essayId);
+    }
 }
