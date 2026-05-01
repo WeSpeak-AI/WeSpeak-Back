@@ -15,4 +15,6 @@ public interface WritingService {
     CorrectionResponse getMyEssay(Long essayId);
 
     String getRandomTopic();
+
+    void deleteMyEssay(String email, Long essayId);
 }
