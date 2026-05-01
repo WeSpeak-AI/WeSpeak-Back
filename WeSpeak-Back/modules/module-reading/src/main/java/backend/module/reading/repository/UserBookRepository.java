@@ -19,5 +19,10 @@ public interface UserBookRepository extends JpaRepository<UserBook, Long> {
             "where ub.user = :user")
     List<UserBook> findByUser(@Param("user")User user);
 
-    boolean existsByBook(Book book);
+    boolean existsByBookBookId(Long bookId);
+
+    @Query("select ub from UserBook ub join fetch ub.book where ub.user.email = :email")
+    List<UserBook> findByUserEmail(@Param("email") String email);
+
+    Optional<UserBook> findByUserEmailAndBookBookId(String email, Long bookId);
 }

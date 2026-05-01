@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface CustomVocaBookRepository extends JpaRepository<CustomVocaBook, Long> {
     Optional<CustomVocaBook> findByUser(User user);
+    Optional<CustomVocaBook> findByUserEmail(String email);
 }
