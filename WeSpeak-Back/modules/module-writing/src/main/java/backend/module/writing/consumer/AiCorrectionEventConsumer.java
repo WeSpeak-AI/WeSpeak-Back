@@ -19,15 +19,19 @@ public class AiCorrectionEventConsumer {
         EventType.EventTopic.WRITING
     })
     public void listen(String message, Acknowledgment ack) {
+        log.info("[AiCorrectionEventConsumer.listen] received message={}", message);
         try {
             Event<EventPayload> event = Event.fromJson(message);
-            if (event != null) {
-                aiCorrectionService.handleEvent(event);
+            if (event == null) {
+                log.warn("[AiCorrectionEventConsumer.listen] Event.fromJson returned null. message={}", message);
+                ack.acknowledge();
+                return;
             }
+            aiCorrectionService.handleEvent(event);
+            ack.acknowledge();
         } catch (Exception e) {
             log.error("[AiCorrectionEventConsumer.listen] message={}", message, e);
-        } finally {
-            ack.acknowledge();
+            throw e;
         }
     }
 
