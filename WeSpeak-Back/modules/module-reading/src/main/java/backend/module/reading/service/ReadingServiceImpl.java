@@ -12,24 +12,28 @@ import backend.core.domain.user.User;
 import backend.core.domain.userbook.UserBook;
 import backend.core.infra.Snowflake;
 import backend.core.infra.repository.UserRepository;
-import backend.core.webclient.stt.SttService;
+import backend.module.reading.dto.ReadingAiResponse;
 import backend.module.reading.dto.ReadingBookContent;
 import backend.module.reading.dto.ReadingBookPreviewResponse;
 import backend.module.reading.dto.ReadingRequest;
 import backend.module.reading.repository.BookPageRepository;
 import backend.module.reading.repository.ReadingBookRepository;
 import backend.module.reading.repository.UserBookRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -40,11 +44,17 @@ public class ReadingServiceImpl implements ReadingService {
     private final BookPageRepository bookPageRepository;
     private final UserBookRepository userBookRepository;
     private final UserRepository userRepository;
-    @Qualifier("aiWebClient")
-    private final WebClient aiWebClient;
-    private final SttService sttService;
     private final Snowflake snowflake;
     private final OutboxEventPublisher outboxEventPublisher;
+
+    @Value("${ai.server.url}")
+    private String aiServerUrl;
+    private RestClient restClient;
+
+    @PostConstruct
+    public void init() {
+        restClient = RestClient.create(aiServerUrl);
+    }
 
     @Override
     public Page<ReadingBookPreviewResponse> getAllBooks(int page, int size) {
@@ -60,12 +70,7 @@ public class ReadingServiceImpl implements ReadingService {
 
     @Override
     public List<ReadingBookPreviewResponse> getMyBooks(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        List<UserBook> userBooks = userBookRepository.findByUser(user);
-
-        return userBooks.stream()
+        return userBookRepository.findByUserEmail(email).stream()
                 .map(ReadingBookPreviewResponse::fromUserBook)
                 .toList();
     }
@@ -73,22 +78,23 @@ public class ReadingServiceImpl implements ReadingService {
     @Override
     @Transactional
     public ReadingBookContent getPage(String email, Long bookId, Integer pageNumber) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        Book book = readingBookRepository.findById(bookId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
-
-        UserBook userBook = userBookRepository.findByUserAndBook(user, book)
-                .orElseGet(() -> userBookRepository.save(UserBook.builder()
-                        .userBookId(snowflake.nextId())
-                        .user(user)
-                        .book(book)
-                        .currentPage(1)
-                        .build()));
+        UserBook userBook = userBookRepository.findByUserEmailAndBookBookId(email, bookId)
+                .orElseGet(() -> {
+                    User user = userRepository.findByEmail(email)
+                            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+                    Book book = readingBookRepository.findById(bookId)
+                            .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
+                    return userBookRepository.save(UserBook.builder()
+                            .userBookId(snowflake.nextId())
+                            .user(user)
+                            .book(book)
+                            .currentPage(1)
+                            .build());
+                });
 
         int targetPage = (pageNumber != null) ? pageNumber : userBook.getCurrentPage();
 
-        BookPage bookPage = bookPageRepository.findByBookAndPageNumber(book, targetPage)
+        BookPage bookPage = bookPageRepository.findByBookIdAndPageNumber(bookId, targetPage)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
 
         userBook.updateCurrentPage(targetPage);
@@ -102,47 +108,60 @@ public class ReadingServiceImpl implements ReadingService {
 
     @Override
     @Transactional
-    public String processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
+    public ReadingAiResponse processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         user.consumeTicket();
 
-        String userSummary = sttService.transcribe(audioBytes);
-        return getFeedback(bookPageId, userSummary);
+        return getFeedback(bookPageId, audioBytes);
     }
 
     @Override
-    public String getFeedback(Long bookPageId, String userSummary) {
+    public ReadingAiResponse getFeedback(Long bookPageId, byte[] audioBytes) {
         BookPage bookPage = bookPageRepository.findById(bookPageId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
 
-        return aiWebClient.post()
+        ByteArrayResource audioResource = new ByteArrayResource(audioBytes) {
+            @Override
+            public String getFilename() { return "audio.wav"; }
+        };
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", audioResource);
+        body.add("book_content", bookPage.getContent());
+
+        return restClient.post()
                 .uri("/feedback")
-                .bodyValue(Map.of("messages", List.of(
-                        Map.of("role", "user", "content", bookPage.getContent()),
-                        Map.of("role", "assistant", "content", "Give me a summary."),
-                        Map.of("role", "user", "content", userSummary)
-                )))
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(body)
                 .retrieve()
-                .bodyToMono(String.class)
-                .block();
+                .body(ReadingAiResponse.class);
+    }
+
+    @Override
+    @Transactional
+    public void deleteMyBook(Long bookId, String email) {
+        UserBook userbook = userBookRepository.findByUserEmailAndBookBookId(email, bookId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_BOOK_NOT_FOUND));
+        userBookRepository.delete(userbook);
     }
 
     @Override
     @Transactional
     public Long startBook(String email, ReadingRequest readingRequest) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        Book book = readingBookRepository.findById(readingRequest.getBookId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
-
-        return userBookRepository.findByUserAndBook(user, book)
-                .orElseGet(() -> userBookRepository.save(UserBook.builder()
-                        .userBookId(snowflake.nextId())
-                        .book(book)
-                        .user(user)
-                        .currentPage(1)
-                        .build()))
+        return userBookRepository.findByUserEmailAndBookBookId(email, readingRequest.getBookId())
+                .orElseGet(() -> {
+                    User user = userRepository.findByEmail(email)
+                            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+                    Book book = readingBookRepository.findById(readingRequest.getBookId())
+                            .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
+                    return userBookRepository.save(UserBook.builder()
+                            .userBookId(snowflake.nextId())
+                            .book(book)
+                            .user(user)
+                            .currentPage(1)
+                            .build());
+                })
                 .getUserBookId();
     }
 }

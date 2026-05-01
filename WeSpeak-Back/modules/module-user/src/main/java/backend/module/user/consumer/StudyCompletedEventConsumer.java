@@ -19,10 +19,15 @@ public class StudyCompletedEventConsumer {
         EventType.EventTopic.USER
     })
     public void listen(String message, Acknowledgment ack) {
-        Event<EventPayload> event = Event.fromJson(message);
-        if (event != null) {
-            streakUpdateService.handleEvent(event);
+        try {
+            Event<EventPayload> event = Event.fromJson(message);
+            if (event != null) {
+                streakUpdateService.handleEvent(event);
+            }
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("[StudyCompletedEventConsumer.listen] message={}", message, e);
+            throw e;
         }
-        ack.acknowledge();
     }
 }

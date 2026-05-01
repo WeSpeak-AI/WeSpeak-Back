@@ -49,7 +49,7 @@ public class AdminBookServiceImpl implements AdminBookService {
     public void deleteBook(Long bookId) {
         Book book = readingBookRepository.findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
-        if (userBookRepository.existsByBook(book)) {
+        if (userBookRepository.existsByBookBookId(bookId)) {
             throw new BusinessException(ErrorCode.READING_BOOK_IN_USE);
         }
         readingBookRepository.delete(book);

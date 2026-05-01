@@ -1,6 +1,7 @@
 package backend.module.reading.service;
 
 import backend.core.domain.reading.Book.Level;
+import backend.module.reading.dto.ReadingAiResponse;
 import backend.module.reading.dto.ReadingBookContent;
 import backend.module.reading.dto.ReadingBookPreviewResponse;
 import backend.module.reading.dto.ReadingRequest;
@@ -20,8 +21,9 @@ public interface ReadingService {
 
     Long startBook(String email, ReadingRequest readingRequest);
 
-    String processUserSummary(String email, Long bookPageId, byte[] audioBytes);
+    ReadingAiResponse processUserSummary(String email, Long bookPageId, byte[] audioBytes);
 
-    String getFeedback(Long bookPageId, String userSummary);
+    ReadingAiResponse getFeedback(Long bookPageId, byte[] audioBytes);
 
+    void deleteMyBook(Long bookId, String email);
 }

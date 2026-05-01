@@ -1,6 +1,6 @@
 package backend.module.reading.handler;
 
-import backend.core.webclient.tts.TtsService;
+import backend.module.reading.dto.ReadingAiResponse;
 import backend.module.reading.service.ReadingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +10,7 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 
 @Slf4j
 @Component
@@ -18,7 +19,6 @@ public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
 
     private static final String AUDIO_BUFFER = "audioBuffer";
 
-    private final TtsService ttsService;
     private final ReadingService readingService;
 
     @Override
@@ -48,13 +48,11 @@ public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
         byte[] audioBytes = buffer.toByteArray();
         buffer.reset();
 
-        String feedback = readingService.processUserSummary(email, bookPageId, audioBytes);
+        ReadingAiResponse response = readingService.processUserSummary(email, bookPageId, audioBytes);
 
-        session.sendMessage(new TextMessage(feedback));
-
-        ByteArrayOutputStream ttsStream = new ByteArrayOutputStream();
-        ttsService.stream(feedback, ttsStream);
-        session.sendMessage(new BinaryMessage(ttsStream.toByteArray()));
+        session.sendMessage(new TextMessage(response.userText()));
+        session.sendMessage(new TextMessage(response.feedbackText()));
+        session.sendMessage(new BinaryMessage(Base64.getDecoder().decode(response.audioData())));
     }
 
     @Override

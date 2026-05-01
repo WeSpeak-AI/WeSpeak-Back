@@ -23,10 +23,10 @@ public class VocaGenerationEventConsumer {
             if (event != null) {
                 vocaGenerationService.handleEvent(event);
             }
+            ack.acknowledge();
         } catch (Exception e) {
             log.error("[VocaGenerationEventConsumer.listen] message={}", message, e);
-        } finally {
-            ack.acknowledge();
+            throw e;
         }
     }
 }

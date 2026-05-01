@@ -26,7 +26,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class VocaGenerationEventHandler implements EventHandler<VocaGenerationEventPayload> {
+public class VocaGenerationHandler implements EventHandler<VocaGenerationEventPayload> {
 
     @Qualifier("aiWebClient")
     private final WebClient aiWebClient;

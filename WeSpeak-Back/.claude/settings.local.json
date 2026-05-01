@@ -76,7 +76,10 @@
       "Bash(python3 -m venv venv)",
       "Bash(./venv/bin/pip install *)",
       "Bash(venv/bin/python *)",
-      "Bash(venv/bin/pip install *)"
+      "Bash(venv/bin/pip install *)",
+      "Bash(awk '{print $2}')",
+      "Read(//mnt/c/Users/user/github/WeSpeak-STT/**)",
+      "Read(//usr/bin/**)"
     ]
   }
 }
