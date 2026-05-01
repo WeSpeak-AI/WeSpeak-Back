@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "user_book")
+@Table(name = "user_book", indexes = {
+        @Index(columnList = "user_id, book_id"),
+        @Index(columnList = "book_id")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
