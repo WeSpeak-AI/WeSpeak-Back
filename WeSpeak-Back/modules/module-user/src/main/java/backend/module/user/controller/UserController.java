@@ -1,6 +1,7 @@
 package backend.module.user.controller;
 
 import backend.core.common.response.ApiResponse;
+import backend.module.user.dto.MyPageResponse;
 import backend.module.user.dto.UserProfileResponse;
 import backend.module.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,13 @@ public class UserController {
             @RequestHeader("X-Username") String email
     ) {
         return ApiResponse.ok(userService.getProfile(email));
+    }
+
+    @GetMapping("/mypage")
+    public ApiResponse<MyPageResponse> getMyPage(
+            @RequestHeader("X-Username") String email
+    ) {
+        return ApiResponse.ok(userService.getMyPage(email));
     }
 
     @PostMapping("/ads/reward")
