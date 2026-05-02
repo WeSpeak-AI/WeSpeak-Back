@@ -92,10 +92,8 @@ public class VocaServiceImpl implements VocaService {
     @Override
     @Transactional
     public List<WordResponse> getWordsByDay(String email, Long bookId, int dayNumber) {
-        outboxEventPublisher.publish(EventType.STUDY_COMPLETED, StudyCompletedEventPayload.builder()
-                .email(email)
-                .studiedAt(LocalDate.now())
-                .build());
+        publishEventIfFirst(email);
+
         return wordRepository.findByVocaBookDay_VocaBook_VocaBookIdAndVocaBookDay_Day(bookId, dayNumber).stream()
                 .map(WordResponse::from)
                 .toList();
@@ -107,5 +105,16 @@ public class VocaServiceImpl implements VocaService {
         UserVocaBook userVocaBook = userVocaBookRepository.findByUserEmailAndVocaBookVocaBookId(email, bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_VOCA_BOOK_NOT_FOUND));
         userVocaBookRepository.delete(userVocaBook);
+    }
+
+    private void publishEventIfFirst(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        if (!LocalDate.now().equals(user.getLastStudiedAt())) {
+            outboxEventPublisher.publish(EventType.STUDY_COMPLETED, StudyCompletedEventPayload.builder()                                                                                                                                             .email(email)
+                    .studiedAt(LocalDate.now())
+                    .build());
+        }
     }
 }
