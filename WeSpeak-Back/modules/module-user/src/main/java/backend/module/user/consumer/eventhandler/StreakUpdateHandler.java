@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StreakUpdateHandler implements EventHandler<StudyCompletedEventPayload> {
     private final UserRepository userRepository;
-
+    private static final int XP_PER_STREAK = 5;
 
     @Override
     public void handle(Event<StudyCompletedEventPayload> event) {
@@ -24,6 +24,7 @@ public class StreakUpdateHandler implements EventHandler<StudyCompletedEventPayl
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         user.updateStreak(event.getPayload().getStudiedAt());
+        user.addXp(XP_PER_STREAK);
     }
 
     @Override
