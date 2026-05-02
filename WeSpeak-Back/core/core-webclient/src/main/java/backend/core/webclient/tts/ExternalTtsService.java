@@ -13,15 +13,15 @@ import java.util.Map;
 @Service
 public class ExternalTtsService implements TtsService {
 
-    private final WebClient ttsWebClient;
+    private final WebClient aiWebClient;
 
-    public ExternalTtsService(@Qualifier("ttsWebClient") WebClient ttsWebClient) {
-        this.ttsWebClient = ttsWebClient;
+    public ExternalTtsService(@Qualifier("aiWebClient") WebClient aiWebClient) {
+        this.aiWebClient = aiWebClient;
     }
 
     @Override
     public String generateUrl(String text) {
-        return ttsWebClient.post()
+        return aiWebClient.post()
                 .uri("/tts/url")
                 .bodyValue(Map.of("text", text))
                 .retrieve()
@@ -32,7 +32,7 @@ public class ExternalTtsService implements TtsService {
 
     @Override
     public void stream(String text, OutputStream outputStream) throws IOException {
-        byte[] audioBytes = ttsWebClient.post()
+        byte[] audioBytes = aiWebClient.post()
                 .uri("/tts/stream")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("text", text))

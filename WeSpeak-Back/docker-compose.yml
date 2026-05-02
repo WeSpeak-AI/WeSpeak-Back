@@ -108,6 +108,9 @@ services:
         MODULE_PATH: modules/module-auth
     ports:
       - "9001:9001"
+    environment:
+      <<: *common-env
+      NODE_ID: 1
 
   user-service:
     <<: *service-common
@@ -118,6 +121,9 @@ services:
         MODULE_PATH: modules/module-user
     ports:
       - "9002:9002"
+    environment:
+      <<: *common-env
+      NODE_ID: 2
 
   voca-service:
     <<: *service-common
@@ -128,6 +134,9 @@ services:
         MODULE_PATH: modules/module-voca
     ports:
       - "9003:9003"
+    environment:
+      <<: *common-env
+      NODE_ID: 3
 
   writing-service:
     <<: *service-common
@@ -138,6 +147,9 @@ services:
         MODULE_PATH: modules/module-writing
     ports:
       - "9004:9004"
+    environment:
+      <<: *common-env
+      NODE_ID: 4
 
   reading-service:
     <<: *service-common
@@ -148,6 +160,9 @@ services:
         MODULE_PATH: modules/module-reading
     ports:
       - "9005:9005"
+    environment:
+      <<: *common-env
+      NODE_ID: 5
 
   conversation-service:
     <<: *service-common
@@ -158,6 +173,9 @@ services:
         MODULE_PATH: modules/module-conversation
     ports:
       - "9006:9006"
+    environment:
+      <<: *common-env
+      NODE_ID: 6
 
   search-service:
     container_name: wespeak-search
@@ -169,6 +187,7 @@ services:
       - "9007:9007"
     environment:
       AI_SERVER_URL: http://wespeak-ai:8000
+      NODE_ID: 7
     depends_on:
       - wespeak-ai
     restart: unless-stopped
