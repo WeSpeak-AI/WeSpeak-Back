@@ -1,3 +1,27 @@
+x-service-common: &service-common
+  build:
+    context: .
+  depends_on:
+    mysql:
+      condition: service_healthy
+    redis:
+      condition: service_started
+    kafka:
+      condition: service_started
+  networks:
+    - default
+    - wespeak-ai-net
+  environment: &common-env
+    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wespeak?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    DB_USERNAME: ${DB_USERNAME:-root}
+    DB_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+    REDIS_HOST: redis
+    REDIS_PORT: 6379
+    KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    AI_SERVER_URL: http://wespeak-ai:8000
+    TOKEN_SECRET: ${TOKEN_SECRET:-xG0DFZb7UoyqpZy6d02S9X-AkpRFSQ39Y5aXvssuF6YjS5_5b3lZNhEebf9E9f7oG8x1Pj0d_2S2r7LZokdHkQ==}
+  restart: unless-stopped
+
 services:
   mysql:
     image: mysql:8.0
@@ -52,29 +76,6 @@ services:
     restart: unless-stopped
 
   # ─── Spring Microservices ──────────────────────────────────────────────────
-
-  x-service-common: &service-common
-    build:
-      context: .
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      kafka:
-        condition: service_started
-    extra_hosts:
-      - "host-gateway:host-gateway"
-    environment: &common-env
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wespeak?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-      DB_USERNAME: ${DB_USERNAME:-root}
-      DB_PASSWORD: ${DB_PASSWORD:-Abcd123@}
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
-      AI_SERVER_URL: http://host-gateway:8000
-      TOKEN_SECRET: ${TOKEN_SECRET:-xG0DFZb7UoyqpZy6d02S9X-AkpRFSQ39Y5aXvssuF6YjS5_5b3lZNhEebf9E9f7oG8x1Pj0d_2S2r7LZokdHkQ==}
-    restart: unless-stopped
 
   auth-service:
     <<: *service-common
@@ -162,10 +163,11 @@ services:
         MODULE_PATH: modules/module-searchword
     ports:
       - "9007:9007"
-    extra_hosts:
-      - "host-gateway:host-gateway"
+    networks:
+      - default
+      - wespeak-ai-net
     environment:
-      AI_SERVER_URL: http://host-gateway:8000
+      AI_SERVER_URL: http://wespeak-ai:8000
       NODE_ID: 7
     restart: unless-stopped
 
@@ -195,6 +197,13 @@ services:
       CONVERSATION_SERVICE_URL: http://conversation-service:9006
       SEARCH_SERVICE_URL: http://search-service:9007
     restart: unless-stopped
+
+networks:
+  default:
+    name: wespeak-back_default
+  wespeak-ai-net:
+    external: true
+    name: wespeak-ai_default
 
 volumes:
   mysql-data:
