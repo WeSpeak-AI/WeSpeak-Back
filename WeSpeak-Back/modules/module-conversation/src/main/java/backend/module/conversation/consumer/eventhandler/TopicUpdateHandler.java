@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
@@ -40,6 +41,7 @@ public class TopicUpdateHandler implements EventHandler<TopicUpdateEventPayload>
                 ))
                 .retrieve()
                 .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(30))
                 .block();
 
         Topic topic = topicRepository.findById(payload.getTopicId())

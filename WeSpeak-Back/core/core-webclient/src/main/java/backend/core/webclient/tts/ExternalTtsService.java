@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Duration;
 import java.util.Map;
 
 @Service
@@ -25,6 +26,7 @@ public class ExternalTtsService implements TtsService {
                 .bodyValue(Map.of("text", text))
                 .retrieve()
                 .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(30))
                 .block();
     }
 
@@ -36,6 +38,7 @@ public class ExternalTtsService implements TtsService {
                 .bodyValue(Map.of("text", text))
                 .retrieve()
                 .bodyToMono(byte[].class)
+                .timeout(Duration.ofSeconds(30))
                 .block();
         if (audioBytes != null) {
             outputStream.write(audioBytes);

@@ -5,6 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+
 @Service
 public class ExternalSttService implements SttService {
 
@@ -22,6 +24,7 @@ public class ExternalSttService implements SttService {
                 .bodyValue(audioBytes)
                 .retrieve()
                 .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(30))
                 .block();
     }
 }

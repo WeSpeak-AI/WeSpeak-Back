@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
@@ -36,6 +37,7 @@ public class AiCorrectionHandler implements EventHandler<AiCorrectionEventPayloa
                 .bodyValue(Map.of("content", payload.getContent()))
                 .retrieve()
                 .bodyToMono(AiCorrectionResponse.class)
+                .timeout(Duration.ofSeconds(30))
                 .map(AiCorrectionResponse::getResult)
                 .block();
 
