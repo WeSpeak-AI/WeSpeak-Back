@@ -1,17 +1,22 @@
 package backend.core.common.outboxmessagerelay.pub;
 
+import net.javacrumbs.shedlock.core.LockProvider;
+import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -19,11 +24,22 @@ import java.util.concurrent.Executors;
 
 @Configuration
 @EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "9s")
 @ComponentScan("backend.core.common.outboxmessagerelay")
 @EnableAsync
 public class MessageRelayConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
+
+    @Bean
+    public LockProvider lockProvider(DataSource dataSource) {
+        return new JdbcTemplateLockProvider(
+                JdbcTemplateLockProvider.Configuration.builder()
+                        .withJdbcTemplate(new JdbcTemplate(dataSource))
+                        .usingDbTime()
+                        .build()
+        );
+    }
 
     @Bean
     public KafkaTemplate<String, String> messageRelayKafkaTemplate() {

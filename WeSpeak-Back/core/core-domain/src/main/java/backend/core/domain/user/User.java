@@ -19,6 +19,9 @@ public class User {
     @Id
     private Long userId;
 
+    @Version
+    private Long version;
+
     @Column(nullable = false, unique = true)
     private String email;
 

@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "custom_voca_books")
+@Table(
+        name = "custom_voca_books",
+        uniqueConstraints =  @UniqueConstraint(columnNames = {"user_id"})
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -20,7 +23,7 @@ public class CustomVocaBook {
     private Long customVocaBookId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private LocalDateTime createdAt;

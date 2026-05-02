@@ -7,6 +7,7 @@ import backend.core.common.event.payload.AiCorrectionEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.domain.writing.Essay;
+import backend.module.writing.consumer.AiCorrectionSaveService;
 import backend.module.writing.repository.EssayRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Slf4j
@@ -24,10 +26,9 @@ public class AiCorrectionHandler implements EventHandler<AiCorrectionEventPayloa
 
     @Qualifier("aiWebClient")
     private final WebClient aiWebClient;
-    private final EssayRepository essayRepository;
+    private final AiCorrectionSaveService aiCorrectionSaveService;
 
     @Override
-    @Transactional
     public void handle(Event<AiCorrectionEventPayload> event) {
         AiCorrectionEventPayload payload = event.getPayload();
 
@@ -36,12 +37,11 @@ public class AiCorrectionHandler implements EventHandler<AiCorrectionEventPayloa
                 .bodyValue(Map.of("content", payload.getContent()))
                 .retrieve()
                 .bodyToMono(AiCorrectionResponse.class)
+                .timeout(Duration.ofSeconds(30))
                 .map(AiCorrectionResponse::getResult)
                 .block();
 
-        Essay essay = essayRepository.findById(payload.getEssayId())
-                .orElseThrow(() -> new BusinessException(ErrorCode.ESSAY_NOT_FOUND));
-        essay.applyCorrection(correctionResult);
+        aiCorrectionSaveService.applyAiCorrection(payload.getEssayId(), correctionResult);
     }
 
     @Override

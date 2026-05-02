@@ -21,14 +21,16 @@ public class Outbox {
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;
-    private String payload; //eventPayload
+    private String payload;
+    private String serviceName;
     private LocalDateTime createdAt;
 
-    public static Outbox create(Long outboxId, EventType eventType, String payload) {
+    public static Outbox create(Long outboxId, EventType eventType, String payload, String serviceName) {
         Outbox outbox = new Outbox();
         outbox.outboxId = outboxId;
         outbox.eventType = eventType;
         outbox.payload = payload;
+        outbox.serviceName = serviceName;
         outbox.createdAt = LocalDateTime.now();
         return outbox;
     }

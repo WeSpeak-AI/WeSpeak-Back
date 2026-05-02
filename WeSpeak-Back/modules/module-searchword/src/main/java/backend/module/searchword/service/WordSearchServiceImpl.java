@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.Map;
 
 @Service
@@ -22,6 +23,7 @@ public class WordSearchServiceImpl implements WordSearchService {
                 .bodyValue(Map.of("query", query))
                 .retrieve()
                 .bodyToMono(WordSearchResponse.class)
+                .timeout(Duration.ofSeconds(30))
                 .block();
     }
 }

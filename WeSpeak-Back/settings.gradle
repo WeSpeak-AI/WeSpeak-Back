@@ -21,4 +21,3 @@ include 'modules:module-searchword'
 
 // api
 include 'api:api-gateway'
-include 'api:api-main'

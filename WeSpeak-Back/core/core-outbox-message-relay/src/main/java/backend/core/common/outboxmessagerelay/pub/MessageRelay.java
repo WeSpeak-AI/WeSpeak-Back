@@ -5,6 +5,8 @@ import backend.core.common.outboxmessagerelay.OutboxEvent;
 import backend.core.common.outboxmessagerelay.OutboxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -24,6 +26,9 @@ public class MessageRelay {
 
     private final OutboxRepository outboxRepository;
     private final KafkaTemplate<String, String> messageRelayKafkaTemplate;
+
+    @Value("${spring.application.name}")
+    private String serviceName;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void createOutbox(OutboxEvent outboxEvent) {
@@ -49,6 +54,11 @@ public class MessageRelay {
         }
     }
 
+    @SchedulerLock(
+            name = "${spring.application.name}.publishPendingEvent",
+            lockAtMostFor = "9s",
+            lockAtLeastFor = "5s"
+    )
     @Scheduled(
             fixedDelay = 10,
             initialDelay = 5,
@@ -56,7 +66,8 @@ public class MessageRelay {
             scheduler = "messageRelayPublishPendingEventExecutor"
     )
     public void publishPendingEvent() {
-        List<Outbox> outboxes = outboxRepository.findAllByCreatedAtLessThanEqualOrderByCreatedAtAsc(
+        List<Outbox> outboxes = outboxRepository.findAllByServiceNameAndCreatedAtLessThanEqualOrderByCreatedAtAsc(
+                serviceName,
                 LocalDateTime.now().minusSeconds(10),
                 Pageable.ofSize(100)
         );

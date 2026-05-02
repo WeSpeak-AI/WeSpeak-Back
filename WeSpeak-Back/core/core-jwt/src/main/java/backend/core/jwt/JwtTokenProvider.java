@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
@@ -47,11 +46,11 @@ public class JwtTokenProvider{
     }
 
     private SecretKey buildSigningKey(String secret) {
-        try {
-            return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secret));
-        } catch (IllegalArgumentException notBase64) {
-            return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        byte[] keyBytes = Decoders.BASE64URL.decode(secret);
+        if (keyBytes.length < 64) {
+            throw new IllegalArgumentException("JWT secret must be at least 64 bytes (512 bits) for HS512");
         }
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String getUsernameFromToken(String token) {

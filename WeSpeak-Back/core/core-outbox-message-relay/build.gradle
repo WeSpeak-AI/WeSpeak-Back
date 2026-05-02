@@ -7,6 +7,9 @@ dependencies {
     api 'org.springframework.kafka:spring-kafka'
     runtimeOnly 'com.mysql:mysql-connector-j'
 
+    implementation 'net.javacrumbs.shedlock:shedlock-spring:7.7.0'
+    implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.7.0'
+
     implementation project(':core:core-infra')
     api project(':core:core-event')
     implementation project(':core:core-data-serializer')

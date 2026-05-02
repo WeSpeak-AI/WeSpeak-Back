@@ -47,12 +47,12 @@ public class AuthServiceImpl implements AuthService {
                 .streak(0)
                 .build();
 
+        userRepository.save(user);
+
         customVocaBookRepository.save(CustomVocaBook.builder()
                 .customVocaBookId(snowflake.nextId())
                 .user(user)
                 .build());
-
-        userRepository.save(user);
     }
 
     @Override
