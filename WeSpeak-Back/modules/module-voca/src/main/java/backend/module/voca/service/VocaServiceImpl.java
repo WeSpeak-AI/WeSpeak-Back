@@ -19,6 +19,7 @@ import backend.module.voca.repository.VocaBookDayRepository;
 import backend.module.voca.repository.VocaBookRepository;
 import backend.module.voca.repository.WordRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,11 +64,15 @@ public class VocaServiceImpl implements VocaService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        userVocaBookRepository.save(UserVocaBook.builder()
-                .userBookId(snowflake.nextId())
-                .user(user)
-                .vocaBook(vocaBook)
-                .build());
+        try {
+            userVocaBookRepository.save(UserVocaBook.builder()
+                    .userBookId(snowflake.nextId())
+                    .user(user)
+                    .vocaBook(vocaBook)
+                    .build());
+        } catch (DataIntegrityViolationException e) {
+            throw new BusinessException(ErrorCode.ALREADY_STARTED_VOCA);
+        }
     }
 
     @Override

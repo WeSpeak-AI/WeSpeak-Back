@@ -6,7 +6,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "user_voca_books", indexes = {@Index(columnList = "user_id, voca_book_id"), @Index(columnList = "email, voca_book_id")})
+@Table(
+        name = "user_voca_books",
+        indexes = @Index(columnList = "user_id, voca_book_id"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "voca_book_id"})
+)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
