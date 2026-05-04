@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeSpeak Admin Panel</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+
+/* Login */
+#login-screen {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+.login-card {
+  background: white; padding: 40px; border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15); width: 380px;
+}
+.login-card h1 { text-align: center; margin-bottom: 8px; color: #4f46e5; font-size: 28px; }
+.login-card p { text-align: center; color: #888; margin-bottom: 28px; font-size: 14px; }
+
+/* Form elements */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: #555; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0; border-radius: 8px;
+  font-size: 14px; outline: none; transition: border-color 0.2s; background: white;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #4f46e5; }
+.form-group textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.btn-primary { background: #4f46e5; color: white; }
+.btn-primary:hover { background: #4338ca; }
+.btn-danger { background: #ef4444; color: white; }
+.btn-danger:hover { background: #dc2626; }
+.btn-warning { background: #f59e0b; color: white; }
+.btn-warning:hover { background: #d97706; }
+.btn-success { background: #10b981; color: white; }
+.btn-success:hover { background: #059669; }
+.btn-block { width: 100%; }
+
+/* Dashboard */
+#admin-dashboard { display: none; min-height: 100vh; }
+.dashboard-header {
+  background: #4f46e5; color: white; padding: 16px 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.dashboard-header h1 { font-size: 20px; }
+.user-info { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+.logout-btn {
+  background: rgba(255,255,255,0.2); border: none; color: white;
+  padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px;
+}
+.logout-btn:hover { background: rgba(255,255,255,0.3); }
+
+.dashboard-body { display: flex; }
+
+.sidebar {
+  width: 220px; background: white; min-height: calc(100vh - 57px);
+  border-right: 1px solid #e2e8f0; padding: 16px 0; position: sticky;
+  top: 57px; height: calc(100vh - 57px); overflow-y: auto;
+}
+.sidebar-label {
+  padding: 8px 20px 4px; font-size: 11px; font-weight: 700; color: #999;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.sidebar-item {
+  display: block; padding: 10px 20px; color: #555; cursor: pointer;
+  font-size: 14px; border-left: 3px solid transparent; transition: all 0.15s;
+}
+.sidebar-item:hover { background: #f5f3ff; color: #4f46e5; }
+.sidebar-item.active { background: #ede9fe; color: #4f46e5; border-left-color: #4f46e5; font-weight: 600; }
+.sidebar-divider { height: 1px; background: #f0f0f0; margin: 8px 0; }
+
+.main-content { flex: 1; padding: 24px; max-width: calc(100% - 220px); }
+.page-title { font-size: 22px; font-weight: 700; margin-bottom: 20px; color: #1a1a2e; }
+
+.card {
+  background: white; border-radius: 12px; padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px;
+  border: 1px solid #f0f0f0;
+}
+.card-title {
+  font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #1a1a2e;
+  padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-actions { display: flex; gap: 8px; margin-top: 4px; }
+.inline-form { display: flex; gap: 12px; align-items: flex-end; }
+.inline-form .form-group { margin-bottom: 0; }
+
+.response-box {
+  margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 13px;
+  font-family: 'Consolas', monospace; white-space: pre-wrap;
+  max-height: 200px; overflow-y: auto; display: none;
+}
+.response-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+.response-error { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+
+.content-section { display: none; }
+.content-section.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <h1>WeSpeak</h1>
+    <p>관리자 패널 로그인</p>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>이메일</label>
+        <input type="email" id="loginEmail" placeholder="admin@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>비밀번호</label>
+        <input type="password" id="loginPassword" placeholder="비밀번호 입력" required>
+      </div>
+      <div id="loginError" class="response-box response-error"></div>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px">로그인</button>
+    </form>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="admin-dashboard">
+  <header class="dashboard-header">
+    <h1>WeSpeak Admin</h1>
+    <div class="user-info">
+      <span id="loggedUserEmail"></span>
+      <button class="logout-btn" onclick="logout()">로그아웃</button>
+    </div>
+  </header>
+
+  <div class="dashboard-body">
+    <nav class="sidebar">
+      <div class="sidebar-label">단어장 관리</div>
+      <a class="sidebar-item active" onclick="showSection('voca-book', this)">단어장 (VocaBook)</a>
+      <a class="sidebar-item" onclick="showSection('voca-day', this)">단어장 Day</a>
+      <a class="sidebar-item" onclick="showSection('voca-word', this)">단어 (Word)</a>
+      <a class="sidebar-item" onclick="showSection('voca-ai', this)">AI 단어 생성</a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-label">독해 관리</div>
+      <a class="sidebar-item" onclick="showSection('reading-book', this)">도서 (Book)</a>
+      <a class="sidebar-item" onclick="showSection('reading-page', this)">도서 페이지</a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-label">회화 관리</div>
+      <a class="sidebar-item" onclick="showSection('conversation-topic', this)">주제 (Topic)</a>
+    </nav>
+
+    <main class="main-content">
+
+      <!-- VOCA BOOK -->
+      <div id="section-voca-book" class="content-section active">
+        <div class="page-title">단어장 관리</div>
+
+        <div class="card">
+          <div class="card-title">단어장 생성</div>
+          <form onsubmit="createVocaBook(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="vb-title" placeholder="예: 토익 기초 단어장" required>
+              </div>
+              <div class="form-group">
+                <label>카테고리 *</label>
+                <select id="vb-category" required>
+                  <option value="">선택</option>
+                  <option value="BASIC">BASIC (기초)</option>
+                  <option value="INTERMEDIATE">INTERMEDIATE (중급)</option>
+                  <option value="HARD">HARD (고급)</option>
+                  <option value="TOEIC">TOEIC (토익)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>설명 *</label>
+              <textarea id="vb-description" placeholder="단어장 설명" required></textarea>
+            </div>
+            <div class="form-group" style="width:200px">
+              <label>총 Day 수</label>
+              <input type="number" id="vb-days" value="30" min="1">
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">생성</button>
+            </div>
+            <div id="res-vb-create" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">단어장 수정</div>
+          <form onsubmit="updateVocaBook(event)">
+            <div class="form-group" style="width:200px">
+              <label>단어장 ID *</label>
+              <input type="number" id="vb-update-id" placeholder="ID 입력" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="vb-update-title" placeholder="새 제목" required>
+              </div>
+              <div class="form-group">
+                <label>카테고리 *</label>
+                <select id="vb-update-category" required>
+                  <option value="">선택</option>
+                  <option value="BASIC">BASIC</option>
+                  <option value="INTERMEDIATE">INTERMEDIATE</option>
+                  <option value="HARD">HARD</option>
+                  <option value="TOEIC">TOEIC</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>설명 *</label>
+              <textarea id="vb-update-desc" placeholder="새 설명" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-warning">수정</button>
+            </div>
+            <div id="res-vb-update" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">단어장 삭제</div>
+          <div class="inline-form">
+            <div class="form-group" style="width:200px">
+              <label>단어장 ID *</label>
+              <input type="number" id="vb-delete-id" placeholder="ID 입력">
+            </div>
+            <button class="btn btn-danger" onclick="deleteVocaBook()">삭제</button>
+          </div>
+          <div id="res-vb-delete" class="response-box"></div>
+        </div>
+      </div>
+
+      <!-- VOCA DAY -->
+      <div id="section-voca-day" class="content-section">
+        <div class="page-title">단어장 Day 관리</div>
+
+        <div class="card">
+          <div class="card-title">Day 생성</div>
+          <form onsubmit="createVocaDay(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>단어장 ID *</label>
+                <input type="number" id="vd-book-id" placeholder="단어장 ID" required>
+              </div>
+              <div class="form-group">
+                <label>Day 번호 *</label>
+                <input type="number" id="vd-day" placeholder="예: 1" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Day 주제 *</label>
+              <input type="text" id="vd-topic" placeholder="예: Animals" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">생성</button>
+            </div>
+            <div id="res-vd-create" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Day 수정</div>
+          <form onsubmit="updateVocaDay(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Day ID *</label>
+                <input type="number" id="vd-update-id" placeholder="Day ID" required>
+              </div>
+              <div class="form-group">
+                <label>Day 번호 *</label>
+                <input type="number" id="vd-update-day" placeholder="새 번호" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Day 주제 *</label>
+              <input type="text" id="vd-update-topic" placeholder="새 주제" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-warning">수정</button>
+            </div>
+            <div id="res-vd-update" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Day 삭제</div>
+          <div class="inline-form">
+            <div class="form-group" style="width:200px">
+              <label>Day ID *</label>
+              <input type="number" id="vd-delete-id" placeholder="Day ID">
+            </div>
+            <button class="btn btn-danger" onclick="deleteVocaDay()">삭제</button>
+          </div>
+          <div id="res-vd-delete" class="response-box"></div>
+        </div>
+      </div>
+
+      <!-- VOCA WORD -->
+      <div id="section-voca-word" class="content-section">
+        <div class="page-title">단어 관리</div>
+
+        <div class="card">
+          <div class="card-title">단어 생성</div>
+          <form onsubmit="createWord(event)">
+            <div class="form-group" style="width:200px">
+              <label>Day ID *</label>
+              <input type="number" id="w-day-id" placeholder="Day ID" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>단어 (term) *</label>
+                <input type="text" id="w-term" placeholder="예: Apple" required>
+              </div>
+              <div class="form-group">
+                <label>의미 (meaning) *</label>
+                <input type="text" id="w-meaning" placeholder="예: 사과" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>발음 기호 (phonetic) *</label>
+                <input type="text" id="w-phonetic" placeholder="예: /ˈæp.əl/" required>
+              </div>
+              <div class="form-group">
+                <label>이미지 URL</label>
+                <input type="url" id="w-image" placeholder="https://...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>예문 (example) *</label>
+              <textarea id="w-example" placeholder="예: I eat an apple every day." required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">생성</button>
+            </div>
+            <div id="res-w-create" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">단어 수정</div>
+          <form onsubmit="updateWord(event)">
+            <div class="form-group" style="width:200px">
+              <label>단어 ID *</label>
+              <input type="number" id="w-update-id" placeholder="단어 ID" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>단어 (term) *</label>
+                <input type="text" id="w-update-term" placeholder="새 단어" required>
+              </div>
+              <div class="form-group">
+                <label>의미 (meaning) *</label>
+                <input type="text" id="w-update-meaning" placeholder="새 의미" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>발음 기호 *</label>
+                <input type="text" id="w-update-phonetic" placeholder="새 발음 기호" required>
+              </div>
+              <div class="form-group">
+                <label>이미지 URL</label>
+                <input type="url" id="w-update-image" placeholder="https://...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>예문 *</label>
+              <textarea id="w-update-example" placeholder="새 예문" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-warning">수정</button>
+            </div>
+            <div id="res-w-update" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">단어 삭제</div>
+          <div class="inline-form">
+            <div class="form-group" style="width:200px">
+              <label>단어 ID *</label>
+              <input type="number" id="w-delete-id" placeholder="단어 ID">
+            </div>
+            <button class="btn btn-danger" onclick="deleteWord()">삭제</button>
+          </div>
+          <div id="res-w-delete" class="response-box"></div>
+        </div>
+      </div>
+
+      <!-- VOCA AI -->
+      <div id="section-voca-ai" class="content-section">
+        <div class="page-title">AI 단어 자동 생성</div>
+        <div class="card">
+          <div class="card-title">AI 단어 생성 요청</div>
+          <form onsubmit="aiGenerate(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="ai-title" placeholder="생성할 단어장 제목" required>
+              </div>
+              <div class="form-group">
+                <label>카테고리 *</label>
+                <select id="ai-category" required>
+                  <option value="">선택</option>
+                  <option value="BASIC">BASIC</option>
+                  <option value="INTERMEDIATE">INTERMEDIATE</option>
+                  <option value="HARD">HARD</option>
+                  <option value="TOEIC">TOEIC</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>설명 *</label>
+              <textarea id="ai-description" placeholder="AI가 이 설명을 바탕으로 단어를 자동 생성합니다" required></textarea>
+            </div>
+            <div class="form-group" style="width:200px">
+              <label>Day 수</label>
+              <input type="number" id="ai-days" value="10" min="1">
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">AI 생성 요청</button>
+            </div>
+            <div id="res-ai" class="response-box"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- READING BOOK -->
+      <div id="section-reading-book" class="content-section">
+        <div class="page-title">도서 관리</div>
+
+        <div class="card">
+          <div class="card-title">도서 생성</div>
+          <form onsubmit="createBook(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="rb-title" placeholder="도서 제목" required>
+              </div>
+              <div class="form-group">
+                <label>레벨 *</label>
+                <select id="rb-level" required>
+                  <option value="">선택</option>
+                  <option value="BEGINNER">BEGINNER (초급)</option>
+                  <option value="INTERMEDIATE">INTERMEDIATE (중급)</option>
+                  <option value="ADVANCED">ADVANCED (고급)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>카테고리 *</label>
+              <input type="text" id="rb-category" placeholder="예: Science, History, Fiction" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">생성</button>
+            </div>
+            <div id="res-rb-create" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">도서 수정</div>
+          <form onsubmit="updateBook(event)">
+            <div class="form-group" style="width:200px">
+              <label>도서 ID *</label>
+              <input type="number" id="rb-update-id" placeholder="도서 ID" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="rb-update-title" placeholder="새 제목" required>
+              </div>
+              <div class="form-group">
+                <label>레벨 *</label>
+                <select id="rb-update-level" required>
+                  <option value="">선택</option>
+                  <option value="BEGINNER">BEGINNER</option>
+                  <option value="INTERMEDIATE">INTERMEDIATE</option>
+                  <option value="ADVANCED">ADVANCED</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>카테고리 *</label>
+              <input type="text" id="rb-update-category" placeholder="새 카테고리" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-warning">수정</button>
+            </div>
+            <div id="res-rb-update" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">도서 삭제</div>
+          <div class="inline-form">
+            <div class="form-group" style="width:200px">
+              <label>도서 ID *</label>
+              <input type="number" id="rb-delete-id" placeholder="도서 ID">
+            </div>
+            <button class="btn btn-danger" onclick="deleteBook()">삭제</button>
+          </div>
+          <div id="res-rb-delete" class="response-box"></div>
+        </div>
+      </div>
+
+      <!-- READING PAGE -->
+      <div id="section-reading-page" class="content-section">
+        <div class="page-title">도서 페이지 관리</div>
+
+        <div class="card">
+          <div class="card-title">페이지 생성</div>
+          <form onsubmit="createBookPage(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>도서 ID *</label>
+                <input type="number" id="rp-book-id" placeholder="도서 ID" required>
+              </div>
+              <div class="form-group">
+                <label>페이지 번호 *</label>
+                <input type="number" id="rp-page-num" placeholder="예: 1" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>본문 내용 *</label>
+              <textarea id="rp-content" style="min-height:150px" placeholder="페이지 본문 내용을 입력하세요" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">생성</button>
+            </div>
+            <div id="res-rp-create" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">페이지 수정</div>
+          <form onsubmit="updateBookPage(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>페이지 ID *</label>
+                <input type="number" id="rp-update-id" placeholder="페이지 ID" required>
+              </div>
+              <div class="form-group">
+                <label>페이지 번호 *</label>
+                <input type="number" id="rp-update-num" placeholder="새 번호" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>본문 내용 *</label>
+              <textarea id="rp-update-content" style="min-height:150px" placeholder="새 본문 내용" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-warning">수정</button>
+            </div>
+            <div id="res-rp-update" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">페이지 삭제</div>
+          <div class="inline-form">
+            <div class="form-group" style="width:200px">
+              <label>페이지 ID *</label>
+              <input type="number" id="rp-delete-id" placeholder="페이지 ID">
+            </div>
+            <button class="btn btn-danger" onclick="deleteBookPage()">삭제</button>
+          </div>
+          <div id="res-rp-delete" class="response-box"></div>
+        </div>
+      </div>
+
+      <!-- CONVERSATION TOPIC -->
+      <div id="section-conversation-topic" class="content-section">
+        <div class="page-title">회화 주제 관리</div>
+
+        <div class="card">
+          <div class="card-title">주제 생성</div>
+          <form onsubmit="createTopic(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="ct-title" placeholder="예: Daily Routine" required>
+              </div>
+              <div class="form-group">
+                <label>난이도 *</label>
+                <input type="text" id="ct-difficulty" placeholder="예: Beginner" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>이모지 *</label>
+                <input type="text" id="ct-emoji" placeholder="예: 🌟" required>
+              </div>
+              <div class="form-group">
+                <label>색상 *</label>
+                <input type="text" id="ct-color" placeholder="예: #FF6B6B" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>내용 *</label>
+              <textarea id="ct-content" placeholder="회화 주제 설명 또는 프롬프트" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">생성</button>
+            </div>
+            <div id="res-ct-create" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">주제 수정</div>
+          <form onsubmit="updateTopic(event)">
+            <div class="form-group" style="width:200px">
+              <label>주제 ID *</label>
+              <input type="number" id="ct-update-id" placeholder="주제 ID" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="ct-update-title" placeholder="새 제목" required>
+              </div>
+              <div class="form-group">
+                <label>난이도 *</label>
+                <input type="text" id="ct-update-difficulty" placeholder="새 난이도" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>이모지 *</label>
+                <input type="text" id="ct-update-emoji" placeholder="새 이모지" required>
+              </div>
+              <div class="form-group">
+                <label>색상 *</label>
+                <input type="text" id="ct-update-color" placeholder="새 색상" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>내용 *</label>
+              <textarea id="ct-update-content" placeholder="새 내용" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-warning">수정</button>
+            </div>
+            <div id="res-ct-update" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">주제 삭제</div>
+          <div class="inline-form">
+            <div class="form-group" style="width:200px">
+              <label>주제 ID *</label>
+              <input type="number" id="ct-delete-id" placeholder="주제 ID">
+            </div>
+            <button class="btn btn-danger" onclick="deleteTopic()">삭제</button>
+          </div>
+          <div id="res-ct-delete" class="response-box"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+const BASE_URL = 'http://localhost:8080';
+let token = sessionStorage.getItem('admin_token') || '';
+let userEmail = sessionStorage.getItem('admin_email') || '';
+
+if (token) showDashboard();
+
+// AUTH
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errBox = document.getElementById('loginError');
+  errBox.style.display = 'none';
+
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: document.getElementById('loginEmail').value,
+        password: document.getElementById('loginPassword').value
+      })
+    });
+    const data = await res.json();
+
+    if (!res.ok || data.code !== 'SUCCESS') {
+      errBox.textContent = data.message || '로그인 실패. 이메일/비밀번호를 확인하세요.';
+      errBox.style.display = 'block';
+      return;
+    }
+
+    token = data.data.accessToken;
+    userEmail = data.data.email;
+    sessionStorage.setItem('admin_token', token);
+    sessionStorage.setItem('admin_email', userEmail);
+    showDashboard();
+  } catch (err) {
+    errBox.textContent = '서버 연결 실패: ' + err.message;
+    errBox.style.display = 'block';
+  }
+});
+
+function showDashboard() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-dashboard').style.display = 'block';
+  document.getElementById('loggedUserEmail').textContent = userEmail;
+}
+
+function logout() {
+  sessionStorage.clear();
+  token = '';
+  document.getElementById('admin-dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+// NAVIGATION
+function showSection(name, el) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+// API HELPER
+async function api(method, path, body, resId) {
+  const box = document.getElementById(resId);
+  box.style.display = 'none';
+
+  try {
+    const res = await fetch(`${BASE_URL}${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    const data = await res.json();
+    box.textContent = JSON.stringify(data, null, 2);
+    box.className = `response-box ${res.ok ? 'response-success' : 'response-error'}`;
+    box.style.display = 'block';
+  } catch (err) {
+    box.textContent = '오류: ' + err.message;
+    box.className = 'response-box response-error';
+    box.style.display = 'block';
+  }
+}
+
+// VOCA BOOK
+async function createVocaBook(e) {
+  e.preventDefault();
+  await api('POST', '/api/admin/voca-books', {
+    title: document.getElementById('vb-title').value,
+    category: document.getElementById('vb-category').value,
+    description: document.getElementById('vb-description').value,
+    numberOfDays: parseInt(document.getElementById('vb-days').value)
+  }, 'res-vb-create');
+}
+
+async function updateVocaBook(e) {
+  e.preventDefault();
+  const id = document.getElementById('vb-update-id').value;
+  await api('PUT', `/api/admin/voca-books/${id}`, {
+    title: document.getElementById('vb-update-title').value,
+    category: document.getElementById('vb-update-category').value,
+    description: document.getElementById('vb-update-desc').value,
+    numberOfDays: 0
+  }, 'res-vb-update');
+}
+
+async function deleteVocaBook() {
+  const id = document.getElementById('vb-delete-id').value;
+  if (!id) return alert('ID를 입력하세요');
+  if (!confirm(`단어장 ID ${id}를 삭제하시겠습니까?`)) return;
+  await api('DELETE', `/api/admin/voca-books/${id}`, null, 'res-vb-delete');
+}
+
+// VOCA DAY
+async function createVocaDay(e) {
+  e.preventDefault();
+  const bookId = document.getElementById('vd-book-id').value;
+  await api('POST', `/api/admin/voca-books/${bookId}/days`, {
+    day: parseInt(document.getElementById('vd-day').value),
+    dayTopic: document.getElementById('vd-topic').value
+  }, 'res-vd-create');
+}
+
+async function updateVocaDay(e) {
+  e.preventDefault();
+  const id = document.getElementById('vd-update-id').value;
+  await api('PUT', `/api/admin/days/${id}`, {
+    day: parseInt(document.getElementById('vd-update-day').value),
+    dayTopic: document.getElementById('vd-update-topic').value
+  }, 'res-vd-update');
+}
+
+async function deleteVocaDay() {
+  const id = document.getElementById('vd-delete-id').value;
+  if (!id) return alert('ID를 입력하세요');
+  if (!confirm(`Day ID ${id}를 삭제하시겠습니까?`)) return;
+  await api('DELETE', `/api/admin/days/${id}`, null, 'res-vd-delete');
+}
+
+// WORD
+async function createWord(e) {
+  e.preventDefault();
+  const dayId = document.getElementById('w-day-id').value;
+  const imageUrl = document.getElementById('w-image').value;
+  await api('POST', `/api/admin/days/${dayId}/words`, {
+    term: document.getElementById('w-term').value,
+    meaning: document.getElementById('w-meaning').value,
+    phonetic: document.getElementById('w-phonetic').value,
+    example: document.getElementById('w-example').value,
+    imageUrl: imageUrl || null
+  }, 'res-w-create');
+}
+
+async function updateWord(e) {
+  e.preventDefault();
+  const id = document.getElementById('w-update-id').value;
+  const imageUrl = document.getElementById('w-update-image').value;
+  await api('PUT', `/api/admin/words/${id}`, {
+    term: document.getElementById('w-update-term').value,
+    meaning: document.getElementById('w-update-meaning').value,
+    phonetic: document.getElementById('w-update-phonetic').value,
+    example: document.getElementById('w-update-example').value,
+    imageUrl: imageUrl || null
+  }, 'res-w-update');
+}
+
+async function deleteWord() {
+  const id = document.getElementById('w-delete-id').value;
+  if (!id) return alert('ID를 입력하세요');
+  if (!confirm(`단어 ID ${id}를 삭제하시겠습니까?`)) return;
+  await api('DELETE', `/api/admin/words/${id}`, null, 'res-w-delete');
+}
+
+// AI GENERATE
+async function aiGenerate(e) {
+  e.preventDefault();
+  await api('POST', '/api/admin/voca/ai-generate', {
+    title: document.getElementById('ai-title').value,
+    category: document.getElementById('ai-category').value,
+    description: document.getElementById('ai-description').value,
+    numberOfDays: parseInt(document.getElementById('ai-days').value)
+  }, 'res-ai');
+}
+
+// READING BOOK
+async function createBook(e) {
+  e.preventDefault();
+  await api('POST', '/api/admin/books', {
+    title: document.getElementById('rb-title').value,
+    level: document.getElementById('rb-level').value,
+    category: document.getElementById('rb-category').value
+  }, 'res-rb-create');
+}
+
+async function updateBook(e) {
+  e.preventDefault();
+  const id = document.getElementById('rb-update-id').value;
+  await api('PUT', `/api/admin/books/${id}`, {
+    title: document.getElementById('rb-update-title').value,
+    level: document.getElementById('rb-update-level').value,
+    category: document.getElementById('rb-update-category').value
+  }, 'res-rb-update');
+}
+
+async function deleteBook() {
+  const id = document.getElementById('rb-delete-id').value;
+  if (!id) return alert('ID를 입력하세요');
+  if (!confirm(`도서 ID ${id}를 삭제하시겠습니까?`)) return;
+  await api('DELETE', `/api/admin/books/${id}`, null, 'res-rb-delete');
+}
+
+// READING PAGE
+async function createBookPage(e) {
+  e.preventDefault();
+  const bookId = document.getElementById('rp-book-id').value;
+  await api('POST', `/api/admin/books/${bookId}/pages`, {
+    pageNumber: parseInt(document.getElementById('rp-page-num').value),
+    content: document.getElementById('rp-content').value
+  }, 'res-rp-create');
+}
+
+async function updateBookPage(e) {
+  e.preventDefault();
+  const id = document.getElementById('rp-update-id').value;
+  await api('PUT', `/api/admin/pages/${id}`, {
+    pageNumber: parseInt(document.getElementById('rp-update-num').value),
+    content: document.getElementById('rp-update-content').value
+  }, 'res-rp-update');
+}
+
+async function deleteBookPage() {
+  const id = document.getElementById('rp-delete-id').value;
+  if (!id) return alert('ID를 입력하세요');
+  if (!confirm(`페이지 ID ${id}를 삭제하시겠습니까?`)) return;
+  await api('DELETE', `/api/admin/pages/${id}`, null, 'res-rp-delete');
+}
+
+// CONVERSATION TOPIC
+async function createTopic(e) {
+  e.preventDefault();
+  await api('POST', '/api/admin/topics', {
+    title: document.getElementById('ct-title').value,
+    difficulty: document.getElementById('ct-difficulty').value,
+    content: document.getElementById('ct-content').value,
+    emoji: document.getElementById('ct-emoji').value,
+    color: document.getElementById('ct-color').value
+  }, 'res-ct-create');
+}
+
+async function updateTopic(e) {
+  e.preventDefault();
+  const id = document.getElementById('ct-update-id').value;
+  await api('PUT', `/api/admin/topics/${id}`, {
+    title: document.getElementById('ct-update-title').value,
+    difficulty: document.getElementById('ct-update-difficulty').value,
+    content: document.getElementById('ct-update-content').value,
+    emoji: document.getElementById('ct-update-emoji').value,
+    color: document.getElementById('ct-update-color').value
+  }, 'res-ct-update');
+}
+
+async function deleteTopic() {
+  const id = document.getElementById('ct-delete-id').value;
+  if (!id) return alert('ID를 입력하세요');
+  if (!confirm(`주제 ID ${id}를 삭제하시겠습니까?`)) return;
+  await api('DELETE', `/api/admin/topics/${id}`, null, 'res-ct-delete');
+}
+</script>
+</body>
+</html>
