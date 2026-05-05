@@ -27,7 +27,7 @@ public class Word {
     @Column(nullable = false)
     private String phonetic;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 110)
     private String example;
 
     private String imageUrl;
