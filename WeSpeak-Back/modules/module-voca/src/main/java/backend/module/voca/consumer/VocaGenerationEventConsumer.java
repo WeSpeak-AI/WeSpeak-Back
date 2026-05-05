@@ -16,7 +16,7 @@ public class VocaGenerationEventConsumer {
 
     private final VocaGenerationService vocaGenerationService;
 
-    @KafkaListener(topics = {EventType.EventTopic.VOCA})
+    @KafkaListener(topics = {EventType.EventTopic.VOCA}, containerFactory = "vocaGenerationKafkaListenerContainerFactory")
     public void listen(String message, Acknowledgment ack) {
         try {
             Event<EventPayload> event = Event.fromJson(message);

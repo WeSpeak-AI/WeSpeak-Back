@@ -79,7 +79,9 @@
       "Bash(venv/bin/pip install *)",
       "Bash(awk '{print $2}')",
       "Read(//mnt/c/Users/user/github/WeSpeak-STT/**)",
-      "Read(//usr/bin/**)"
+      "Read(//usr/bin/**)",
+      "Bash(ssh -T git@github.com)",
+      "Read(//home/jeongseonwoong/.ssh/**)"
     ]
   }
 }
