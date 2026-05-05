@@ -11,6 +11,11 @@ x-service-common: &service-common
   networks:
     - default
     - wespeak-ai-net
+  logging:
+    driver: json-file
+    options:
+      max-size: "20m"
+      max-file: "3"
   environment: &common-env
     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wespeak?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     DB_USERNAME: ${DB_USERNAME:-root}
@@ -40,6 +45,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
     restart: unless-stopped
 
   redis:
@@ -49,6 +59,11 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: unless-stopped
 
   zookeeper:
@@ -57,6 +72,11 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: unless-stopped
 
   kafka:
@@ -73,6 +93,11 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     restart: unless-stopped
 
   # ─── Spring Microservices ──────────────────────────────────────────────────
@@ -169,6 +194,11 @@ services:
     environment:
       AI_SERVER_URL: http://wespeak-ai:8000
       NODE_ID: 7
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
     restart: unless-stopped
 
   api-gateway:
@@ -196,6 +226,11 @@ services:
       READING_SERVICE_URL: http://reading-service:9005
       CONVERSATION_SERVICE_URL: http://conversation-service:9006
       SEARCH_SERVICE_URL: http://search-service:9007
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
     restart: unless-stopped
 
 networks:
