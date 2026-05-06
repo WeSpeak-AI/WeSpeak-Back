@@ -18,6 +18,7 @@ public class Topic {
 
     private String difficulty;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private String emoji;
