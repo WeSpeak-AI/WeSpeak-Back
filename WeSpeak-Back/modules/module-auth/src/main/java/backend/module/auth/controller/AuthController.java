@@ -1,6 +1,7 @@
 package backend.module.auth.controller;
 
 import backend.core.common.response.ApiResponse;
+import backend.module.auth.dto.GoogleLoginRequest;
 import backend.module.auth.dto.LoginRequest;
 import backend.module.auth.dto.LoginResponse;
 import backend.module.auth.dto.RegisterRequest;
@@ -34,5 +35,10 @@ public class AuthController {
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ApiResponse.ok(authService.login(request));
+    }
+
+    @PostMapping("/google")
+    public ApiResponse<LoginResponse> googleLogin(@Valid @RequestBody GoogleLoginRequest request) {
+        return ApiResponse.ok(authService.googleLogin(request));
     }
 }

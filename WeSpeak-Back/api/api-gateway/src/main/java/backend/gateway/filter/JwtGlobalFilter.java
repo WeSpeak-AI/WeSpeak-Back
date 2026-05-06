@@ -35,6 +35,7 @@ public class JwtGlobalFilter implements GlobalFilter, Ordered {
             "/api/auth/login",
             "/api/auth/register",
             "/api/auth/isDuplicate",
+            "/api/auth/google",
             "/api/oauth2"
     );
     private static final String ADMIN_PATH_PREFIX = "/api/admin";
@@ -49,10 +50,21 @@ public class JwtGlobalFilter implements GlobalFilter, Ordered {
 
         String token = resolveToken(exchange.getRequest().getHeaders());
 
-        if (token == null || !jwtTokenProvider.validateToken(token)) {
+        boolean valid;
+        try {
+            valid = token != null && jwtTokenProvider.validateToken(token);
+        } catch (Exception e) {
+            valid = false;
+        }
+
+        if (!valid) {
             log.warn("JWT validation failed for path: {}", path);
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return exchange.getResponse().setComplete();
+            exchange.getResponse().getHeaders().add("Content-Type", "application/json");
+            byte[] body = "{\"success\":false,\"code\":\"A004\",\"message\":\"인증이 필요합니다.\"}".getBytes();
+            return exchange.getResponse().writeWith(
+                    reactor.core.publisher.Mono.just(exchange.getResponse().bufferFactory().wrap(body))
+            );
         }
 
         String username = jwtTokenProvider.getUsernameFromToken(token);

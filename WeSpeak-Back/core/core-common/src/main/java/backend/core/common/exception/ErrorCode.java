@@ -20,6 +20,7 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "A002", "이미 사용 중인 이메일입니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "A003", "비밀번호가 올바르지 않습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "A004", "유효하지 않은 토큰입니다."),
+    INVALID_GOOGLE_TOKEN(HttpStatus.UNAUTHORIZED, "A005", "유효하지 않은 Google 토큰입니다."),
 
     // User
     INSUFFICIENT_TICKET(HttpStatus.BAD_REQUEST, "U001", "티켓이 부족합니다."),
