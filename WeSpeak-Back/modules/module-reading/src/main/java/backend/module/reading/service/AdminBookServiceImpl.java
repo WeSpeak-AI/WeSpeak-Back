@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -44,16 +43,34 @@ public class AdminBookServiceImpl implements AdminBookService {
     @Override
     @Transactional
     public Long quickCreateBook(QuickBookRequest request) {
-        // single \n → space (PDF/text soft line breaks), \n\n paragraph breaks preserved
+        // single \n → space, \n\n+ → \n\n (paragraph break preserved)
         String normalized = request.getContent().trim()
-                .replaceAll("(?<!\n)\n(?!\n)", " ");
-        String[] words = normalized.split("\\s+");
+                .replaceAll("(?<!\n)\n(?!\n)", " ")
+                .replaceAll("\n{2,}", "\n\n");
+
+        // split into paragraphs, distribute into ~180-word pages keeping paragraph boundaries
+        String[] paragraphs = normalized.split("\n\n");
         int wordsPerPage = 180;
 
         List<String> pageContents = new ArrayList<>();
-        for (int i = 0; i < words.length; i += wordsPerPage) {
-            int end = Math.min(i + wordsPerPage, words.length);
-            pageContents.add(String.join(" ", Arrays.copyOfRange(words, i, end)));
+        List<String> currentParas = new ArrayList<>();
+        int currentWordCount = 0;
+
+        for (String para : paragraphs) {
+            String trimmed = para.trim();
+            if (trimmed.isEmpty()) continue;
+            int paraWords = trimmed.split("\\s+").length;
+
+            if (currentWordCount + paraWords > wordsPerPage && !currentParas.isEmpty()) {
+                pageContents.add(String.join("\n\n", currentParas));
+                currentParas = new ArrayList<>();
+                currentWordCount = 0;
+            }
+            currentParas.add(trimmed);
+            currentWordCount += paraWords;
+        }
+        if (!currentParas.isEmpty()) {
+            pageContents.add(String.join("\n\n", currentParas));
         }
 
         List<String> headerPages = new ArrayList<>();
