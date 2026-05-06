@@ -68,7 +68,7 @@ public class TestServiceImpl implements TestService{
         List<Word> words = wordRepository.findByBookIdAndTermIn(bookId, terms);
 
         Map<String, Word> wordMap = words.stream()
-                .collect(Collectors.toMap(Word::getTerm, word -> word));
+                .collect(Collectors.toMap(Word::getTerm, word -> word, (w1, w2) -> w1));
 
         Test test = saveTest(user, vocaBook, testResultRequest);
 
