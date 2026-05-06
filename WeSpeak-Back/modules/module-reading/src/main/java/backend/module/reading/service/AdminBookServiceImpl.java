@@ -50,7 +50,7 @@ public class AdminBookServiceImpl implements AdminBookService {
 
         // split into paragraphs, distribute into ~180-word pages keeping paragraph boundaries
         String[] paragraphs = normalized.split("\n\n");
-        int wordsPerPage = 180;
+        int wordsPerPage = 200;
 
         List<String> pageContents = new ArrayList<>();
         List<String> currentParas = new ArrayList<>();
