@@ -65,7 +65,7 @@ public class TestServiceImpl implements TestService{
         List<String> terms = testResultRequest.getTestedWords().stream()
                 .map(TestResultRequest.TestedWord::term)
                 .toList();
-        List<Word> words = wordRepository.findByTermIn(terms);
+        List<Word> words = wordRepository.findByBookIdAndTermIn(bookId, terms);
 
         Map<String, Word> wordMap = words.stream()
                 .collect(Collectors.toMap(Word::getTerm, word -> word));

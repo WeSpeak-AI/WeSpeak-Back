@@ -21,4 +21,7 @@ public interface WordRepository extends JpaRepository<Word, Long> {
     Optional<Word> findByTerm(String term);
 
     List<Word> findByTermIn(List<String> term);
+
+    @Query("select w from Word w where w.vocaBookDay.vocaBook.vocaBookId = :bookId and w.term in :terms")
+    List<Word> findByBookIdAndTermIn(@Param("bookId") Long bookId, @Param("terms") List<String> terms);
 }
