@@ -64,8 +64,8 @@ public class VocaController {
     }
 
     @DeleteMapping("/books/{bookId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMyVoca(@PathVariable("bookId") Long bookId, @RequestHeader("X-Username") String email) {
+    public ApiResponse<Void> deleteMyVoca(@PathVariable("bookId") Long bookId, @RequestHeader("X-Username") String email) {
         vocaService.deleteMyVoca(bookId, email);
+        return ApiResponse.ok();
     }
 }
