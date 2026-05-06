@@ -21,6 +21,7 @@ public class Outbox {
 
     @Enumerated(EnumType.STRING)
     private EventType eventType;
+    @Column(columnDefinition = "TEXT")
     private String payload;
     private String serviceName;
     private LocalDateTime createdAt;
