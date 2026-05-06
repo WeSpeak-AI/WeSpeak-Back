@@ -1,6 +1,7 @@
 package backend.module.voca.controller;
 
 import backend.core.common.response.ApiResponse;
+import backend.module.voca.dto.IngestRequest;
 import backend.module.voca.dto.VocaBookDayRequest;
 import backend.module.voca.dto.VocaBookRequest;
 import backend.module.voca.dto.WordRequest;
@@ -74,6 +75,13 @@ public class AdminVocaController {
     @PostMapping("/voca/ai-generate")
     public ApiResponse<Void> aiGenerate(@Valid @RequestBody VocaBookRequest request) {
         adminVocaService.aiGenerate(request);
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/voca/ingest")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ApiResponse<Void> ingestVoca(@Valid @RequestBody IngestRequest request) {
+        adminVocaService.ingestVoca(request);
         return ApiResponse.ok();
     }
 }

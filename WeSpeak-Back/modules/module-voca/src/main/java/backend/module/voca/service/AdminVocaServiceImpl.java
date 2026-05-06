@@ -10,6 +10,7 @@ import backend.core.domain.voca.VocaBook;
 import backend.core.domain.voca.VocaBookDay;
 import backend.core.domain.voca.Word;
 import backend.core.infra.Snowflake;
+import backend.module.voca.dto.IngestRequest;
 import backend.module.voca.dto.VocaBookDayRequest;
 import backend.module.voca.dto.VocaBookRequest;
 import backend.module.voca.dto.WordRequest;
@@ -21,16 +22,21 @@ import backend.module.voca.repository.VocaBookDayRepository;
 import backend.module.voca.repository.VocaBookRepository;
 import backend.module.voca.repository.WordRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AdminVocaServiceImpl implements AdminVocaService {
 
+    @Qualifier("aiWebClient")
+    private final WebClient aiWebClient;
     private final VocaBookRepository vocaBookRepository;
     private final VocaBookDayRepository vocaBookDayRepository;
     private final WordRepository wordRepository;
@@ -146,6 +152,16 @@ public class AdminVocaServiceImpl implements AdminVocaService {
         correctWordRepository.deleteByWord(word);
         incorrectWordRepository.deleteByWord(word);
         wordRepository.delete(word);
+    }
+
+    @Override
+    public void ingestVoca(IngestRequest request) {
+        aiWebClient.post()
+                .uri("/admin/ingest/voca")
+                .bodyValue(Map.of("files", request.getFiles()))
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
 
     @Override

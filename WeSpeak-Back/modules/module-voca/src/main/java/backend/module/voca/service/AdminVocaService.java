@@ -1,5 +1,6 @@
 package backend.module.voca.service;
 
+import backend.module.voca.dto.IngestRequest;
 import backend.module.voca.dto.VocaBookDayRequest;
 import backend.module.voca.dto.VocaBookRequest;
 import backend.module.voca.dto.WordRequest;
@@ -15,4 +16,5 @@ public interface AdminVocaService {
     void updateWord(Long wordId, WordRequest request);
     void deleteWord(Long wordId);
     void aiGenerate(VocaBookRequest request);
+    void ingestVoca(IngestRequest request);
 }
