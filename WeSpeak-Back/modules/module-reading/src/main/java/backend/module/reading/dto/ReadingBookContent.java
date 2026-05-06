@@ -7,14 +7,14 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ReadingBookContent {
-    private Long bookPageId;
+    private String bookPageId;
     private int pageNumber;
     private int totalPages;
     private String content;
 
     public static ReadingBookContent from(BookPage bookPage) {
         return ReadingBookContent.builder()
-                .bookPageId(bookPage.getBookPageId())
+                .bookPageId(String.valueOf(bookPage.getBookPageId()))
                 .pageNumber(bookPage.getPageNumber())
                 .totalPages(bookPage.getBook().getTotalPages())
                 .content(bookPage.getContent())

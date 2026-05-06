@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class TestRecordPreview {
-    Long testId;
+    String testId;
     LocalDateTime testedAt;
     int startDay;
     int endDay;
@@ -18,7 +18,7 @@ public class TestRecordPreview {
 
     public static TestRecordPreview from(Test test) {
         TestRecordPreview testRecordPreview = new TestRecordPreview();
-        testRecordPreview.testId = test.getTestId();
+        testRecordPreview.testId = String.valueOf(test.getTestId());
         testRecordPreview.testedAt = test.getTestedAt();
         testRecordPreview.startDay = test.getStartDay();
         testRecordPreview.endDay = test.getEndDay();
