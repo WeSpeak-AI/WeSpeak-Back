@@ -7,12 +7,17 @@ import backend.core.domain.reading.BookPage;
 import backend.core.infra.Snowflake;
 import backend.module.reading.dto.BookPageRequest;
 import backend.module.reading.dto.BookRequest;
+import backend.module.reading.dto.QuickBookRequest;
 import backend.module.reading.repository.BookPageRepository;
 import backend.module.reading.repository.ReadingBookRepository;
 import backend.module.reading.repository.UserBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +39,60 @@ public class AdminBookServiceImpl implements AdminBookService {
                 .category(request.getCategory())
                 .build();
         return readingBookRepository.save(book).getBookId();
+    }
+
+    @Override
+    @Transactional
+    public Long quickCreateBook(QuickBookRequest request) {
+        // single \n → space (PDF/text soft line breaks), \n\n paragraph breaks preserved
+        String normalized = request.getContent().trim()
+                .replaceAll("(?<!\n)\n(?!\n)", " ");
+        String[] words = normalized.split("\\s+");
+        int wordsPerPage = 180;
+
+        List<String> pageContents = new ArrayList<>();
+        for (int i = 0; i < words.length; i += wordsPerPage) {
+            int end = Math.min(i + wordsPerPage, words.length);
+            pageContents.add(String.join(" ", Arrays.copyOfRange(words, i, end)));
+        }
+
+        List<String> headerPages = new ArrayList<>();
+        if (hasContent(request.getTitlePageContent()))   headerPages.add(request.getTitlePageContent());
+        if (hasContent(request.getChapterPageContent())) headerPages.add(request.getChapterPageContent());
+        if (hasContent(request.getIntroPageContent()))   headerPages.add(request.getIntroPageContent());
+
+        Book book = Book.builder()
+                .bookId(snowflake.nextId())
+                .title(request.getTitle())
+                .level(request.getLevel())
+                .category(request.getCategory())
+                .totalPages(headerPages.size() + pageContents.size())
+                .build();
+        readingBookRepository.save(book);
+
+        int pageNum = 1;
+        for (String headerContent : headerPages) {
+            bookPageRepository.save(BookPage.builder()
+                    .bookPageId(snowflake.nextId())
+                    .book(book)
+                    .pageNumber(pageNum++)
+                    .content(headerContent)
+                    .build());
+        }
+        for (String bodyContent : pageContents) {
+            bookPageRepository.save(BookPage.builder()
+                    .bookPageId(snowflake.nextId())
+                    .book(book)
+                    .pageNumber(pageNum++)
+                    .content(bodyContent)
+                    .build());
+        }
+
+        return book.getBookId();
+    }
+
+    private boolean hasContent(String s) {
+        return s != null && !s.isBlank();
     }
 
     @Override

@@ -467,6 +467,51 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
         <div class="page-title">도서 관리</div>
 
         <div class="card">
+          <div class="card-title">도서 빠른 생성</div>
+          <form onsubmit="quickCreateBook(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>제목 *</label>
+                <input type="text" id="qb-title" placeholder="도서 제목" required>
+              </div>
+              <div class="form-group">
+                <label>레벨 *</label>
+                <select id="qb-level" required>
+                  <option value="">선택</option>
+                  <option value="BEGINNER">BEGINNER (초급)</option>
+                  <option value="INTERMEDIATE">INTERMEDIATE (중급)</option>
+                  <option value="ADVANCED">ADVANCED (고급)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>카테고리 *</label>
+              <input type="text" id="qb-category" placeholder="예: Science, History, Fiction" required>
+            </div>
+            <div class="form-group">
+              <label>1페이지 - 제목 (선택)</label>
+              <textarea id="qb-page1" style="min-height:80px" placeholder="책 제목 페이지 내용 (없으면 비워두세요)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>2페이지 - 챕터 (선택)</label>
+              <textarea id="qb-page2" style="min-height:80px" placeholder="챕터 안내 페이지 내용 (없으면 비워두세요)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>3페이지 - Introduction (선택)</label>
+              <textarea id="qb-page3" style="min-height:80px" placeholder="Introduction 페이지 내용 (없으면 비워두세요)"></textarea>
+            </div>
+            <div class="form-group">
+              <label>전체 본문 *</label>
+              <textarea id="qb-content" style="min-height:200px" placeholder="전체 본문을 붙여넣으세요. 180단어 단위로 페이지가 자동 분할됩니다. 단일 줄바꿈은 공백으로 처리됩니다." required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">빠른 생성</button>
+            </div>
+            <div id="res-qb-create" class="response-box"></div>
+          </form>
+        </div>
+
+        <div class="card">
           <div class="card-title">도서 생성</div>
           <form onsubmit="createBook(event)">
             <div class="form-row">
@@ -898,6 +943,19 @@ async function aiGenerate(e) {
 }
 
 // READING BOOK
+async function quickCreateBook(e) {
+  e.preventDefault();
+  await api('POST', '/api/admin/books/quick-create', {
+    title: document.getElementById('qb-title').value,
+    level: document.getElementById('qb-level').value,
+    category: document.getElementById('qb-category').value,
+    titlePageContent: document.getElementById('qb-page1').value || null,
+    chapterPageContent: document.getElementById('qb-page2').value || null,
+    introPageContent: document.getElementById('qb-page3').value || null,
+    content: document.getElementById('qb-content').value
+  }, 'res-qb-create');
+}
+
 async function createBook(e) {
   e.preventDefault();
   await api('POST', '/api/admin/books', {

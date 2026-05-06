@@ -3,6 +3,7 @@ package backend.module.reading.controller;
 import backend.core.common.response.ApiResponse;
 import backend.module.reading.dto.BookPageRequest;
 import backend.module.reading.dto.BookRequest;
+import backend.module.reading.dto.QuickBookRequest;
 import backend.module.reading.service.AdminBookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,12 @@ public class AdminBookController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Long> createBook(@Valid @RequestBody BookRequest request) {
         return ApiResponse.ok(adminBookService.createBook(request));
+    }
+
+    @PostMapping("/books/quick-create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<Long> quickCreateBook(@Valid @RequestBody QuickBookRequest request) {
+        return ApiResponse.ok(adminBookService.quickCreateBook(request));
     }
 
     @PutMapping("/books/{bookId}")

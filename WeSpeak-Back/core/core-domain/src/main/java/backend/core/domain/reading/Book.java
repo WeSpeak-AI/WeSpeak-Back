@@ -39,4 +39,8 @@ public class Book {
         this.level = level;
         this.category = category;
     }
+
+    public void incrementTotalPages() {
+        this.totalPages++;
+    }
 }
