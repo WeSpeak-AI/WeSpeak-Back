@@ -17,6 +17,10 @@ public class VocaBook {
     @Id
     private Long vocaBookId;
 
+    @OneToMany(mappedBy = "vocaBook", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<VocaBookDay> vocaBookDays = new ArrayList<>();
+
     @Column(nullable = false)
     private String title;
 
