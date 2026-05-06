@@ -147,6 +147,7 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
       <a class="sidebar-item" onclick="showSection('voca-day', this)">단어장 Day</a>
       <a class="sidebar-item" onclick="showSection('voca-word', this)">단어 (Word)</a>
       <a class="sidebar-item" onclick="showSection('voca-ai', this)">AI 단어 생성</a>
+      <a class="sidebar-item" onclick="showSection('voca-ingest', this)">Voca 임베딩</a>
       <div class="sidebar-divider"></div>
       <div class="sidebar-label">독해 관리</div>
       <a class="sidebar-item" onclick="showSection('reading-book', this)">도서 (Book)</a>
@@ -435,6 +436,28 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
               <button type="submit" class="btn btn-success">AI 생성 요청</button>
             </div>
             <div id="res-ai" class="response-box"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- VOCA INGEST -->
+      <div id="section-voca-ingest" class="content-section">
+        <div class="page-title">Voca 임베딩 (Pinecone)</div>
+        <div class="card">
+          <div class="card-title">파일 임베딩 요청</div>
+          <p style="font-size:13px; color:#888; margin-bottom:16px">
+            컨테이너 내부의 파일 경로를 입력하세요 (예: <code>assets/pg8492.txt</code>).<br>
+            <strong style="color:#ef4444">⚠ 기존 Pinecone 데이터가 전체 삭제된 후 재삽입됩니다.</strong>
+          </p>
+          <form onsubmit="ingestVoca(event)">
+            <div class="form-group">
+              <label>파일 경로 (줄바꿈으로 여러 파일 입력) *</label>
+              <textarea id="ingest-files" style="min-height:120px; font-family:monospace" placeholder="assets/pg8492.txt&#10;assets/another.pdf" required></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-warning">임베딩 시작</button>
+            </div>
+            <div id="res-ingest" class="response-box"></div>
           </form>
         </div>
       </div>
@@ -850,6 +873,17 @@ async function deleteWord() {
   if (!id) return alert('ID를 입력하세요');
   if (!confirm(`단어 ID ${id}를 삭제하시겠습니까?`)) return;
   await api('DELETE', `/api/admin/words/${id}`, null, 'res-w-delete');
+}
+
+// VOCA INGEST
+async function ingestVoca(e) {
+  e.preventDefault();
+  const files = document.getElementById('ingest-files').value
+    .split('\n')
+    .map(f => f.trim())
+    .filter(f => f.length > 0);
+  if (!confirm(`${files.length}개 파일을 임베딩합니다.\n기존 Pinecone 데이터가 전체 삭제됩니다.\n계속하시겠습니까?`)) return;
+  await api('POST', '/api/admin/voca/ingest', { files }, 'res-ingest');
 }
 
 // AI GENERATE
