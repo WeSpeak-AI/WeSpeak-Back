@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface TestRepository extends JpaRepository<Test, Long> {
 
+    List<Test> findByVocaBook(VocaBook vocaBook);
+
     List<Test> findByUserAndVocaBook(User user, VocaBook vocaBook);
 
     List<Test> findByUserEmailAndVocaBookVocaBookId(String email, Long vocaBookId);

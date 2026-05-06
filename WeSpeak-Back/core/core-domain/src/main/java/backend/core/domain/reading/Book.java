@@ -3,6 +3,9 @@ package backend.core.domain.reading;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "reading_books")
 @Getter
@@ -13,6 +16,10 @@ public class Book {
 
     @Id
     private Long bookId;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @Builder.Default
+    private List<BookPage> pages = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;

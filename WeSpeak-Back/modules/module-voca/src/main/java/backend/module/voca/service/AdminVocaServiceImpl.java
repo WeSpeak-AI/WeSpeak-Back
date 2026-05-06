@@ -5,6 +5,7 @@ import backend.core.common.event.payload.VocaGenerationEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
+import backend.core.domain.test.Test;
 import backend.core.domain.voca.VocaBook;
 import backend.core.domain.voca.VocaBookDay;
 import backend.core.domain.voca.Word;
@@ -12,12 +13,18 @@ import backend.core.infra.Snowflake;
 import backend.module.voca.dto.VocaBookDayRequest;
 import backend.module.voca.dto.VocaBookRequest;
 import backend.module.voca.dto.WordRequest;
+import backend.module.voca.repository.CorrectWordRepository;
+import backend.module.voca.repository.IncorrectWordRepository;
+import backend.module.voca.repository.TestRepository;
+import backend.module.voca.repository.UserVocaBookRepository;
 import backend.module.voca.repository.VocaBookDayRepository;
 import backend.module.voca.repository.VocaBookRepository;
 import backend.module.voca.repository.WordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +34,10 @@ public class AdminVocaServiceImpl implements AdminVocaService {
     private final VocaBookRepository vocaBookRepository;
     private final VocaBookDayRepository vocaBookDayRepository;
     private final WordRepository wordRepository;
+    private final TestRepository testRepository;
+    private final CorrectWordRepository correctWordRepository;
+    private final IncorrectWordRepository incorrectWordRepository;
+    private final UserVocaBookRepository userVocaBookRepository;
     private final Snowflake snowflake;
     private final OutboxEventPublisher outboxEventPublisher;
 
@@ -55,6 +66,13 @@ public class AdminVocaServiceImpl implements AdminVocaService {
     public void deleteVocaBook(Long vocaBookId) {
         VocaBook vocaBook = vocaBookRepository.findById(vocaBookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
+        List<Test> tests = testRepository.findByVocaBook(vocaBook);
+        for (Test test : tests) {
+            correctWordRepository.deleteByTestId(test.getTestId());
+            incorrectWordRepository.deleteByTestId(test.getTestId());
+        }
+        testRepository.deleteAll(tests);
+        userVocaBookRepository.deleteAllByVocaBook(vocaBook);
         vocaBookRepository.delete(vocaBook);
     }
 
@@ -86,6 +104,11 @@ public class AdminVocaServiceImpl implements AdminVocaService {
     public void deleteVocaBookDay(Long vocaBookDayId) {
         VocaBookDay vocaBookDay = vocaBookDayRepository.findById(vocaBookDayId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_DAY_NOT_FOUND));
+        List<Word> words = wordRepository.findByVocaBookDay(vocaBookDay);
+        if (!words.isEmpty()) {
+            correctWordRepository.deleteByWordIn(words);
+            incorrectWordRepository.deleteByWordIn(words);
+        }
         vocaBookDay.getVocaBook().decrementTotalDays();
         vocaBookDayRepository.delete(vocaBookDay);
     }
@@ -120,6 +143,8 @@ public class AdminVocaServiceImpl implements AdminVocaService {
     public void deleteWord(Long wordId) {
         Word word = wordRepository.findById(wordId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.WORD_NOT_FOUND));
+        correctWordRepository.deleteByWord(word);
+        incorrectWordRepository.deleteByWord(word);
         wordRepository.delete(word);
     }
 

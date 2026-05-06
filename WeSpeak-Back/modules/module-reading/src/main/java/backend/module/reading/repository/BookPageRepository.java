@@ -10,6 +10,8 @@ import java.util.Optional;
 
 public interface BookPageRepository extends JpaRepository<BookPage, Long> {
 
+    void deleteAllByBook(Book book);
+
     Optional<BookPage> findByBookAndPageNumber(Book book, int pageNumber);
 
     @Query("select bp from BookPage bp where bp.book.bookId = :bookId and bp.pageNumber = :pageNumber")

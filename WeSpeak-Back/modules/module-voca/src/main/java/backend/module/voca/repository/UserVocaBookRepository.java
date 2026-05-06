@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface UserVocaBookRepository extends JpaRepository<UserVocaBook, Long> {
 
+    void deleteAllByVocaBook(VocaBook vocaBook);
+
     boolean existsByUserAndVocaBook(User user, VocaBook vocaBook);
 
     boolean existsByUserEmailAndVocaBookVocaBookId(String email, Long bookId);

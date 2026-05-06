@@ -1,5 +1,6 @@
 package backend.module.voca.repository;
 
+import backend.core.domain.voca.VocaBookDay;
 import backend.core.domain.voca.Word;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WordRepository extends JpaRepository<Word, Long> {
+
+    List<Word> findByVocaBookDay(VocaBookDay vocaBookDay);
 
     List<Word> findByVocaBookDay_VocaBook_VocaBookIdAndVocaBookDay_Day(Long vocaBookId, int day);
 
