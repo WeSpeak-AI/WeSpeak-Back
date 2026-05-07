@@ -24,8 +24,15 @@ public class BookPage {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Column
+    private String imageUrl;
+
     public void update(int pageNumber, String content) {
         this.pageNumber = pageNumber;
         this.content = content;
+    }
+
+    public void updateImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

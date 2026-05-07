@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -57,5 +58,12 @@ public class AdminBookController {
     public ApiResponse<Void> deleteBookPage(@PathVariable("bookPageId") Long bookPageId) {
         adminBookService.deleteBookPage(bookPageId);
         return ApiResponse.ok();
+    }
+
+    @PatchMapping("/pages/{bookPageId}/image")
+    public ApiResponse<String> uploadPageImage(
+            @PathVariable("bookPageId") Long bookPageId,
+            @RequestParam("file") MultipartFile file) {
+        return ApiResponse.ok(adminBookService.uploadPageImage(bookPageId, file));
     }
 }

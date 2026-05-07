@@ -14,7 +14,9 @@ import backend.module.reading.repository.UserBookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class AdminBookServiceImpl implements AdminBookService {
     private final BookPageRepository bookPageRepository;
     private final UserBookRepository userBookRepository;
     private final Snowflake snowflake;
+    private final R2Service r2Service;
     private static final int WORDS_PER_PAGES = 200;
 
     @Override
@@ -129,6 +132,21 @@ public class AdminBookServiceImpl implements AdminBookService {
         BookPage bookPage = bookPageRepository.findById(bookPageId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
         bookPageRepository.delete(bookPage);
+    }
+
+    @Override
+    @Transactional
+    public String uploadPageImage(Long bookPageId, MultipartFile file) {
+        BookPage bookPage = bookPageRepository.findById(bookPageId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
+        try {
+            String key = "books/pages/" + bookPageId + "/" + file.getOriginalFilename();
+            String url = r2Service.upload(key, file.getBytes(), file.getContentType());
+            bookPage.updateImageUrl(url);
+            return url;
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private static List<String> getPageContents(QuickBookRequest request) {

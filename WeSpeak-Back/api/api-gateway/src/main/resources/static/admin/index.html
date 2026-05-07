@@ -665,6 +665,24 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
           </div>
           <div id="res-rp-delete" class="response-box"></div>
         </div>
+
+        <div class="card">
+          <div class="card-title">페이지 이미지 업로드</div>
+          <form onsubmit="uploadPageImage(event)">
+            <div class="form-group" style="width:200px">
+              <label>페이지 ID *</label>
+              <input type="number" id="rp-img-page-id" placeholder="페이지 ID" required>
+            </div>
+            <div class="form-group">
+              <label>이미지 파일 *</label>
+              <input type="file" id="rp-img-file" accept="image/*" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">업로드</button>
+            </div>
+            <div id="res-rp-img" class="response-box"></div>
+          </form>
+        </div>
       </div>
 
       <!-- CONVERSATION TOPIC -->
@@ -1025,6 +1043,32 @@ async function deleteBookPage() {
   if (!id) return alert('ID를 입력하세요');
   if (!confirm(`페이지 ID ${id}를 삭제하시겠습니까?`)) return;
   await api('DELETE', `/api/admin/pages/${id}`, null, 'res-rp-delete');
+}
+
+async function uploadPageImage(e) {
+  e.preventDefault();
+  const id = document.getElementById('rp-img-page-id').value;
+  const file = document.getElementById('rp-img-file').files[0];
+  const box = document.getElementById('res-rp-img');
+  box.style.display = 'none';
+  if (!file) return alert('파일을 선택하세요');
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${BASE_URL}/api/admin/pages/${id}/image`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    box.textContent = JSON.stringify(data, null, 2);
+    box.className = `response-box ${res.ok ? 'response-success' : 'response-error'}`;
+    box.style.display = 'block';
+  } catch (err) {
+    box.textContent = '오류: ' + err.message;
+    box.className = 'response-box response-error';
+    box.style.display = 'block';
+  }
 }
 
 // CONVERSATION TOPIC
