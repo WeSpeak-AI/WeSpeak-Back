@@ -69,6 +69,10 @@ public class User {
         this.lastStudiedAt = today;
     }
 
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
     public void addTicket(int amount) {
         this.mediaTicket += amount;
     }

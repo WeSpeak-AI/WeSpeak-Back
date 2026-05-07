@@ -1,9 +1,11 @@
 package backend.module.user.controller;
 
 import backend.core.common.response.ApiResponse;
+import backend.module.user.dto.EditProfileRequest;
 import backend.module.user.dto.MyPageResponse;
 import backend.module.user.dto.UserProfileResponse;
 import backend.module.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,15 @@ public class UserController {
             @RequestHeader("X-Username") String email
     ) {
         return ApiResponse.ok(userService.getMyPage(email));
+    }
+
+    @PatchMapping("/me")
+    public ApiResponse<Void> updateProfile(
+            @RequestHeader("X-Username") String email,
+            @Valid @RequestBody EditProfileRequest request
+    ) {
+        userService.updateProfile(email, request);
+        return ApiResponse.ok();
     }
 
     @PostMapping("/ads/reward")

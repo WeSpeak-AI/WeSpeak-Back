@@ -3,6 +3,7 @@ package backend.module.user.service;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.domain.user.User;
+import backend.module.user.dto.EditProfileRequest;
 import backend.module.user.dto.MyPageResponse;
 import backend.module.user.dto.UserProfileResponse;
 import backend.core.infra.repository.ConversationStatsRepository;
@@ -42,6 +43,13 @@ public class UserServiceImpl implements UserService {
                 userBookStatsRepository.countByUserEmail(email),
                 conversationStatsRepository.countByUserEmail(email)
         );
+    }
+
+    @Override
+    @Transactional
+    public void updateProfile(String email, EditProfileRequest request) {
+        User user = findByEmail(email);
+        user.updateNickname(request.getNickname());
     }
 
     @Override
