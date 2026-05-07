@@ -114,6 +114,7 @@ services:
     environment:
       <<: *common-env
       NODE_ID: 1
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
 
   user-service:
     <<: *service-common
