@@ -10,6 +10,7 @@ import backend.core.infra.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -19,6 +20,7 @@ public class StreakUpdateHandler implements EventHandler<StudyCompletedEventPayl
     private static final int XP_PER_STREAK = 5;
 
     @Override
+    @Transactional
     public void handle(Event<StudyCompletedEventPayload> event) {
         User user = userRepository.findByEmail(event.getPayload().getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));

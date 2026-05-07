@@ -45,6 +45,7 @@ public class AdminBookServiceImpl implements AdminBookService {
     public Long quickCreateBook(QuickBookRequest request) {
         // single \n → space, \n\n+ → \n\n (paragraph break preserved)
         String normalized = request.getContent().trim()
+                .replaceAll("\\[.*?\\]", "")
                 .replaceAll("(?<!\n)\n(?!\n)", " ")
                 .replaceAll("\n{2,}", "\n\n");
 
