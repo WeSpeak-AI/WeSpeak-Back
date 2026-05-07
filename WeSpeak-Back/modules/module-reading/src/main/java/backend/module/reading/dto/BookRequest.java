@@ -13,6 +13,9 @@ public class BookRequest {
     @NotBlank
     private String title;
 
+    @NotBlank
+    private String author;
+
     @NotNull
     private Book.Level level;
 

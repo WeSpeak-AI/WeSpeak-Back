@@ -24,6 +24,9 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
+    private String author;
+
     @Enumerated(EnumType.STRING)
     private Level level;
 
@@ -34,8 +37,9 @@ public class Book {
         BEGINNER, INTERMEDIATE, ADVANCED
     }
 
-    public void update(String title, Level level, String category) {
+    public void update(String title, String author, Level level, String category) {
         this.title = title;
+        this.author = author;
         this.level = level;
         this.category = category;
     }

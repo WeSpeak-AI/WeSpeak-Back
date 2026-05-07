@@ -27,6 +27,7 @@ public class AdminBookServiceImpl implements AdminBookService {
     private final BookPageRepository bookPageRepository;
     private final UserBookRepository userBookRepository;
     private final Snowflake snowflake;
+    private static final int WORDS_PER_PAGES = 200;
 
     @Override
     @Transactional
@@ -34,6 +35,7 @@ public class AdminBookServiceImpl implements AdminBookService {
         Book book = Book.builder()
                 .bookId(snowflake.nextId())
                 .title(request.getTitle())
+                .author(request.getAuthor())
                 .level(request.getLevel())
                 .category(request.getCategory())
                 .build();
@@ -43,36 +45,7 @@ public class AdminBookServiceImpl implements AdminBookService {
     @Override
     @Transactional
     public Long quickCreateBook(QuickBookRequest request) {
-        // single \n → space, \n\n+ → \n\n (paragraph break preserved)
-        String normalized = request.getContent().trim()
-                .replaceAll("(?<!\n)\n(?!\n)", " ")
-                .replaceAll("\n{2,}", "\n\n");
-
-        // split into paragraphs, distribute into ~180-word pages keeping paragraph boundaries
-        String[] paragraphs = normalized.split("\n\n");
-        int wordsPerPage = 200;
-
-        List<String> pageContents = new ArrayList<>();
-        List<String> currentParas = new ArrayList<>();
-        int currentWordCount = 0;
-
-        for (String para : paragraphs) {
-            String trimmed = para.trim();
-            if (trimmed.isEmpty()) continue;
-            int paraWords = trimmed.split("\\s+").length;
-
-            if (currentWordCount + paraWords > wordsPerPage && !currentParas.isEmpty()) {
-                pageContents.add(String.join("\n\n", currentParas));
-                currentParas = new ArrayList<>();
-                currentWordCount = 0;
-            }
-            currentParas.add(trimmed);
-            currentWordCount += paraWords;
-        }
-        if (!currentParas.isEmpty()) {
-            pageContents.add(String.join("\n\n", currentParas));
-        }
-
+        List<String> pageContents = getPageContents(request);
         List<String> headerPages = new ArrayList<>();
         if (hasContent(request.getTitlePageContent()))   headerPages.add(request.getTitlePageContent());
         if (hasContent(request.getChapterPageContent())) headerPages.add(request.getChapterPageContent());
@@ -81,6 +54,7 @@ public class AdminBookServiceImpl implements AdminBookService {
         Book book = Book.builder()
                 .bookId(snowflake.nextId())
                 .title(request.getTitle())
+                .author(request.getAuthor())
                 .level(request.getLevel())
                 .category(request.getCategory())
                 .totalPages(headerPages.size() + pageContents.size())
@@ -108,16 +82,12 @@ public class AdminBookServiceImpl implements AdminBookService {
         return book.getBookId();
     }
 
-    private boolean hasContent(String s) {
-        return s != null && !s.isBlank();
-    }
-
     @Override
     @Transactional
     public void updateBook(Long bookId, BookRequest request) {
         Book book = readingBookRepository.findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
-        book.update(request.getTitle(), request.getLevel(), request.getCategory());
+        book.update(request.getTitle(), request.getAuthor(), request.getLevel(), request.getCategory());
     }
 
     @Override
@@ -159,5 +129,46 @@ public class AdminBookServiceImpl implements AdminBookService {
         BookPage bookPage = bookPageRepository.findById(bookPageId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
         bookPageRepository.delete(bookPage);
+    }
+
+    private static List<String> getPageContents(QuickBookRequest request) {
+        String[] paragraphs = splitParagraphs(request);
+
+        List<String> pageContents = new ArrayList<>();
+        List<String> currentParas = new ArrayList<>();
+        int currentWordCount = 0;
+
+        for (String para : paragraphs) {
+            String trimmed = para.trim();
+            if (trimmed.isEmpty()) continue;
+            int paraWords = trimmed.split("\\s+").length;
+
+            if (currentWordCount + paraWords > WORDS_PER_PAGES && !currentParas.isEmpty()) {
+                pageContents.add(String.join("\n\n", currentParas));
+                currentParas = new ArrayList<>();
+                currentWordCount = 0;
+            }
+            currentParas.add(trimmed);
+            currentWordCount += paraWords;
+        }
+        if (!currentParas.isEmpty()) {
+            pageContents.add(String.join("\n\n", currentParas));
+        }
+        return pageContents;
+    }
+
+    private static String[] splitParagraphs(QuickBookRequest request) {
+        // single \n → space, \n\n+ → \n\n (paragraph break preserved)
+        String normalized = request.getContent().trim()
+                .replaceAll("(?<!\n)\n(?!\n)", " ")
+                .replaceAll("\n{2,}", "\n\n");
+
+        // split into paragraphs, distribute into ~180-word pages keeping paragraph boundaries
+        String[] paragraphs = normalized.split("\n\n");
+        return paragraphs;
+    }
+
+    private boolean hasContent(String s) {
+        return s != null && !s.isBlank();
     }
 }
