@@ -10,10 +10,7 @@ import backend.core.domain.voca.VocaBook;
 import backend.core.domain.voca.VocaBookDay;
 import backend.core.domain.voca.Word;
 import backend.core.infra.Snowflake;
-import backend.module.voca.dto.IngestRequest;
-import backend.module.voca.dto.VocaBookDayRequest;
-import backend.module.voca.dto.VocaBookRequest;
-import backend.module.voca.dto.WordRequest;
+import backend.module.voca.dto.*;
 import backend.module.voca.repository.CorrectWordRepository;
 import backend.module.voca.repository.IncorrectWordRepository;
 import backend.module.voca.repository.TestRepository;
@@ -65,6 +62,14 @@ public class AdminVocaServiceImpl implements AdminVocaService {
         VocaBook vocaBook = vocaBookRepository.findById(vocaBookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
         vocaBook.update(request.getTitle(), request.getCategory(), request.getDescription());
+    }
+
+    @Override
+    @Transactional
+    public void updateVocaBookImage(Long vocaBookId, VocaBookImageRequest request) {
+        VocaBook vocaBook = vocaBookRepository.findById(vocaBookId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
+        vocaBook.updateImage(request.getImageUrl());
     }
 
     @Override

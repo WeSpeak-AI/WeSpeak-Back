@@ -1,10 +1,7 @@
 package backend.module.voca.controller;
 
 import backend.core.common.response.ApiResponse;
-import backend.module.voca.dto.IngestRequest;
-import backend.module.voca.dto.VocaBookDayRequest;
-import backend.module.voca.dto.VocaBookRequest;
-import backend.module.voca.dto.WordRequest;
+import backend.module.voca.dto.*;
 import backend.module.voca.service.AdminVocaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +24,12 @@ public class AdminVocaController {
     @PutMapping("/voca-books/{vocaBookId}")
     public ApiResponse<Void> updateVocaBook(@PathVariable("vocaBookId") Long vocaBookId, @Valid @RequestBody VocaBookRequest request) {
         adminVocaService.updateVocaBook(vocaBookId, request);
+        return ApiResponse.ok();
+    }
+
+    @PutMapping("/voca-books/{vocaBookId}/image")
+    public ApiResponse<Void> updateVocaBookImage(@PathVariable("vocaBookId") Long vocaBookId, @Valid @RequestBody VocaBookImageRequest request) {
+        adminVocaService.updateVocaBookImage(vocaBookId, request);
         return ApiResponse.ok();
     }
 

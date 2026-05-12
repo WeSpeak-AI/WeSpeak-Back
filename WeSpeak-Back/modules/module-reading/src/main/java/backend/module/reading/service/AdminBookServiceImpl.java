@@ -5,6 +5,7 @@ import backend.core.common.exception.ErrorCode;
 import backend.core.domain.reading.Book;
 import backend.core.domain.reading.BookPage;
 import backend.core.infra.Snowflake;
+import backend.module.reading.dto.BookImageRequest;
 import backend.module.reading.dto.BookPageRequest;
 import backend.module.reading.dto.BookRequest;
 import backend.module.reading.dto.QuickBookRequest;
@@ -91,6 +92,14 @@ public class AdminBookServiceImpl implements AdminBookService {
         Book book = readingBookRepository.findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
         book.update(request.getTitle(), request.getAuthor(), request.getLevel(), request.getCategory());
+    }
+
+    @Override
+    @Transactional
+    public void updateBookImage(Long bookId, BookImageRequest request) {
+        Book book = readingBookRepository.findById(bookId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
+        book.updateImage(request.getImageUrl());
     }
 
     @Override

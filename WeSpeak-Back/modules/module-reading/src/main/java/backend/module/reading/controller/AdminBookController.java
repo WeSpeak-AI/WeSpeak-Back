@@ -1,6 +1,7 @@
 package backend.module.reading.controller;
 
 import backend.core.common.response.ApiResponse;
+import backend.module.reading.dto.BookImageRequest;
 import backend.module.reading.dto.BookPageRequest;
 import backend.module.reading.dto.BookRequest;
 import backend.module.reading.dto.QuickBookRequest;
@@ -33,6 +34,12 @@ public class AdminBookController {
     @PutMapping("/books/{bookId}")
     public ApiResponse<Void> updateBook(@PathVariable("bookId") Long bookId, @Valid @RequestBody BookRequest request) {
         adminBookService.updateBook(bookId, request);
+        return ApiResponse.ok();
+    }
+
+    @PutMapping("/books/{bookId}/image")
+    public ApiResponse<Void> updateBookImage(@PathVariable("bookId") Long bookId, @Valid @RequestBody BookImageRequest request) {
+        adminBookService.updateBookImage(bookId, request);
         return ApiResponse.ok();
     }
 
