@@ -24,6 +24,7 @@ public class ReadingBookPreviewResponse {
                 .title(book.getTitle())
                 .level(book.getLevel().name())
                 .category(book.getCategory())
+                .totalPage(book.getTotalPages())
                 .build();
     }
 
