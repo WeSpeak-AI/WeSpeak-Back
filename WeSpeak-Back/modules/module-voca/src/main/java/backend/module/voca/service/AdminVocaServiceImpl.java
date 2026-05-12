@@ -22,8 +22,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +45,7 @@ public class AdminVocaServiceImpl implements AdminVocaService {
     private final UserVocaBookRepository userVocaBookRepository;
     private final Snowflake snowflake;
     private final OutboxEventPublisher outboxEventPublisher;
+    private final R2Service r2Service;
 
     @Override
     @Transactional
@@ -66,10 +69,17 @@ public class AdminVocaServiceImpl implements AdminVocaService {
 
     @Override
     @Transactional
-    public void updateVocaBookImage(Long vocaBookId, VocaBookImageRequest request) {
+    public String uploadVocaBookImage(Long vocaBookId, MultipartFile file) {
         VocaBook vocaBook = vocaBookRepository.findById(vocaBookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
-        vocaBook.updateImage(request.getImageUrl());
+        try {
+            String key = "voca-books/" + vocaBookId + "/" + file.getOriginalFilename();
+            String url = r2Service.upload(key, file.getBytes(), file.getContentType());
+            vocaBook.updateImage(url);
+            return url;
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

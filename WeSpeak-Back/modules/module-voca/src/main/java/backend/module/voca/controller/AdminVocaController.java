@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -27,10 +28,10 @@ public class AdminVocaController {
         return ApiResponse.ok();
     }
 
-    @PutMapping("/voca-books/{vocaBookId}/image")
-    public ApiResponse<Void> updateVocaBookImage(@PathVariable("vocaBookId") Long vocaBookId, @Valid @RequestBody VocaBookImageRequest request) {
-        adminVocaService.updateVocaBookImage(vocaBookId, request);
-        return ApiResponse.ok();
+    @PatchMapping("/voca-books/{vocaBookId}/image")
+    public ApiResponse<String> uploadVocaBookImage(@PathVariable("vocaBookId") Long vocaBookId,
+                                                   @RequestParam("file") MultipartFile file) {
+        return ApiResponse.ok(adminVocaService.uploadVocaBookImage(vocaBookId, file));
     }
 
     @DeleteMapping("/voca-books/{vocaBookId}")

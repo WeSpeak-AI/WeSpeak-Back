@@ -96,10 +96,17 @@ public class AdminBookServiceImpl implements AdminBookService {
 
     @Override
     @Transactional
-    public void updateBookImage(Long bookId, BookImageRequest request) {
+    public String uploadBookImage(Long bookId, MultipartFile file) {
         Book book = readingBookRepository.findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
-        book.updateImage(request.getImageUrl());
+        try {
+            String key = "books/" + bookId + "/" + file.getOriginalFilename();
+            String url = r2Service.upload(key, file.getBytes(), file.getContentType());
+            book.updateImage(url);
+            return url;
+        } catch (IOException e) {
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override

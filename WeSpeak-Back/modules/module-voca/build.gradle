@@ -8,4 +8,5 @@ dependencies {
     implementation project(':core:core-outbox-message-relay')
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'software.amazon.awssdk:s3:2.25.0'
 }

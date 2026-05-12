@@ -244,18 +244,18 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
         </div>
 
         <div class="card">
-          <div class="card-title">단어장 표지 이미지 설정</div>
-          <form onsubmit="updateVocaBookImage(event)">
+          <div class="card-title">단어장 표지 이미지 업로드</div>
+          <form onsubmit="uploadVocaBookImage(event)">
             <div class="form-group" style="width:200px">
               <label>단어장 ID *</label>
               <input type="number" id="vb-img-id" placeholder="단어장 ID" required>
             </div>
             <div class="form-group">
-              <label>이미지 URL *</label>
-              <input type="text" id="vb-img-url" placeholder="https://..." required>
+              <label>이미지 파일 *</label>
+              <input type="file" id="vb-img-file" accept="image/*" required>
             </div>
             <div class="form-actions">
-              <button type="submit" class="btn btn-primary">저장</button>
+              <button type="submit" class="btn btn-primary">업로드</button>
             </div>
             <div id="res-vb-img" class="response-box"></div>
           </form>
@@ -567,18 +567,18 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
         </div>
 
         <div class="card">
-          <div class="card-title">도서 표지 이미지 설정</div>
-          <form onsubmit="updateBookImage(event)">
+          <div class="card-title">도서 표지 이미지 업로드</div>
+          <form onsubmit="uploadBookImage(event)">
             <div class="form-group" style="width:200px">
               <label>도서 ID *</label>
               <input type="number" id="rb-img-id" placeholder="도서 ID" required>
             </div>
             <div class="form-group">
-              <label>이미지 URL *</label>
-              <input type="text" id="rb-img-url" placeholder="https://..." required>
+              <label>이미지 파일 *</label>
+              <input type="file" id="rb-img-file" accept="image/*" required>
             </div>
             <div class="form-actions">
-              <button type="submit" class="btn btn-primary">저장</button>
+              <button type="submit" class="btn btn-primary">업로드</button>
             </div>
             <div id="res-rb-img" class="response-box"></div>
           </form>
@@ -930,12 +930,30 @@ async function deleteVocaBook() {
   await api('DELETE', `/api/admin/voca-books/${id}`, null, 'res-vb-delete');
 }
 
-async function updateVocaBookImage(e) {
+async function uploadVocaBookImage(e) {
   e.preventDefault();
   const id = document.getElementById('vb-img-id').value;
-  await api('PUT', `/api/admin/voca-books/${id}/image`, {
-    imageUrl: document.getElementById('vb-img-url').value
-  }, 'res-vb-img');
+  const file = document.getElementById('vb-img-file').files[0];
+  const box = document.getElementById('res-vb-img');
+  box.style.display = 'none';
+  if (!file) return alert('파일을 선택하세요');
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${BASE_URL}/api/admin/voca-books/${id}/image`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    box.textContent = JSON.stringify(data, null, 2);
+    box.className = `response-box ${res.ok ? 'response-success' : 'response-error'}`;
+    box.style.display = 'block';
+  } catch (err) {
+    box.textContent = '오류: ' + err.message;
+    box.className = 'response-box response-error';
+    box.style.display = 'block';
+  }
 }
 
 // VOCA DAY
@@ -1049,12 +1067,30 @@ async function deleteBook() {
   await api('DELETE', `/api/admin/books/${id}`, null, 'res-rb-delete');
 }
 
-async function updateBookImage(e) {
+async function uploadBookImage(e) {
   e.preventDefault();
   const id = document.getElementById('rb-img-id').value;
-  await api('PUT', `/api/admin/books/${id}/image`, {
-    imageUrl: document.getElementById('rb-img-url').value
-  }, 'res-rb-img');
+  const file = document.getElementById('rb-img-file').files[0];
+  const box = document.getElementById('res-rb-img');
+  box.style.display = 'none';
+  if (!file) return alert('파일을 선택하세요');
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch(`${BASE_URL}/api/admin/books/${id}/image`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${token}` },
+      body: formData
+    });
+    const data = await res.json();
+    box.textContent = JSON.stringify(data, null, 2);
+    box.className = `response-box ${res.ok ? 'response-success' : 'response-error'}`;
+    box.style.display = 'block';
+  } catch (err) {
+    box.textContent = '오류: ' + err.message;
+    box.className = 'response-box response-error';
+    box.style.display = 'block';
+  }
 }
 
 async function quickCreateBook(e) {

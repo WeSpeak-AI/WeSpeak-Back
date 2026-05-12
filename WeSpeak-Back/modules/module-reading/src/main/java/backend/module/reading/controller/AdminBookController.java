@@ -37,10 +37,10 @@ public class AdminBookController {
         return ApiResponse.ok();
     }
 
-    @PutMapping("/books/{bookId}/image")
-    public ApiResponse<Void> updateBookImage(@PathVariable("bookId") Long bookId, @Valid @RequestBody BookImageRequest request) {
-        adminBookService.updateBookImage(bookId, request);
-        return ApiResponse.ok();
+    @PatchMapping("/books/{bookId}/image")
+    public ApiResponse<String> uploadBookImage(@PathVariable("bookId") Long bookId,
+                                               @RequestParam("file") MultipartFile file) {
+        return ApiResponse.ok(adminBookService.uploadBookImage(bookId, file));
     }
 
     @DeleteMapping("/books/{bookId}")
