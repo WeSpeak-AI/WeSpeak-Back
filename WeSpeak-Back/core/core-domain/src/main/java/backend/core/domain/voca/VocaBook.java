@@ -34,8 +34,13 @@ public class VocaBook {
 
     private int totalDays;
 
+
     public enum Category {
         BASIC, INTERMEDIATE, HARD, TOEIC
+    }
+
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void update(String title, Category category, String description) {

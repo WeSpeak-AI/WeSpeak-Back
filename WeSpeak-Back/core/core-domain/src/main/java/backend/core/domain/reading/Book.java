@@ -35,8 +35,13 @@ public class Book {
     private String category;
     private int totalPages;
 
+
     public enum Level {
         BEGINNER, INTERMEDIATE, ADVANCED
+    }
+
+    public void updateImage(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void update(String title, String author, Level level, String category) {
