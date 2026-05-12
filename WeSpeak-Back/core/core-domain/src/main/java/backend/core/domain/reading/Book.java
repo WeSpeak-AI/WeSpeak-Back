@@ -24,6 +24,8 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
+    private String imageUrl;
+
     @Column(nullable = false)
     private String author;
 

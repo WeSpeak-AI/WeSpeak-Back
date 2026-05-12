@@ -24,6 +24,8 @@ public class VocaBook {
     @Column(nullable = false)
     private String title;
 
+    private String imageUrl;
+
     @Enumerated(EnumType.STRING)
     private Category category;
 
