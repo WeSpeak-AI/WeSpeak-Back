@@ -15,6 +15,7 @@ public class ReadingBookPreviewResponse {
     private String title;
     private String level;
     private String category;
+    private String imageUrl;
     private int currentPage;
     private int totalPage;
 
@@ -24,6 +25,7 @@ public class ReadingBookPreviewResponse {
                 .title(book.getTitle())
                 .level(book.getLevel().name())
                 .category(book.getCategory())
+                .imageUrl(book.getImageUrl())
                 .totalPage(book.getTotalPages())
                 .build();
     }
@@ -35,6 +37,7 @@ public class ReadingBookPreviewResponse {
                 .totalPage(book.getTotalPages())
                 .bookId(String.valueOf(book.getBookId()))
                 .title(book.getTitle())
+                .imageUrl(book.getImageUrl())
                 .level(book.getLevel().name())
                 .category(book.getCategory())
                 .build();

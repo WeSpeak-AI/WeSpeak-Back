@@ -12,6 +12,7 @@ public class VocaBookResponse {
 
     private String vocaBookId;
     private String title;
+    private String imageUrl;
     private String category;
     private String description;
     private int totalDays;
@@ -20,6 +21,7 @@ public class VocaBookResponse {
         return VocaBookResponse.builder()
                 .vocaBookId(String.valueOf(book.getVocaBookId()))
                 .title(book.getTitle())
+                .imageUrl(book.getImageUrl())
                 .category(book.getCategory().name())
                 .description(book.getDescription())
                 .totalDays(book.getTotalDays())
