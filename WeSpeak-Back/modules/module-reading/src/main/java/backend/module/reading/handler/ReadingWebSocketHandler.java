@@ -51,7 +51,6 @@ public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
 
         session.sendMessage(new TextMessage(response.userText()));
         session.sendMessage(new TextMessage(response.feedbackText()));
-        session.sendMessage(new TextMessage("AUDIO:" + response.audioData()));
     }
 
     @Override
