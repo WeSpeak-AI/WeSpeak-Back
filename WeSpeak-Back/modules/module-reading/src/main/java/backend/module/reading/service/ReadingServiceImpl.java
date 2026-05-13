@@ -30,8 +30,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.http.client.ReactorClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
+import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -53,7 +56,12 @@ public class ReadingServiceImpl implements ReadingService {
 
     @PostConstruct
     public void init() {
-        restClient = RestClient.create(aiServerUrl);
+        HttpClient httpClient = HttpClient.create()
+                .responseTimeout(Duration.ofSeconds(25));
+        restClient = RestClient.builder()
+                .requestFactory(new ReactorClientHttpRequestFactory(httpClient))
+                .baseUrl(aiServerUrl)
+                .build();
     }
 
     @Override
