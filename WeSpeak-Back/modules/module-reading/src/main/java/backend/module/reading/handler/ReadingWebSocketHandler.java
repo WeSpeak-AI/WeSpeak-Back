@@ -10,7 +10,6 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
 
 @Slf4j
 @Component
@@ -52,7 +51,7 @@ public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
 
         session.sendMessage(new TextMessage(response.userText()));
         session.sendMessage(new TextMessage(response.feedbackText()));
-        session.sendMessage(new BinaryMessage(Base64.getDecoder().decode(response.audioData())));
+        session.sendMessage(new TextMessage("AUDIO:" + response.audioData()));
     }
 
     @Override
