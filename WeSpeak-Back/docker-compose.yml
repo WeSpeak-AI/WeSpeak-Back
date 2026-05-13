@@ -209,7 +209,7 @@ services:
       args:
         MODULE_PATH: api/api-gateway
     ports:
-      - "8080:8080"
+      - "9000:9000"
     depends_on:
       - auth-service
       - user-service
