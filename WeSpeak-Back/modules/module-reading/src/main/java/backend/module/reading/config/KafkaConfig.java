@@ -1,4 +1,4 @@
-package backend.module.writing.config;
+package backend.module.reading.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -57,11 +57,6 @@ public class KafkaConfig {
         factory.setCommonErrorHandler(errorHandler);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return factory;
-    }
-
-    @Bean
-    public NewTopic writingDlt() {
-        return TopicBuilder.name("writing.DLT").partitions(1).replicas(1).build();
     }
 
     @Bean

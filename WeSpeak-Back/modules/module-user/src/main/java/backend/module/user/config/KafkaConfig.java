@@ -60,7 +60,27 @@ public class KafkaConfig {
     }
 
     @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> userDeletedKafkaListenerContainerFactory(
+            KafkaTemplate<String, String> messageRelayKafkaTemplate) {
+        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(messageRelayKafkaTemplate,
+                (record, ex) -> new TopicPartition(record.topic() + ".DLT", -1));
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(5000L, 10L));
+
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        factory.setCommonErrorHandler(errorHandler);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+        return factory;
+    }
+
+    @Bean
     public NewTopic userDlt() {
         return TopicBuilder.name("user.DLT").partitions(1).replicas(1).build();
+    }
+
+    @Bean
+    public NewTopic userDeletedDlt() {
+        return TopicBuilder.name("user-deleted.DLT").partitions(1).replicas(1).build();
     }
 }

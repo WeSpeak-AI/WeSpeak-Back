@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: wespeak
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - api-gateway:9000
+          - auth-service:9001
+          - user-service:9002
+          - voca-service:9003
+          - writing-service:9004
+          - reading-service:9005
+          - conversation-service:9006
+          - search-service:9007

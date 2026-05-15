@@ -15,6 +15,7 @@ public class WordResponse {
     private String meaning;
     private String phonetic;
     private String example;
+    private String imageUrl;
 
     public static WordResponse from(Word word) {
         return WordResponse.builder()
@@ -23,6 +24,7 @@ public class WordResponse {
                 .meaning(word.getMeaning())
                 .example(word.getExample())
                 .phonetic(word.getPhonetic())
+                .imageUrl(word.getImageUrl())
                 .build();
     }
 }
