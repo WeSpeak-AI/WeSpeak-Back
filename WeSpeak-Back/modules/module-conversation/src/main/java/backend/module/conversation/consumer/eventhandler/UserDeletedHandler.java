@@ -27,7 +27,9 @@ public class UserDeletedHandler implements EventHandler<UserDeletedEventPayload>
         String email = event.getPayload().getEmail();
 
         List<Conversation> conversations = conversationRepository.findByUser_Email(email);
-        conversationMessageRepository.deleteAllByConversationIn(conversations);
+        if (!conversations.isEmpty()) {
+            conversationMessageRepository.deleteAllByConversationIn(conversations);
+        }
         conversationRepository.deleteAll(conversations);
 
         log.info("[UserDeletedHandler] conversation 데이터 삭제 완료. email={}", email);
