@@ -24,7 +24,7 @@ public class UserDeletedEventConsumer {
             }
             ack.acknowledge();
         } catch (Exception e) {
-            log.error("[UserDeletedEventConsumer.listen] message={}", message, e);
+            log.error("[UserDeletedEventConsumer.listenVoca] message={}", message, e);
             throw e;
         }
     }

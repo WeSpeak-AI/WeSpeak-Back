@@ -1,6 +1,7 @@
 package backend.module.voca.service;
 
 import backend.core.common.event.EventType;
+import backend.core.common.event.payload.ImageGenerationEventPayload;
 import backend.core.common.event.payload.VocaGenerationEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
@@ -194,6 +195,16 @@ public class AdminVocaServiceImpl implements AdminVocaService {
                 .category(vocaBook.getCategory().name())
                 .description(vocaBook.getDescription())
                 .numberOfDays(request.getNumberOfDays())
+                .build());
+    }
+
+    @Override
+    public void wordImageGenerate(Long vocaBookId) {
+        VocaBook vocaBook = vocaBookRepository.findById(vocaBookId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
+
+        outboxEventPublisher.publish(EventType.IMAGE_GENERATION, ImageGenerationEventPayload.builder()
+                .vocaBookId(vocaBookId)
                 .build());
     }
 }

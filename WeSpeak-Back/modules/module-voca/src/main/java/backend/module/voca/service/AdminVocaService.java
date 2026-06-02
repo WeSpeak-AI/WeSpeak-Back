@@ -15,5 +15,7 @@ public interface AdminVocaService {
     void updateWord(Long wordId, WordRequest request);
     void deleteWord(Long wordId);
     void aiGenerate(VocaBookRequest request);
+    void wordImageGenerate(Long vocaBookId);
     void ingestVoca(IngestRequest request);
+
 }

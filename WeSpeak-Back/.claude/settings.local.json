@@ -81,7 +81,9 @@
       "Read(//mnt/c/Users/user/github/WeSpeak-STT/**)",
       "Read(//usr/bin/**)",
       "Bash(ssh -T git@github.com)",
-      "Read(//home/jeongseonwoong/.ssh/**)"
+      "Read(//home/jeongseonwoong/.ssh/**)",
+      "Read(//mnt/c/Users/user/github/Wespeak-AI/**)",
+      "Read(//mnt/c/Users/user/github/**)"
     ]
   }
 }
