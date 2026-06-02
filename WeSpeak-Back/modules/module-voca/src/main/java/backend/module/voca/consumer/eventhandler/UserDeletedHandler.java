@@ -43,8 +43,7 @@ public class UserDeletedHandler implements EventHandler<UserDeletedEventPayload>
         List<UserVocaBook> userVocaBooks = userVocaBookRepository.findByUserEmail(email);
         userVocaBookRepository.deleteAll(userVocaBooks);
 
-        customVocaBookRepository.findByUserEmail(email)
-                .ifPresent(customVocaBookRepository::delete);
+        customVocaBookRepository.deleteAll(customVocaBookRepository.findAllByUserEmail(email));
 
         log.info("[UserDeletedHandler] voca 데이터 삭제 완료. email={}", email);
     }

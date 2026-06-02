@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import org.springframework.data.jpa.repository.Modifying;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +26,11 @@ public interface WordRepository extends JpaRepository<Word, Long> {
 
     @Query("select w from Word w where w.vocaBookDay.vocaBook.vocaBookId = :bookId and w.term in :terms")
     List<Word> findByBookIdAndTermIn(@Param("bookId") Long bookId, @Param("terms") List<String> terms);
+
+    @Query("select w from Word w where w.vocaBookDay.vocaBook.vocaBookId = :vocaBookId")
+    List<Word> findAllByVocaBookId(@Param("vocaBookId") Long vocaBookId);
+
+    @Modifying
+    @Query("update Word w set w.imageUrl = :imageUrl where w.wordId = :wordId")
+    void updateImageUrl(@Param("wordId") Long wordId, @Param("imageUrl") String imageUrl);
 }

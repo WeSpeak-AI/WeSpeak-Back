@@ -8,12 +8,12 @@ import backend.core.domain.user.User;
 import backend.core.infra.Snowflake;
 import backend.core.infra.repository.CustomVocaBookRepository;
 import backend.core.infra.repository.UserRepository;
+import backend.module.voca.dto.CustomVocaBookRequest;
 import backend.module.voca.dto.CustomVocaBookResponse;
 import backend.module.voca.dto.CustomWordRequest;
 import backend.module.voca.dto.CustomWordResponse;
 import backend.module.voca.repository.CustomWordRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,26 +31,34 @@ public class CustomVocaServiceImpl implements CustomVocaService {
 
     @Override
     @Transactional
-    public CustomVocaBookResponse getMyCustomVocaBook(String email) {
-        try {
-            CustomVocaBook book = customVocaBookRepository.findByUserEmail(email)
-                    .orElseGet(() -> customVocaBookRepository.save(CustomVocaBook.builder()
-                            .customVocaBookId(snowflake.nextId())
-                            .user(findUser(email))
-                            .build()));
-            return CustomVocaBookResponse.from(book);
-        } catch (DataIntegrityViolationException e) {
-            return CustomVocaBookResponse.from(
-                    customVocaBookRepository.findByUserEmail(email)
-                            .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_VOCA_BOOK_NOT_FOUND))
-            );
-        }
+    public CustomVocaBookResponse createCustomVocaBook(String email, CustomVocaBookRequest request) {
+        User user = findUser(email);
+        CustomVocaBook book = customVocaBookRepository.save(CustomVocaBook.builder()
+                .customVocaBookId(snowflake.nextId())
+                .user(user)
+                .name(request.name())
+                .build());
+        return CustomVocaBookResponse.from(book);
+    }
+
+    @Override
+    public List<CustomVocaBookResponse> getMyCustomVocaBooks(String email) {
+        return customVocaBookRepository.findAllByUserEmail(email).stream()
+                .map(CustomVocaBookResponse::from)
+                .toList();
     }
 
     @Override
     @Transactional
-    public CustomWordResponse addWord(String email, CustomWordRequest request) {
-        CustomVocaBook book = getOrCreateBook(email);
+    public void deleteCustomVocaBook(String email, Long customVocaBookId) {
+        CustomVocaBook book = findBookByIdAndEmail(customVocaBookId, email);
+        customVocaBookRepository.delete(book);
+    }
+
+    @Override
+    @Transactional
+    public CustomWordResponse addWord(String email, Long customVocaBookId, CustomWordRequest request) {
+        CustomVocaBook book = findBookByIdAndEmail(customVocaBookId, email);
         CustomWord word = customWordRepository.save(CustomWord.builder()
                 .customWordId(snowflake.nextId())
                 .customVocaBook(book)
@@ -64,10 +72,9 @@ public class CustomVocaServiceImpl implements CustomVocaService {
     }
 
     @Override
-    public List<CustomWordResponse> getWords(String email) {
-        CustomVocaBook book = customVocaBookRepository.findByUserEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_VOCA_BOOK_NOT_FOUND));
-        return customWordRepository.findByCustomVocaBook_CustomVocaBookId(book.getCustomVocaBookId()).stream()
+    public List<CustomWordResponse> getWords(String email, Long customVocaBookId) {
+        findBookByIdAndEmail(customVocaBookId, email);
+        return customWordRepository.findByCustomVocaBook_CustomVocaBookId(customVocaBookId).stream()
                 .map(CustomWordResponse::from)
                 .toList();
     }
@@ -92,17 +99,9 @@ public class CustomVocaServiceImpl implements CustomVocaService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
-    private CustomVocaBook getOrCreateBook(String email) {
-        try {
-            return customVocaBookRepository.findByUserEmail(email)
-                    .orElseGet(() -> customVocaBookRepository.save(CustomVocaBook.builder()
-                            .customVocaBookId(snowflake.nextId())
-                            .user(findUser(email))
-                            .build()));
-        } catch (DataIntegrityViolationException e) {
-            return customVocaBookRepository.findByUserEmail(email)
-                    .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_VOCA_BOOK_NOT_FOUND));
-        }
+    private CustomVocaBook findBookByIdAndEmail(Long customVocaBookId, String email) {
+        return customVocaBookRepository.findByCustomVocaBookIdAndUserEmail(customVocaBookId, email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOM_VOCA_BOOK_NOT_FOUND));
     }
 
     private CustomWord validateWordOwnership(String email, Long customWordId) {
