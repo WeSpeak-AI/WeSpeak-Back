@@ -57,7 +57,7 @@ public class ReadingServiceImpl implements ReadingService {
     @PostConstruct
     public void init() {
         HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(25));
+                .responseTimeout(Duration.ofSeconds(50));
         restClient = RestClient.builder()
                 .requestFactory(new ReactorClientHttpRequestFactory(httpClient))
                 .baseUrl(aiServerUrl)
