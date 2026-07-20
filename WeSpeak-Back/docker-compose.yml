@@ -52,6 +52,152 @@ services:
         max-file: "3"
     restart: unless-stopped
 
+  # ─── 서비스별 MySQL 인스턴스 (database-per-service, 아직 어떤 서비스도 연결되지 않음) ──────
+
+  mysql-auth:
+    image: mysql:8.0
+    container_name: wespeak-mysql-auth
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_auth
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-auth-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-user:
+    image: mysql:8.0
+    container_name: wespeak-mysql-user
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_user
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-user-data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-voca:
+    image: mysql:8.0
+    container_name: wespeak-mysql-voca
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_voca
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-voca-data:/var/lib/mysql
+    ports:
+      - "3309:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-writing:
+    image: mysql:8.0
+    container_name: wespeak-mysql-writing
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_writing
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-writing-data:/var/lib/mysql
+    ports:
+      - "3310:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-reading:
+    image: mysql:8.0
+    container_name: wespeak-mysql-reading
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_reading
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-reading-data:/var/lib/mysql
+    ports:
+      - "3311:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-conversation:
+    image: mysql:8.0
+    container_name: wespeak-mysql-conversation
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_conversation
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-conversation-data:/var/lib/mysql
+    ports:
+      - "3312:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
   redis:
     image: redis:7-alpine
     container_name: wespeak-redis
@@ -243,4 +389,10 @@ networks:
 
 volumes:
   mysql-data:
+  mysql-auth-data:
+  mysql-user-data:
+  mysql-voca-data:
+  mysql-writing-data:
+  mysql-reading-data:
+  mysql-conversation-data:
   redis-data:
