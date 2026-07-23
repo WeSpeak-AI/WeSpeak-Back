@@ -1,8 +1,8 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.test.CorrectWord;
-import backend.core.domain.test.IncorrectWord;
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.CorrectWord;
+import backend.module.voca.domain.IncorrectWord;
+import backend.module.voca.domain.Word;
 import lombok.Getter;
 
 @Getter

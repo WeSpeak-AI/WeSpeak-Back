@@ -1,6 +1,6 @@
 package backend.module.voca.repository;
 
-import backend.core.domain.voca.VocaBookDay;
+import backend.module.voca.domain.VocaBookDay;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

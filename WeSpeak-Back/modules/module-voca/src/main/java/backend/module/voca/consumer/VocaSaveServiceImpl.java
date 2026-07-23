@@ -2,9 +2,9 @@ package backend.module.voca.consumer;
 
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
-import backend.core.domain.voca.VocaBook;
-import backend.core.domain.voca.VocaBookDay;
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.VocaBook;
+import backend.module.voca.domain.VocaBookDay;
+import backend.module.voca.domain.Word;
 import backend.core.infra.Snowflake;
 import backend.module.voca.dto.VocaGenerationResponse;
 import backend.module.voca.repository.VocaBookDayRepository;

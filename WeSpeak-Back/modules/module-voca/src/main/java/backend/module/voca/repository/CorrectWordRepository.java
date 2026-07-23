@@ -1,8 +1,8 @@
 package backend.module.voca.repository;
 
-import backend.core.domain.test.CorrectWord;
-import backend.core.domain.test.Test;
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.CorrectWord;
+import backend.module.voca.domain.Test;
+import backend.module.voca.domain.Word;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

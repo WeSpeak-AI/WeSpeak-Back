@@ -1,6 +1,6 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.customvoca.CustomWord;
+import backend.module.voca.domain.CustomWord;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 

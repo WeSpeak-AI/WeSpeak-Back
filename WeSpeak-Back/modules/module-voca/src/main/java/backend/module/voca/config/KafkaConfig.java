@@ -87,4 +87,9 @@ public class KafkaConfig {
     public NewTopic vocaDlt() {
         return TopicBuilder.name("voca.DLT").partitions(1).replicas(1).build();
     }
+
+    @Bean
+    public NewTopic userLifecycleDlt() {
+        return TopicBuilder.name("user-lifecycle.DLT").partitions(1).replicas(1).build();
+    }
 }

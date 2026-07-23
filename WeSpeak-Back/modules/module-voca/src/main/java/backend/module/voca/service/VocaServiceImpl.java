@@ -2,14 +2,13 @@ package backend.module.voca.service;
 
 import backend.core.common.event.EventType;
 import backend.core.common.event.payload.StudyCompletedEventPayload;
+import backend.core.common.event.payload.UserStatEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
-import backend.core.domain.user.User;
-import backend.core.domain.uservoca.UserVocaBook;
-import backend.core.domain.voca.VocaBook;
 import backend.core.infra.Snowflake;
-import backend.core.infra.repository.UserRepository;
+import backend.module.voca.domain.UserVocaBook;
+import backend.module.voca.domain.VocaBook;
 import backend.module.voca.dto.MyVocaBookResponse;
 import backend.module.voca.dto.VocaBookDayResponse;
 import backend.module.voca.dto.VocaBookResponse;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,7 +34,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class VocaServiceImpl implements VocaService {
 
-    private final UserRepository userRepository;
     private final VocaBookRepository vocaBookRepository;
     private final VocaBookDayRepository vocaBookDayRepository;
     private final UserVocaBookRepository userVocaBookRepository;
@@ -62,17 +61,20 @@ public class VocaServiceImpl implements VocaService {
         }
         VocaBook vocaBook = vocaBookRepository.findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         try {
             userVocaBookRepository.save(UserVocaBook.builder()
                     .userBookId(snowflake.nextId())
-                    .user(user)
+                    .userEmail(email)
                     .vocaBook(vocaBook)
                     .build());
         } catch (DataIntegrityViolationException e) {
             throw new BusinessException(ErrorCode.ALREADY_STARTED_VOCA);
         }
+
+        outboxEventPublisher.publish(EventType.VOCA_BOOK_ENROLLED, UserStatEventPayload.builder()
+                .email(email)
+                .recordedAt(LocalDateTime.now())
+                .build());
     }
 
     @Override
@@ -92,7 +94,10 @@ public class VocaServiceImpl implements VocaService {
     @Override
     @Transactional
     public List<WordResponse> getWordsByDay(String email, Long bookId, int dayNumber) {
-        publishEventIfFirst(email);
+        outboxEventPublisher.publish(EventType.STUDY_COMPLETED, StudyCompletedEventPayload.builder()
+                .email(email)
+                .studiedAt(LocalDate.now())
+                .build());
 
         return wordRepository.findByVocaBookDay_VocaBook_VocaBookIdAndVocaBookDay_Day(bookId, dayNumber).stream()
                 .map(WordResponse::from)
@@ -105,16 +110,5 @@ public class VocaServiceImpl implements VocaService {
         UserVocaBook userVocaBook = userVocaBookRepository.findByUserEmailAndVocaBookVocaBookId(email, bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_VOCA_BOOK_NOT_FOUND));
         userVocaBookRepository.delete(userVocaBook);
-    }
-
-    private void publishEventIfFirst(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-
-        if (!LocalDate.now().equals(user.getLastStudiedAt())) {
-            outboxEventPublisher.publish(EventType.STUDY_COMPLETED, StudyCompletedEventPayload.builder()                                                                                                                                             .email(email)
-                    .studiedAt(LocalDate.now())
-                    .build());
-        }
     }
 }

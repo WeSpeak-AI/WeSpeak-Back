@@ -1,6 +1,6 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.voca.VocaBook;
+import backend.module.voca.domain.VocaBook;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

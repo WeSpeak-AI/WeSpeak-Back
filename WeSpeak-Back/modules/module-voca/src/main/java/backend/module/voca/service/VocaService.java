@@ -1,6 +1,6 @@
 package backend.module.voca.service;
 
-import backend.core.domain.voca.VocaBook;
+import backend.module.voca.domain.VocaBook;
 import backend.module.voca.dto.MyVocaBookResponse;
 import backend.module.voca.dto.VocaBookDayResponse;
 import backend.module.voca.dto.VocaBookResponse;

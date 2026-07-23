@@ -1,6 +1,6 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.Word;
 import lombok.Getter;
 
 @Getter

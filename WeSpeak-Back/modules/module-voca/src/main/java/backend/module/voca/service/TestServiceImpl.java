@@ -2,14 +2,12 @@ package backend.module.voca.service;
 
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
-import backend.core.domain.test.CorrectWord;
-import backend.core.domain.test.IncorrectWord;
-import backend.core.domain.test.Test;
-import backend.core.domain.user.User;
-import backend.core.domain.voca.VocaBook;
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.CorrectWord;
+import backend.module.voca.domain.IncorrectWord;
+import backend.module.voca.domain.Test;
+import backend.module.voca.domain.VocaBook;
+import backend.module.voca.domain.Word;
 import backend.core.infra.Snowflake;
-import backend.core.infra.repository.UserRepository;
 import backend.module.voca.dto.TestRecordPreview;
 import backend.module.voca.dto.TestResultRequest;
 import backend.module.voca.dto.TestingWordResponse;
@@ -39,7 +37,6 @@ public class TestServiceImpl implements TestService{
     private final WordRepository wordRepository;
     private final TestRepository testRepository;
     private final VocaBookRepository vocaBookRepository;
-    private final UserRepository userRepository;
     private final IncorrectWordRepository incorrectWordRepository;
     private final CorrectWordRepository correctWordRepository;
     private final UserVocaBookRepository userVocaBookRepository;
@@ -57,8 +54,6 @@ public class TestServiceImpl implements TestService{
     @Override
     @Transactional
     public void endTest(Long bookId, TestResultRequest testResultRequest, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         VocaBook vocaBook = vocaBookRepository.findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.VOCA_BOOK_NOT_FOUND));
 
@@ -70,20 +65,20 @@ public class TestServiceImpl implements TestService{
         Map<String, Word> wordMap = words.stream()
                 .collect(Collectors.toMap(Word::getTerm, word -> word, (w1, w2) -> w1));
 
-        Test test = saveTest(user, vocaBook, testResultRequest);
+        Test test = saveTest(email, vocaBook, testResultRequest);
 
-        updateCurrentDay(user, vocaBook, testResultRequest.getEndDay());
+        updateCurrentDay(email, vocaBook, testResultRequest.getEndDay());
         saveCorrectWords(test, testResultRequest.getTestedWords(), wordMap);
         saveIncorrectWords(test, testResultRequest.getTestedWords(), wordMap);
     }
 
-    private Test saveTest(User user, VocaBook vocaBook, TestResultRequest req) {
+    private Test saveTest(String email, VocaBook vocaBook, TestResultRequest req) {
         List<TestResultRequest.TestedWord> testedWords = req.getTestedWords();
         int score = (int) testedWords.stream().filter(TestResultRequest.TestedWord::correct).count();
 
         Test test = Test.builder()
                 .testId(snowflake.nextId())
-                .user(user)
+                .userEmail(email)
                 .vocaBook(vocaBook)
                 .testedAt(LocalDateTime.now())
                 .startDay(req.getStartDay())
@@ -95,8 +90,8 @@ public class TestServiceImpl implements TestService{
         return testRepository.save(test);
     }
 
-    private void updateCurrentDay(User user, VocaBook vocaBook, int endDay) {
-        userVocaBookRepository.findByUserAndVocaBook(user, vocaBook)
+    private void updateCurrentDay(String email, VocaBook vocaBook, int endDay) {
+        userVocaBookRepository.findByUserEmailAndVocaBookVocaBookId(email, vocaBook.getVocaBookId())
                 .ifPresent(uv -> uv.updateCurrentDay(endDay));
     }
 
