@@ -1,7 +1,7 @@
 package backend.module.reading.controller;
 
 import backend.core.common.response.ApiResponse;
-import backend.core.domain.reading.Book.Level;
+import backend.module.reading.domain.Book.Level;
 import backend.module.reading.dto.ReadingBookContent;
 import backend.module.reading.dto.ReadingBookPreviewResponse;
 import backend.module.reading.dto.ReadingRequest;

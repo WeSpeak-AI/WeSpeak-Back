@@ -2,16 +2,15 @@ package backend.module.reading.service;
 
 import backend.core.common.event.EventType;
 import backend.core.common.event.payload.StudyCompletedEventPayload;
+import backend.core.common.event.payload.UserStatEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
-import backend.core.domain.reading.Book;
-import backend.core.domain.reading.Book.Level;
-import backend.core.domain.reading.BookPage;
-import backend.core.domain.user.User;
-import backend.core.domain.userbook.UserBook;
+import backend.module.reading.domain.Book;
+import backend.module.reading.domain.Book.Level;
+import backend.module.reading.domain.BookPage;
+import backend.module.reading.domain.UserBook;
 import backend.core.infra.Snowflake;
-import backend.core.infra.repository.UserRepository;
 import backend.module.reading.dto.ReadingAiResponse;
 import backend.module.reading.dto.ReadingBookContent;
 import backend.module.reading.dto.ReadingBookPreviewResponse;
@@ -31,12 +30,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.http.client.ReactorClientHttpRequestFactory;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -46,13 +48,16 @@ public class ReadingServiceImpl implements ReadingService {
     private final ReadingBookRepository readingBookRepository;
     private final BookPageRepository bookPageRepository;
     private final UserBookRepository userBookRepository;
-    private final UserRepository userRepository;
     private final Snowflake snowflake;
     private final OutboxEventPublisher outboxEventPublisher;
 
     @Value("${ai.server.url}")
     private String aiServerUrl;
     private RestClient restClient;
+
+    @Value("${user.service.url}")
+    private String userServiceUrl;
+    private RestClient userServiceClient;
 
     @PostConstruct
     public void init() {
@@ -61,6 +66,9 @@ public class ReadingServiceImpl implements ReadingService {
         restClient = RestClient.builder()
                 .requestFactory(new ReactorClientHttpRequestFactory(httpClient))
                 .baseUrl(aiServerUrl)
+                .build();
+        userServiceClient = RestClient.builder()
+                .baseUrl(userServiceUrl)
                 .build();
     }
 
@@ -88,16 +96,16 @@ public class ReadingServiceImpl implements ReadingService {
     public ReadingBookContent getPage(String email, Long bookId, Integer pageNumber) {
         UserBook userBook = userBookRepository.findByUserEmailAndBookBookId(email, bookId)
                 .orElseGet(() -> {
-                    User user = userRepository.findByEmail(email)
-                            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
                     Book book = readingBookRepository.findById(bookId)
                             .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
-                    return userBookRepository.save(UserBook.builder()
+                    UserBook created = userBookRepository.save(UserBook.builder()
                             .userBookId(snowflake.nextId())
-                            .user(user)
+                            .userEmail(email)
                             .book(book)
                             .currentPage(1)
                             .build());
+                    publishBookProgressed(email);
+                    return created;
                 });
 
         int targetPage = (pageNumber != null) ? pageNumber : userBook.getCurrentPage();
@@ -117,11 +125,22 @@ public class ReadingServiceImpl implements ReadingService {
     @Override
     @Transactional
     public ReadingAiResponse processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
-        user.consumeTicket();
+        consumeTicket(email);
 
         return getFeedback(bookPageId, audioBytes);
+    }
+
+    private void consumeTicket(String email) {
+        try {
+            userServiceClient.post()
+                    .uri("/internal/users/tickets/consume")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("email", email))
+                    .retrieve()
+                    .toBodilessEntity();
+        } catch (HttpClientErrorException.BadRequest e) {
+            throw new BusinessException(ErrorCode.INSUFFICIENT_TICKET);
+        }
     }
 
     @Override
@@ -159,17 +178,24 @@ public class ReadingServiceImpl implements ReadingService {
     public Long startBook(String email, ReadingRequest readingRequest) {
         return userBookRepository.findByUserEmailAndBookBookId(email, readingRequest.getBookId())
                 .orElseGet(() -> {
-                    User user = userRepository.findByEmail(email)
-                            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
                     Book book = readingBookRepository.findById(readingRequest.getBookId())
                             .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
-                    return userBookRepository.save(UserBook.builder()
+                    UserBook created = userBookRepository.save(UserBook.builder()
                             .userBookId(snowflake.nextId())
                             .book(book)
-                            .user(user)
+                            .userEmail(email)
                             .currentPage(1)
                             .build());
+                    publishBookProgressed(email);
+                    return created;
                 })
                 .getUserBookId();
+    }
+
+    private void publishBookProgressed(String email) {
+        outboxEventPublisher.publish(EventType.USER_BOOK_PROGRESSED, UserStatEventPayload.builder()
+                .email(email)
+                .recordedAt(LocalDateTime.now())
+                .build());
     }
 }

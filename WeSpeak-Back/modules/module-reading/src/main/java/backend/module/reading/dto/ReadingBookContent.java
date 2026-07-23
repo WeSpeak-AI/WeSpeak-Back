@@ -1,6 +1,6 @@
 package backend.module.reading.dto;
 
-import backend.core.domain.reading.BookPage;
+import backend.module.reading.domain.BookPage;
 import lombok.Builder;
 import lombok.Getter;
 
