@@ -1,7 +1,7 @@
 package backend.module.conversation.websocket;
 
 import backend.core.common.dataserializer.DataSerializer;
-import backend.core.domain.conversation.Conversation;
+import backend.module.conversation.domain.Conversation;
 import backend.module.conversation.dto.AiChatResponse;
 import backend.module.conversation.repository.ConversationMessageRepository;
 import backend.module.conversation.service.ConversationMessageService;

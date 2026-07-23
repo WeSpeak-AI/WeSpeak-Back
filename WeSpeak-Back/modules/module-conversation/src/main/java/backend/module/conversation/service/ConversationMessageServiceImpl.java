@@ -1,7 +1,7 @@
 package backend.module.conversation.service;
 
-import backend.core.domain.conversation.Conversation;
-import backend.core.domain.conversation.ConversationMessage;
+import backend.module.conversation.domain.Conversation;
+import backend.module.conversation.domain.ConversationMessage;
 import backend.core.infra.Snowflake;
 import backend.module.conversation.repository.ConversationMessageRepository;
 import lombok.RequiredArgsConstructor;

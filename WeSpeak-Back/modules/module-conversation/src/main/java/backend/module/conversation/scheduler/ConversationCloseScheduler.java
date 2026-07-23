@@ -1,6 +1,6 @@
 package backend.module.conversation.scheduler;
 
-import backend.core.domain.conversation.Conversation;
+import backend.module.conversation.domain.Conversation;
 import backend.module.conversation.repository.ConversationMessageRepository;
 import backend.module.conversation.repository.ConversationRepository;
 import lombok.RequiredArgsConstructor;

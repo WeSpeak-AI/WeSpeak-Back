@@ -1,6 +1,6 @@
 package backend.module.conversation.service;
 
-import backend.core.domain.conversation.Conversation;
+import backend.module.conversation.domain.Conversation;
 import backend.module.conversation.dto.ConversationRequest;
 import backend.module.conversation.dto.TopicResponse;
 

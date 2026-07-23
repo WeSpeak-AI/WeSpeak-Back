@@ -2,16 +2,14 @@ package backend.module.conversation.service;
 
 import backend.core.common.event.EventType;
 import backend.core.common.event.payload.StudyCompletedEventPayload;
+import backend.core.common.event.payload.UserStatEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
-import backend.core.domain.conversation.Conversation;
-import backend.core.domain.topic.Topic;
-import backend.core.domain.user.User;
-import backend.core.domain.userbook.UserBook;
+import backend.module.conversation.domain.Conversation;
+import backend.module.conversation.domain.Topic;
 import backend.core.infra.Snowflake;
-import backend.core.infra.repository.TopicRepository;
-import backend.core.infra.repository.UserRepository;
+import backend.module.conversation.repository.TopicRepository;
 import backend.module.conversation.dto.ConversationRequest;
 import backend.module.conversation.dto.TopicResponse;
 import backend.module.conversation.repository.ConversationRepository;
@@ -30,7 +28,6 @@ import java.util.List;
 public class ConversationServiceImpl implements ConversationService {
 
     private final ConversationRepository conversationRepository;
-    private final UserRepository userRepository;
     private final TopicRepository topicRepository;
     private final RedisTemplate<String, Object> redisTemplate;
     private final Snowflake snowflake;
@@ -46,18 +43,23 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     @Transactional
     public Long startConversation(String email, ConversationRequest request) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         Topic topic = topicRepository.findById(request.getTopicId())
                 .orElseThrow(() -> new BusinessException(ErrorCode.TOPIC_NOT_FOUND));
         Conversation conversation = Conversation.builder()
                 .conversationId(snowflake.nextId())
-                .user(user)
+                .userEmail(email)
                 .topic(topic)
                 .startedAt(LocalDateTime.now())
                 .build();
 
-        return conversationRepository.save(conversation).getConversationId();
+        Long conversationId = conversationRepository.save(conversation).getConversationId();
+
+        outboxEventPublisher.publish(EventType.CONVERSATION_HELD, UserStatEventPayload.builder()
+                .email(email)
+                .recordedAt(LocalDateTime.now())
+                .build());
+
+        return conversationId;
     }
 
     @Override
@@ -69,12 +71,12 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     @Transactional
     public void closeSession(Long conversationId) {
-        Conversation conversation = conversationRepository.findByIdWithUser(conversationId)
+        Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CONVERSATION_NOT_FOUND));
         conversation.close();
         redisTemplate.delete("conversation:history:" + conversationId);
         outboxEventPublisher.publish(EventType.STUDY_COMPLETED, StudyCompletedEventPayload.builder()
-                .email(conversation.getUser().getEmail())
+                .email(conversation.getUserEmail())
                 .studiedAt(LocalDate.now())
                 .build());
     }
@@ -82,7 +84,7 @@ public class ConversationServiceImpl implements ConversationService {
     @Override
     @Transactional
     public void deleteConversation(Long conversationId, String email) {
-        Conversation conversation = conversationRepository.findByIdWithUser(conversationId)
+        Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.CONVERSATION_NOT_FOUND));
         conversationRepository.delete(conversation);
     }

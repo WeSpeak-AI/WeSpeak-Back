@@ -1,6 +1,6 @@
 package backend.module.conversation.service;
 
-import backend.core.domain.conversation.Conversation;
+import backend.module.conversation.domain.Conversation;
 
 public interface ConversationMessageService {
     public void saveUserMessageToDB(Conversation conversation, String userMessage);
