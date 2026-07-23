@@ -15,4 +15,6 @@ public interface UserService {
     void addXp(String email, int amount);
 
     void rewardTicket(String email);
+
+    void consumeTicket(String email);
 }
