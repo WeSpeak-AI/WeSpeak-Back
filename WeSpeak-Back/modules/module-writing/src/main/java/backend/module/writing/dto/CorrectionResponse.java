@@ -1,6 +1,6 @@
 package backend.module.writing.dto;
 
-import backend.core.domain.writing.Essay;
+import backend.module.writing.domain.Essay;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;

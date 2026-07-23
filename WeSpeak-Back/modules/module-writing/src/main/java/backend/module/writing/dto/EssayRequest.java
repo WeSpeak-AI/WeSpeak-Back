@@ -1,6 +1,6 @@
 package backend.module.writing.dto;
 
-import backend.core.domain.writing.Essay;
+import backend.module.writing.domain.Essay;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

@@ -6,7 +6,7 @@ import backend.core.common.event.handler.EventHandler;
 import backend.core.common.event.payload.AiCorrectionEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
-import backend.core.domain.writing.Essay;
+import backend.module.writing.domain.Essay;
 import backend.module.writing.consumer.AiCorrectionSaveService;
 import backend.module.writing.repository.EssayRepository;
 import lombok.RequiredArgsConstructor;
