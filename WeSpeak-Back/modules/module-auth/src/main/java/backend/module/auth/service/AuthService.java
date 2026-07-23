@@ -1,6 +1,6 @@
 package backend.module.auth.service;
 
-import backend.core.domain.user.User;
+import backend.module.auth.domain.Credential;
 import backend.module.auth.dto.GoogleLoginRequest;
 import backend.module.auth.dto.LoginRequest;
 import backend.module.auth.dto.LoginResponse;
@@ -14,7 +14,7 @@ public interface AuthService {
 
     LoginResponse googleLogin(GoogleLoginRequest request);
 
-    User findByEmail(String email);
+    Credential findByEmail(String email);
 
     Boolean isDuplicate(String email);
 }
