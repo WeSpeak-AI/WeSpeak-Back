@@ -2,8 +2,6 @@ x-service-common: &service-common
   build:
     context: .
   depends_on:
-    mysql:
-      condition: service_healthy
     redis:
       condition: service_started
     kafka:
@@ -17,9 +15,11 @@ x-service-common: &service-common
       max-size: "20m"
       max-file: "3"
   environment: &common-env
-    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wespeak?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     DB_USERNAME: ${DB_USERNAME:-root}
     DB_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+    # DB 장애가 해당 서비스 스레드만 블로킹하고 게이트웨이/다른 서비스로 전파되지 않도록 커넥션
+    # 타임아웃을 짧게 설정(SC-001) — Spring Boot 완화 바인딩으로 코드 변경 없이 적용됨
+    SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT: ${DB_HIKARI_CONNECTION_TIMEOUT:-3000}
     REDIS_HOST: redis
     REDIS_PORT: 6379
     KAFKA_BOOTSTRAP_SERVERS: kafka:29092
@@ -255,10 +255,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-auth
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9001:9001"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-auth:3306/wespeak_auth?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 1
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
 
@@ -269,10 +277,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-user
+    depends_on:
+      mysql-user:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9002:9002"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-user:3306/wespeak_user?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 2
 
   voca-service:
@@ -282,11 +298,22 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-voca
+    depends_on:
+      mysql-voca:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9003:9003"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-voca:3306/wespeak_voca?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 3
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
 
   writing-service:
     <<: *service-common
@@ -295,10 +322,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-writing
+    depends_on:
+      mysql-writing:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9004:9004"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-writing:3306/wespeak_writing?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 4
 
   reading-service:
@@ -308,11 +343,23 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-reading
+    depends_on:
+      mysql-reading:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9005:9005"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-reading:3306/wespeak_reading?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 5
+      USER_SERVICE_URL: http://user-service:9002
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
 
   conversation-service:
     <<: *service-common
@@ -321,10 +368,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-conversation
+    depends_on:
+      mysql-conversation:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9006:9006"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-conversation:3306/wespeak_conversation?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 6
 
   search-service:
