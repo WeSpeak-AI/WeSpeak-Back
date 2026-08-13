@@ -82,6 +82,12 @@ public class AdminVocaController {
         return ApiResponse.ok();
     }
 
+    @PostMapping("/voca/ai-generate/{vocaBookId}/image")
+    public ApiResponse<Void> wordImageGenerate(@PathVariable("vocaBookId") Long vocaBookId) {
+        adminVocaService.wordImageGenerate(vocaBookId);
+        return ApiResponse.ok();
+    }
+
     @PostMapping("/voca/ingest")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ApiResponse<Void> ingestVoca(@Valid @RequestBody IngestRequest request) {

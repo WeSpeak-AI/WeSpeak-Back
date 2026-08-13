@@ -1,7 +1,10 @@
 package backend.module.user.service;
 
+import backend.core.common.event.EventType;
+import backend.core.common.event.payload.UserDeletedEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
+import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
 import backend.core.domain.user.User;
 import backend.module.user.dto.EditProfileRequest;
 import backend.module.user.dto.MyPageResponse;
@@ -25,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserBookStatsRepository userBookStatsRepository;
     private final UserVocaBookStatsRepository userVocaBookStatsRepository;
     private final ConversationStatsRepository conversationStatsRepository;
+    private final OutboxEventPublisher outboxEventPublisher;
 
     @Override
     public UserProfileResponse getProfile(String email) {
@@ -64,6 +68,15 @@ public class UserServiceImpl implements UserService {
     public void rewardTicket(String email) {
         User user = findByEmail(email);
         user.addTicket(3);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccount(String email) {
+        findByEmail(email);
+        outboxEventPublisher.publish(EventType.USER_DELETED, UserDeletedEventPayload.builder()
+                .email(email)
+                .build());
     }
 
     private User findByEmail(String email) {

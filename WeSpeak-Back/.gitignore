@@ -18,7 +18,6 @@ out/
 
 # Environment files
 .env
-.env.*
 
 # OS
 .DS_Store

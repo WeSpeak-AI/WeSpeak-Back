@@ -17,7 +17,7 @@ public class VocaGenerationEventConsumer {
     private final VocaGenerationService vocaGenerationService;
 
     @KafkaListener(topics = {EventType.EventTopic.VOCA}, containerFactory = "vocaGenerationKafkaListenerContainerFactory")
-    public void listen(String message, Acknowledgment ack) {
+    public void listenVoca(String message, Acknowledgment ack) {
         try {
             Event<EventPayload> event = Event.fromJson(message);
             if (event != null) {
@@ -25,7 +25,21 @@ public class VocaGenerationEventConsumer {
             }
             ack.acknowledge();
         } catch (Exception e) {
-            log.error("[VocaGenerationEventConsumer.listen] message={}", message, e);
+            log.error("[VocaGenerationEventConsumer.listenVoca] message={}", message, e);
+            throw e;
+        }
+    }
+
+    @KafkaListener(topics = {EventType.EventTopic.IMAGE}, containerFactory = "vocaGenerationKafkaListenerContainerFactory")
+    public void listenImage(String message, Acknowledgment ack) {
+        try {
+            Event<EventPayload> event = Event.fromJson(message);
+            if(event != null) {
+                vocaGenerationService.handleEvent(event);
+            }
+            ack.acknowledge();
+        } catch (Exception e) {
+            log.error("[VocaGenerationEventConsumer.listenImage] message ={}", message, e);
             throw e;
         }
     }

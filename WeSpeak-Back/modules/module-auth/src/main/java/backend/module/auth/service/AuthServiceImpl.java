@@ -2,10 +2,8 @@ package backend.module.auth.service;
 
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
-import backend.core.domain.customvoca.CustomVocaBook;
 import backend.core.domain.user.User;
 import backend.core.infra.Snowflake;
-import backend.core.infra.repository.CustomVocaBookRepository;
 import backend.core.jwt.JwtTokenProvider;
 import backend.module.auth.dto.GoogleLoginRequest;
 import backend.module.auth.dto.LoginRequest;
@@ -29,7 +27,6 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final CustomVocaBookRepository customVocaBookRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final Snowflake snowflake;
@@ -59,11 +56,6 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
-
-        customVocaBookRepository.save(CustomVocaBook.builder()
-                .customVocaBookId(snowflake.nextId())
-                .user(user)
-                .build());
     }
 
     @Override
@@ -101,10 +93,6 @@ public class AuthServiceImpl implements AuthService {
                     .streak(0)
                     .build();
             userRepository.save(newUser);
-            customVocaBookRepository.save(CustomVocaBook.builder()
-                    .customVocaBookId(snowflake.nextId())
-                    .user(newUser)
-                    .build());
             return newUser;
         });
 

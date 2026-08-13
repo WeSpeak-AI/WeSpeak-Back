@@ -1,6 +1,7 @@
 package backend.module.voca.controller;
 
 import backend.core.common.response.ApiResponse;
+import backend.module.voca.dto.CustomVocaBookRequest;
 import backend.module.voca.dto.CustomVocaBookResponse;
 import backend.module.voca.dto.CustomWordRequest;
 import backend.module.voca.dto.CustomWordResponse;
@@ -17,26 +18,45 @@ public class CustomVocaController {
 
     private final CustomVocaService customVocaService;
 
-    @GetMapping
-    public ApiResponse<CustomVocaBookResponse> getMyCustomVocaBook(
-            @RequestHeader("X-Username") String email
+    @PostMapping
+    public ApiResponse<CustomVocaBookResponse> createCustomVocaBook(
+            @RequestHeader("X-Username") String email,
+            @RequestBody CustomVocaBookRequest request
     ) {
-        return ApiResponse.ok(customVocaService.getMyCustomVocaBook(email));
+        return ApiResponse.ok(customVocaService.createCustomVocaBook(email, request));
     }
 
-    @PostMapping("/words")
+    @GetMapping
+    public ApiResponse<List<CustomVocaBookResponse>> getMyCustomVocaBooks(
+            @RequestHeader("X-Username") String email
+    ) {
+        return ApiResponse.ok(customVocaService.getMyCustomVocaBooks(email));
+    }
+
+    @DeleteMapping("/{customVocaBookId}")
+    public ApiResponse<Void> deleteCustomVocaBook(
+            @RequestHeader("X-Username") String email,
+            @PathVariable Long customVocaBookId
+    ) {
+        customVocaService.deleteCustomVocaBook(email, customVocaBookId);
+        return ApiResponse.ok();
+    }
+
+    @PostMapping("/{customVocaBookId}/words")
     public ApiResponse<CustomWordResponse> addWord(
             @RequestHeader("X-Username") String email,
+            @PathVariable Long customVocaBookId,
             @RequestBody CustomWordRequest request
     ) {
-        return ApiResponse.ok(customVocaService.addWord(email, request));
+        return ApiResponse.ok(customVocaService.addWord(email, customVocaBookId, request));
     }
 
-    @GetMapping("/words")
+    @GetMapping("/{customVocaBookId}/words")
     public ApiResponse<List<CustomWordResponse>> getWords(
-            @RequestHeader("X-Username") String email
+            @RequestHeader("X-Username") String email,
+            @PathVariable Long customVocaBookId
     ) {
-        return ApiResponse.ok(customVocaService.getWords(email));
+        return ApiResponse.ok(customVocaService.getWords(email, customVocaBookId));
     }
 
     @PutMapping("/words/{customWordId}")

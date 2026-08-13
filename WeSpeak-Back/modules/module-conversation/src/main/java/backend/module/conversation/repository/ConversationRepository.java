@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.repository.query.Param;
 
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
     List<Conversation> findByTopic(Topic topic);
@@ -21,4 +22,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
             WHERE c.conversationId = :id
             """)
     Optional<Conversation> findByIdWithUser(Long conversationId);
+
+    List<Conversation> findByUser_Email(String email);
 }

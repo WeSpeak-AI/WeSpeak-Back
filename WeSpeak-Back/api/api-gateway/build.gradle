@@ -9,6 +9,8 @@ dependencyManagement {
 dependencies {
     // Spring Cloud Gateway (WebFlux 기반 - 반응형)
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation project(':core:core-jwt')
 }

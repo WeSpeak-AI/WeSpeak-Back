@@ -18,13 +18,17 @@ x-service-common: &service-common
       max-file: "3"
   environment: &common-env
     SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wespeak?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-    DB_USERNAME: ${DB_USERNAME:-root}
-    DB_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+    DB_USERNAME: ${DB_USERNAME}
+    DB_PASSWORD: ${DB_PASSWORD}
     REDIS_HOST: redis
     REDIS_PORT: 6379
     KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     AI_SERVER_URL: http://wespeak-ai:8000
-    TOKEN_SECRET: ${TOKEN_SECRET:-xG0DFZb7UoyqpZy6d02S9X-AkpRFSQ39Y5aXvssuF6YjS5_5b3lZNhEebf9E9f7oG8x1Pj0d_2S2r7LZokdHkQ==}
+    TOKEN_SECRET: ${TOKEN_SECRET}
+    GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+    R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+    R2_SECRET_KEY: ${R2_SECRET_KEY}
+    R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
   restart: unless-stopped
 
 services:
@@ -32,7 +36,7 @@ services:
     image: mysql:8.0
     container_name: wespeak-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: wespeak
       MYSQL_CHARACTER_SET_SERVER: utf8mb4
       MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
@@ -41,7 +45,7 @@ services:
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -115,6 +119,12 @@ services:
       <<: *common-env
       NODE_ID: 1
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   user-service:
     <<: *service-common
@@ -128,6 +138,12 @@ services:
     environment:
       <<: *common-env
       NODE_ID: 2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9002/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   voca-service:
     <<: *service-common
@@ -141,6 +157,12 @@ services:
     environment:
       <<: *common-env
       NODE_ID: 3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9003/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   writing-service:
     <<: *service-common
@@ -154,6 +176,12 @@ services:
     environment:
       <<: *common-env
       NODE_ID: 4
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9004/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   reading-service:
     <<: *service-common
@@ -167,6 +195,12 @@ services:
     environment:
       <<: *common-env
       NODE_ID: 5
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9005/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   conversation-service:
     <<: *service-common
@@ -180,6 +214,12 @@ services:
     environment:
       <<: *common-env
       NODE_ID: 6
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9006/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
   search-service:
     container_name: wespeak-search
@@ -195,6 +235,12 @@ services:
     environment:
       AI_SERVER_URL: http://wespeak-ai:8000
       NODE_ID: 7
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9007/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     logging:
       driver: json-file
       options:
@@ -211,15 +257,28 @@ services:
     ports:
       - "9000:9000"
     depends_on:
-      - auth-service
-      - user-service
-      - voca-service
-      - writing-service
-      - reading-service
-      - conversation-service
-      - search-service
+      auth-service:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      voca-service:
+        condition: service_healthy
+      writing-service:
+        condition: service_healthy
+      reading-service:
+        condition: service_healthy
+      conversation-service:
+        condition: service_healthy
+      search-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     environment:
-      TOKEN_SECRET: ${TOKEN_SECRET:-xG0DFZb7UoyqpZy6d02S9X-AkpRFSQ39Y5aXvssuF6YjS5_5b3lZNhEebf9E9f7oG8x1Pj0d_2S2r7LZokdHkQ==}
+      TOKEN_SECRET: ${TOKEN_SECRET}
       AUTH_SERVICE_URL: http://auth-service:9001
       USER_SERVICE_URL: http://user-service:9002
       VOCA_SERVICE_URL: http://voca-service:9003
@@ -234,6 +293,77 @@ services:
         max-file: "3"
     restart: unless-stopped
 
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: wespeak-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - default
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:2.9.0
+    container_name: wespeak-loki
+    ports:
+      - "3100:3100"
+    networks:
+      - default
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: wespeak-promtail
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./promtail-config.yml:/etc/promtail/config.yml
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    command: -config.file=/etc/promtail/config.yml
+    depends_on:
+      - loki
+    networks:
+      - default
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: wespeak-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - loki
+    networks:
+      - default
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
+
 networks:
   default:
     name: wespeak-back_default
@@ -244,3 +374,5 @@ networks:
 volumes:
   mysql-data:
   redis-data:
+  prometheus-data:
+  grafana-data:
