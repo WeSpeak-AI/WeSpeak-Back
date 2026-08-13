@@ -9,6 +9,7 @@ import java.util.List;
 
 public record CustomVocaBookResponse(
         String customVocaBookId,
+        String name,
         int wordCount,
         LocalDateTime createdAt,
         List<CustomWordResponse> words
@@ -16,6 +17,7 @@ public record CustomVocaBookResponse(
     public static CustomVocaBookResponse from(CustomVocaBook book) {
         return new CustomVocaBookResponse(
                 String.valueOf(book.getCustomVocaBookId()),
+                book.getName(),
                 book.getWords().size(),
                 book.getCreatedAt(),
                 book.getWords().stream().map(CustomWordResponse::from).toList()

@@ -456,6 +456,19 @@ body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
             <div id="res-ai" class="response-box"></div>
           </form>
         </div>
+        <div class="card">
+          <div class="card-title">단어 이미지 AI 생성</div>
+          <form onsubmit="wordImageGenerate(event)">
+            <div class="form-group" style="width:200px">
+              <label>단어장 ID *</label>
+              <input type="number" id="img-voca-id" placeholder="vocaBookId" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">이미지 생성 요청</button>
+            </div>
+            <div id="res-img" class="response-box"></div>
+          </form>
+        </div>
       </div>
 
       <!-- VOCA INGEST -->
@@ -1036,6 +1049,13 @@ async function aiGenerate(e) {
     description: document.getElementById('ai-description').value,
     numberOfDays: parseInt(document.getElementById('ai-days').value)
   }, 'res-ai');
+}
+
+// WORD IMAGE GENERATE
+async function wordImageGenerate(e) {
+  e.preventDefault();
+  const id = document.getElementById('img-voca-id').value;
+  await api('POST', `/api/admin/voca/ai-generate/${id}/image`, null, 'res-img');
 }
 
 // READING BOOK

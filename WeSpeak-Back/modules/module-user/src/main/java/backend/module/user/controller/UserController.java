@@ -49,4 +49,12 @@ public class UserController {
         userService.rewardTicket(email);
         return ApiResponse.ok();
     }
+
+    @DeleteMapping("/me")
+    public ApiResponse<Void> deleteAccount(
+            @RequestHeader("X-Username") String email
+    ) {
+        userService.deleteAccount(email);
+        return ApiResponse.ok();
+    }
 }

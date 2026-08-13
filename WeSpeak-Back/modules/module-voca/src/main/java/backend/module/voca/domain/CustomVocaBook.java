@@ -8,10 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(
-        name = "custom_voca_books",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_email"})
-)
+@Table(name = "custom_voca_books")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -23,6 +20,9 @@ public class CustomVocaBook {
 
     @Column(name = "user_email", nullable = false)
     private String userEmail;
+
+    @Column(nullable = false)
+    private String name;
 
     private LocalDateTime createdAt;
 

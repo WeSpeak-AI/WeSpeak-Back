@@ -42,7 +42,7 @@ public class VocaGenerationHandler implements EventHandler<VocaGenerationEventPa
                 ))
                 .retrieve()
                 .bodyToMono(VocaGenerationResponse.class)
-                .timeout(Duration.ofDays(1))
+                .timeout(Duration.ofHours(1))
                 .block();
 
         if (response == null || response.days() == null) {

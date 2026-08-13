@@ -1,6 +1,7 @@
 package backend.module.user.service;
 
 import backend.core.common.event.EventType;
+import backend.core.common.event.payload.UserDeletedEventPayload;
 import backend.core.common.event.payload.UserProfileUpdatedEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
@@ -81,6 +82,15 @@ public class UserServiceImpl implements UserService {
     public void consumeTicket(String email) {
         User user = findByEmail(email);
         user.consumeTicket();
+    }
+
+    @Override
+    @Transactional
+    public void deleteAccount(String email) {
+        findByEmail(email);
+        outboxEventPublisher.publish(EventType.USER_DELETED, UserDeletedEventPayload.builder()
+                .email(email)
+                .build());
     }
 
     private User findByEmail(String email) {

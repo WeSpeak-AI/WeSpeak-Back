@@ -37,7 +37,7 @@ public class AiCorrectionHandler implements EventHandler<AiCorrectionEventPayloa
                 .bodyValue(Map.of("content", payload.getContent()))
                 .retrieve()
                 .bodyToMono(AiCorrectionResponse.class)
-                .timeout(Duration.ofSeconds(30))
+                .timeout(Duration.ofMinutes(5))
                 .map(AiCorrectionResponse::getResult)
                 .block();
 

@@ -10,5 +10,7 @@ import java.util.List;
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
     List<Conversation> findByTopic(Topic topic);
 
+    List<Conversation> findByUserEmail(String userEmail);
+
     List<Conversation> findByStatusAndStartedAtBefore(Conversation.Status status, LocalDateTime threshold);
 }
