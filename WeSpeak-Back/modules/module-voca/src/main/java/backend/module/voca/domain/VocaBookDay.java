@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "voca_book_Days", indexes = @Index(columnList = "voca_book_id"))
+@Table(name = "voca_book_days", indexes = @Index(columnList = "voca_book_id"))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder

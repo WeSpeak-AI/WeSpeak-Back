@@ -33,7 +33,7 @@ public class UserDeletedHandler implements EventHandler<UserDeletedEventPayload>
     public void handle(Event<UserDeletedEventPayload> event) {
         String email = event.getPayload().getEmail();
 
-        List<Test> tests = testRepository.findByUser_Email(email);
+        List<Test> tests = testRepository.findByUserEmail(email);
         for (Test test : tests) {
             correctWordRepository.deleteByTestId(test.getTestId());
             incorrectWordRepository.deleteByTestId(test.getTestId());

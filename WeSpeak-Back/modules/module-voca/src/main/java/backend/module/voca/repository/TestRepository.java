@@ -15,5 +15,5 @@ public interface TestRepository extends JpaRepository<Test, Long> {
 
     Optional<Test> findByTestIdAndUserEmail(Long testId, String email);
 
-    List<Test> findByUser_Email(String email);
+    List<Test> findByUserEmail(String email);
 }
