@@ -1,6 +1,8 @@
-package backend.cowrite.common.snowflake;
+package backend.core.common.snowflake;
 
 import static org.assertj.core.api.Assertions.*;
+
+import backend.core.infra.Snowflake;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.concurrent.Future;
 import org.junit.jupiter.api.Test;
 
 class SnowflakeTest {
-	Snowflake snowflake = new Snowflake();
+	Snowflake snowflake = new Snowflake(0);
 
 	@Test
 	void nextIdTest() throws ExecutionException, InterruptedException {

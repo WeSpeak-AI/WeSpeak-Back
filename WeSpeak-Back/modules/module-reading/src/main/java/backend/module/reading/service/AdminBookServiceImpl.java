@@ -2,8 +2,8 @@ package backend.module.reading.service;
 
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
-import backend.core.domain.reading.Book;
-import backend.core.domain.reading.BookPage;
+import backend.module.reading.domain.Book;
+import backend.module.reading.domain.BookPage;
 import backend.core.infra.Snowflake;
 import backend.module.reading.dto.BookImageRequest;
 import backend.module.reading.dto.BookPageRequest;

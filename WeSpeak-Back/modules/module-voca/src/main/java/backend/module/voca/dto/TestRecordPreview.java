@@ -1,6 +1,6 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.test.Test;
+import backend.module.voca.domain.Test;
 import lombok.Getter;
 import lombok.Setter;
 

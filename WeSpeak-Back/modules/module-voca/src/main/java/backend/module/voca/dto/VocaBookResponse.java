@@ -1,6 +1,6 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.voca.VocaBook;
+import backend.module.voca.domain.VocaBook;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;

@@ -2,21 +2,22 @@ package backend.module.user.service;
 
 import backend.core.common.event.EventType;
 import backend.core.common.event.payload.UserDeletedEventPayload;
+import backend.core.common.event.payload.UserProfileUpdatedEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
-import backend.core.domain.user.User;
+import backend.module.user.domain.User;
+import backend.module.user.domain.UserStatsSnapshot;
 import backend.module.user.dto.EditProfileRequest;
 import backend.module.user.dto.MyPageResponse;
 import backend.module.user.dto.UserProfileResponse;
-import backend.core.infra.repository.ConversationStatsRepository;
-import backend.core.infra.repository.EssayStatsRepository;
-import backend.core.infra.repository.UserBookStatsRepository;
-import backend.core.infra.repository.UserRepository;
-import backend.core.infra.repository.UserVocaBookStatsRepository;
+import backend.module.user.repository.UserRepository;
+import backend.module.user.repository.UserStatsSnapshotRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final EssayStatsRepository essayStatsRepository;
-    private final UserBookStatsRepository userBookStatsRepository;
-    private final UserVocaBookStatsRepository userVocaBookStatsRepository;
-    private final ConversationStatsRepository conversationStatsRepository;
+    private final UserStatsSnapshotRepository userStatsSnapshotRepository;
     private final OutboxEventPublisher outboxEventPublisher;
 
     @Override
@@ -39,13 +37,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public MyPageResponse getMyPage(String email) {
         User user = findByEmail(email);
+        UserStatsSnapshot stats = userStatsSnapshotRepository.findByUserId(user.getUserId())
+                .orElseGet(() -> UserStatsSnapshot.builder().userId(user.getUserId()).build());
         return MyPageResponse.of(
                 user.getNickname(),
                 user.getEmail(),
-                userVocaBookStatsRepository.countByUserEmail(email),
-                essayStatsRepository.countByUserEmail(email),
-                userBookStatsRepository.countByUserEmail(email),
-                conversationStatsRepository.countByUserEmail(email)
+                stats.getVocaBookCount(),
+                stats.getEssayCount(),
+                stats.getUserBookCount(),
+                stats.getConversationCount()
         );
     }
 
@@ -54,6 +54,13 @@ public class UserServiceImpl implements UserService {
     public void updateProfile(String email, EditProfileRequest request) {
         User user = findByEmail(email);
         user.updateNickname(request.getNickname());
+
+        outboxEventPublisher.publish(EventType.USER_PROFILE_UPDATED, UserProfileUpdatedEventPayload.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .updatedAt(LocalDateTime.now())
+                .build());
     }
 
     @Override
@@ -68,6 +75,13 @@ public class UserServiceImpl implements UserService {
     public void rewardTicket(String email) {
         User user = findByEmail(email);
         user.addTicket(3);
+    }
+
+    @Override
+    @Transactional
+    public void consumeTicket(String email) {
+        User user = findByEmail(email);
+        user.consumeTicket();
     }
 
     @Override

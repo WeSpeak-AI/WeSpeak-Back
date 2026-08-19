@@ -1,6 +1,6 @@
 package backend.module.reading.dto;
 
-import backend.core.domain.reading.Book;
+import backend.module.reading.domain.Book;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

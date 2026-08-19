@@ -3,24 +3,24 @@ package backend.module.writing.service;
 import backend.core.common.event.EventType;
 import backend.core.common.event.payload.AiCorrectionEventPayload;
 import backend.core.common.event.payload.StudyCompletedEventPayload;
+import backend.core.common.event.payload.UserStatEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
-import backend.core.domain.user.User;
-import backend.core.domain.writing.Essay;
 import backend.core.infra.Snowflake;
-import backend.core.infra.repository.TopicRepository;
-import backend.core.infra.repository.UserRepository;
+import backend.module.writing.domain.Essay;
+import backend.module.writing.repository.EssayRepository;
+import backend.module.writing.repository.TopicSummaryRepository;
 import backend.module.writing.dto.CorrectionResponse;
 import backend.module.writing.dto.EssayRequest;
 import backend.module.writing.dto.EssayResponse;
-import backend.module.writing.repository.EssayRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -30,14 +30,13 @@ import java.util.List;
 public class WritingServiceImpl implements WritingService {
 
     private final EssayRepository essayRepository;
-    private final UserRepository userRepository;
-    private final TopicRepository topicRepository;
+    private final TopicSummaryRepository topicSummaryRepository;
     private final Snowflake snowflake;
     private final OutboxEventPublisher outboxEventPublisher;
 
     @Override
     public String getRandomTopic() {
-        return topicRepository.findRandom()
+        return topicSummaryRepository.findRandom()
                 .orElseThrow(() -> new BusinessException(ErrorCode.WRITING_TOPIC_NOT_FOUND))
                 .getTitle();
     }
@@ -45,9 +44,9 @@ public class WritingServiceImpl implements WritingService {
     @Override
     @Transactional
     public void deleteMyEssay(String email, Long essayId) {
-        Essay essay = essayRepository.findByIdWithUser(essayId)
+        Essay essay = essayRepository.findById(essayId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.ESSAY_NOT_FOUND));
-        if (!essay.getUser().getEmail().equals(email)) {
+        if (!essay.getUserEmail().equals(email)) {
             throw new BusinessException(ErrorCode.FORBIDDEN);
         }
         essayRepository.delete(essay);
@@ -56,11 +55,9 @@ public class WritingServiceImpl implements WritingService {
     @Override
     @Transactional
     public EssayResponse save(String email, EssayRequest request) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
         Essay essay = Essay.builder()
                 .essayId(snowflake.nextId())
-                .user(user)
+                .userEmail(email)
                 .topic(request.getTopic())
                 .content(request.getContent())
                 .type(request.getType())
@@ -74,6 +71,10 @@ public class WritingServiceImpl implements WritingService {
         outboxEventPublisher.publish(EventType.STUDY_COMPLETED, StudyCompletedEventPayload.builder()
                 .email(email)
                 .studiedAt(LocalDate.now())
+                .build());
+        outboxEventPublisher.publish(EventType.ESSAY_SUBMITTED, UserStatEventPayload.builder()
+                .email(email)
+                .recordedAt(LocalDateTime.now())
                 .build());
         return EssayResponse.from(saved);
     }

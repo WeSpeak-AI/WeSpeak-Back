@@ -1,7 +1,7 @@
 package backend.module.voca.controller;
 
 import backend.core.common.response.ApiResponse;
-import backend.core.domain.voca.VocaBook.Category;
+import backend.module.voca.domain.VocaBook.Category;
 import backend.module.voca.dto.MyVocaBookResponse;
 import backend.module.voca.dto.VocaBookDayResponse;
 import backend.module.voca.dto.VocaBookResponse;

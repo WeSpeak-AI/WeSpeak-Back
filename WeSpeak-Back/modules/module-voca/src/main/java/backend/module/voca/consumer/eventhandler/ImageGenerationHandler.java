@@ -4,7 +4,7 @@ import backend.core.common.event.Event;
 import backend.core.common.event.EventType;
 import backend.core.common.event.handler.EventHandler;
 import backend.core.common.event.payload.ImageGenerationEventPayload;
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.Word;
 import backend.module.voca.consumer.VocaSaveService;
 import backend.module.voca.dto.ImageGenerationResponse;
 import lombok.RequiredArgsConstructor;

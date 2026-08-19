@@ -1,6 +1,6 @@
 package backend.module.reading.repository;
 
-import backend.core.domain.reading.Book;
+import backend.module.reading.domain.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

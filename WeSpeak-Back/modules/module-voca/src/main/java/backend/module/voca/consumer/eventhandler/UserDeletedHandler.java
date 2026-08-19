@@ -4,10 +4,10 @@ import backend.core.common.event.Event;
 import backend.core.common.event.EventType;
 import backend.core.common.event.handler.EventHandler;
 import backend.core.common.event.payload.UserDeletedEventPayload;
-import backend.core.domain.test.Test;
-import backend.core.domain.uservoca.UserVocaBook;
-import backend.core.infra.repository.CustomVocaBookRepository;
+import backend.module.voca.domain.Test;
+import backend.module.voca.domain.UserVocaBook;
 import backend.module.voca.repository.CorrectWordRepository;
+import backend.module.voca.repository.CustomVocaBookRepository;
 import backend.module.voca.repository.IncorrectWordRepository;
 import backend.module.voca.repository.TestRepository;
 import backend.module.voca.repository.UserVocaBookRepository;
@@ -33,7 +33,7 @@ public class UserDeletedHandler implements EventHandler<UserDeletedEventPayload>
     public void handle(Event<UserDeletedEventPayload> event) {
         String email = event.getPayload().getEmail();
 
-        List<Test> tests = testRepository.findByUser_Email(email);
+        List<Test> tests = testRepository.findByUserEmail(email);
         for (Test test : tests) {
             correctWordRepository.deleteByTestId(test.getTestId());
             incorrectWordRepository.deleteByTestId(test.getTestId());

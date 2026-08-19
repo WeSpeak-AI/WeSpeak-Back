@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ConditionalOnMissingClass("backend.api.ApiMainApplication")
 @Configuration
 @EnableJpaAuditing
-@EntityScan(basePackages = {"backend.core.domain", "backend.core.common.outboxmessagerelay"})
-@EnableJpaRepositories(basePackages = {"backend.module.user", "backend.core.infra.repository", "backend.core.common.outboxmessagerelay"})
+@EntityScan(basePackages = {"backend.core.common.outboxmessagerelay", "backend.module.user"})
+@EnableJpaRepositories(basePackages = {"backend.module.user", "backend.core.common.outboxmessagerelay"})
 public class JpaConfig {
 }

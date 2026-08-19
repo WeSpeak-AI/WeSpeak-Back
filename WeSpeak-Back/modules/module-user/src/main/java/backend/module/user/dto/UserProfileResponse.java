@@ -1,6 +1,6 @@
 package backend.module.user.dto;
 
-import backend.core.domain.user.User;
+import backend.module.user.domain.User;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;

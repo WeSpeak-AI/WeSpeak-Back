@@ -1,7 +1,7 @@
 package backend.module.voca.repository;
 
-import backend.core.domain.voca.VocaBookDay;
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.VocaBookDay;
+import backend.module.voca.domain.Word;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

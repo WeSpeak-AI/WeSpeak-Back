@@ -2,7 +2,7 @@ package backend.module.writing.consumer;
 
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
-import backend.core.domain.writing.Essay;
+import backend.module.writing.domain.Essay;
 import backend.module.writing.repository.EssayRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

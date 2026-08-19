@@ -65,6 +65,11 @@ public class KafkaConfig {
     }
 
     @Bean
+    public NewTopic topicDlt() {
+        return TopicBuilder.name("topic.DLT").partitions(1).replicas(1).build();
+    }
+
+    @Bean
     public NewTopic userDeletedDlt() {
         return TopicBuilder.name("user-deleted.DLT").partitions(1).replicas(1).build();
     }

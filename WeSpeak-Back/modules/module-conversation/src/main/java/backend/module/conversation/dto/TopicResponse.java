@@ -1,6 +1,6 @@
 package backend.module.conversation.dto;
 
-import backend.core.domain.topic.Topic;
+import backend.module.conversation.domain.Topic;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;

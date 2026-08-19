@@ -1,7 +1,7 @@
 package backend.module.reading.dto;
 
-import backend.core.domain.reading.Book;
-import backend.core.domain.userbook.UserBook;
+import backend.module.reading.domain.Book;
+import backend.module.reading.domain.UserBook;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Builder;

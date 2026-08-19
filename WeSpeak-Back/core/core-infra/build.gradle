@@ -4,7 +4,6 @@ plugins {
 
 dependencies {
     implementation project(':core:core-common')
-    implementation project(':core:core-domain')
 
     // JPA + MySQL — api로 노출하여 하위 모듈에서 JpaRepository 사용 가능
     api 'org.springframework.boot:spring-boot-starter-data-jpa'

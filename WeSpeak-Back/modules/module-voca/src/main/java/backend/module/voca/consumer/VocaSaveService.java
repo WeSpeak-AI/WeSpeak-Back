@@ -1,6 +1,6 @@
 package backend.module.voca.consumer;
 
-import backend.core.domain.voca.Word;
+import backend.module.voca.domain.Word;
 import backend.module.voca.dto.ImageGenerationResponse;
 import backend.module.voca.dto.VocaGenerationResponse;
 

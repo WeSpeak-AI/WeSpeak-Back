@@ -1,6 +1,6 @@
 package backend.module.voca.dto;
 
-import backend.core.domain.voca.VocaBookDay;
+import backend.module.voca.domain.VocaBookDay;
 import lombok.Getter;
 
 @Getter

@@ -4,7 +4,7 @@ import backend.core.common.event.Event;
 import backend.core.common.event.EventType;
 import backend.core.common.event.handler.EventHandler;
 import backend.core.common.event.payload.UserDeletedEventPayload;
-import backend.core.domain.userbook.UserBook;
+import backend.module.reading.domain.UserBook;
 import backend.module.reading.repository.UserBookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

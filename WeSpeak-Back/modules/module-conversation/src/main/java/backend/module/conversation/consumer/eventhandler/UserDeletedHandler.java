@@ -4,7 +4,7 @@ import backend.core.common.event.Event;
 import backend.core.common.event.EventType;
 import backend.core.common.event.handler.EventHandler;
 import backend.core.common.event.payload.UserDeletedEventPayload;
-import backend.core.domain.conversation.Conversation;
+import backend.module.conversation.domain.Conversation;
 import backend.module.conversation.repository.ConversationMessageRepository;
 import backend.module.conversation.repository.ConversationRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class UserDeletedHandler implements EventHandler<UserDeletedEventPayload>
     public void handle(Event<UserDeletedEventPayload> event) {
         String email = event.getPayload().getEmail();
 
-        List<Conversation> conversations = conversationRepository.findByUser_Email(email);
+        List<Conversation> conversations = conversationRepository.findByUserEmail(email);
         if (!conversations.isEmpty()) {
             conversationMessageRepository.deleteAllByConversationIn(conversations);
         }

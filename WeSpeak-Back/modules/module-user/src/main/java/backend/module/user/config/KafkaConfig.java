@@ -80,6 +80,16 @@ public class KafkaConfig {
     }
 
     @Bean
+    public NewTopic userLifecycleDlt() {
+        return TopicBuilder.name("user-lifecycle.DLT").partitions(1).replicas(1).build();
+    }
+
+    @Bean
+    public NewTopic userStatsDlt() {
+        return TopicBuilder.name("user-stats.DLT").partitions(1).replicas(1).build();
+    }
+
+    @Bean
     public NewTopic userDeletedDlt() {
         return TopicBuilder.name("user-deleted.DLT").partitions(1).replicas(1).build();
     }

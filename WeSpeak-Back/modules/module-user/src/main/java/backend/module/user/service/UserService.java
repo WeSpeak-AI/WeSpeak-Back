@@ -16,5 +16,7 @@ public interface UserService {
 
     void rewardTicket(String email);
 
+    void consumeTicket(String email);
+
     void deleteAccount(String email);
 }

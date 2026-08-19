@@ -1,7 +1,7 @@
 package backend.module.reading.repository;
 
-import backend.core.domain.reading.Book;
-import backend.core.domain.reading.BookPage;
+import backend.module.reading.domain.Book;
+import backend.module.reading.domain.BookPage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

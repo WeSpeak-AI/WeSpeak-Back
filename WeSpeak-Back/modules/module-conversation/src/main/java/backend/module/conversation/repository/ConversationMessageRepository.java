@@ -1,7 +1,7 @@
 package backend.module.conversation.repository;
 
-import backend.core.domain.conversation.Conversation;
-import backend.core.domain.conversation.ConversationMessage;
+import backend.module.conversation.domain.Conversation;
+import backend.module.conversation.domain.ConversationMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

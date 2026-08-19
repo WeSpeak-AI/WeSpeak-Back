@@ -1,8 +1,7 @@
 package backend.module.voca.repository;
 
-import backend.core.domain.user.User;
-import backend.core.domain.uservoca.UserVocaBook;
-import backend.core.domain.voca.VocaBook;
+import backend.module.voca.domain.UserVocaBook;
+import backend.module.voca.domain.VocaBook;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,16 +13,10 @@ public interface UserVocaBookRepository extends JpaRepository<UserVocaBook, Long
 
     void deleteAllByVocaBook(VocaBook vocaBook);
 
-    boolean existsByUserAndVocaBook(User user, VocaBook vocaBook);
-
     boolean existsByUserEmailAndVocaBookVocaBookId(String email, Long bookId);
 
-    List<UserVocaBook> findByUser(User user);
-
-    @Query("select uv from UserVocaBook uv join fetch uv.vocaBook where uv.user.email = :email")
+    @Query("select uv from UserVocaBook uv join fetch uv.vocaBook where uv.userEmail = :email")
     List<UserVocaBook> findByUserEmail(@Param("email") String email);
-
-    Optional<UserVocaBook> findByUserAndVocaBook(User user, VocaBook vocaBook);
 
     Optional<UserVocaBook> findByUserEmailAndVocaBookVocaBookId(String email, Long bookId);
 }

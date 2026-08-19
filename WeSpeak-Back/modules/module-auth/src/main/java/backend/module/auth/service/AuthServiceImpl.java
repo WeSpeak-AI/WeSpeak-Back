@@ -1,15 +1,18 @@
 package backend.module.auth.service;
 
+import backend.core.common.event.EventType;
+import backend.core.common.event.payload.UserRegisteredEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
-import backend.core.domain.user.User;
+import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
 import backend.core.infra.Snowflake;
 import backend.core.jwt.JwtTokenProvider;
+import backend.module.auth.domain.Credential;
 import backend.module.auth.dto.GoogleLoginRequest;
 import backend.module.auth.dto.LoginRequest;
 import backend.module.auth.dto.LoginResponse;
 import backend.module.auth.dto.RegisterRequest;
-import backend.core.infra.repository.UserRepository;
+import backend.module.auth.repository.CredentialRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,11 +30,12 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
+    private final CredentialRepository credentialRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final Snowflake snowflake;
     private final RestTemplate restTemplate;
+    private final OutboxEventPublisher outboxEventPublisher;
 
     @Value("${google.client-id}")
     private String googleClientId;
@@ -41,21 +46,20 @@ public class AuthServiceImpl implements AuthService {
         if (!request.getPassword().equals(request.getPasswordConfirm())) {
             throw new BusinessException(ErrorCode.INVALID_INPUT);
         }
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (credentialRepository.existsByEmail(request.getEmail())) {
             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
-        User user = User.builder()
+        Credential credential = Credential.builder()
                 .userId(snowflake.nextId())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .nickname(request.getNickname())
-                .role(User.Role.BASIC_USER)
-                .xp(0)
-                .streak(0)
+                .role(Credential.Role.BASIC_USER)
                 .build();
 
-        userRepository.save(user);
+        credentialRepository.save(credential);
+
+        publishUserRegistered(credential, request.getNickname());
     }
 
     @Override
@@ -82,56 +86,62 @@ public class AuthServiceImpl implements AuthService {
         String email = tokenInfo.get("email");
         String name = tokenInfo.getOrDefault("name", email.split("@")[0]);
 
-        User user = userRepository.findByEmail(email).orElseGet(() -> {
-            User newUser = User.builder()
+        Credential credential = credentialRepository.findByEmail(email).orElseGet(() -> {
+            Credential newCredential = Credential.builder()
                     .userId(snowflake.nextId())
                     .email(email)
                     .password(passwordEncoder.encode(UUID.randomUUID().toString()))
-                    .nickname(name)
-                    .role(User.Role.BASIC_USER)
-                    .xp(0)
-                    .streak(0)
+                    .role(Credential.Role.BASIC_USER)
                     .build();
-            userRepository.save(newUser);
-            return newUser;
+            credentialRepository.save(newCredential);
+            publishUserRegistered(newCredential, name);
+            return newCredential;
         });
 
-        String token = jwtTokenProvider.generateToken(user.getEmail(), user.getRole().name());
+        String token = jwtTokenProvider.generateToken(credential.getEmail(), credential.getRole().name());
         return LoginResponse.builder()
                 .accessToken(token)
                 .tokenType("Bearer")
-                .email(user.getEmail())
-                .nickname(user.getNickname())
+                .email(credential.getEmail())
+                .nickname(name)
                 .build();
     }
 
     @Override
     public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
+        Credential credential = credentialRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), credential.getPassword())) {
             throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
 
-        String token = jwtTokenProvider.generateToken(user.getEmail(), user.getRole().name());
+        String token = jwtTokenProvider.generateToken(credential.getEmail(), credential.getRole().name());
 
         return LoginResponse.builder()
                 .accessToken(token)
                 .tokenType("Bearer")
-                .email(user.getEmail())
-                .nickname(user.getNickname())
+                .email(credential.getEmail())
                 .build();
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(()-> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    public Credential findByEmail(String email) {
+        return credentialRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     @Override
     public Boolean isDuplicate(String email) {
-        return userRepository.existsByEmail(email);
+        return credentialRepository.existsByEmail(email);
+    }
+
+    private void publishUserRegistered(Credential credential, String nickname) {
+        outboxEventPublisher.publish(EventType.USER_REGISTERED, UserRegisteredEventPayload.builder()
+                .userId(credential.getUserId())
+                .email(credential.getEmail())
+                .nickname(nickname)
+                .registeredAt(LocalDateTime.now())
+                .build());
     }
 }

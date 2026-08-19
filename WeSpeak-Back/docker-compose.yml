@@ -2,8 +2,6 @@ x-service-common: &service-common
   build:
     context: .
   depends_on:
-    mysql:
-      condition: service_healthy
     redis:
       condition: service_started
     kafka:
@@ -17,9 +15,11 @@ x-service-common: &service-common
       max-size: "20m"
       max-file: "3"
   environment: &common-env
-    SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/wespeak?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
-    DB_USERNAME: ${DB_USERNAME}
-    DB_PASSWORD: ${DB_PASSWORD}
+    DB_USERNAME: ${DB_USERNAME:-root}
+    DB_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+    # DB 장애가 해당 서비스 스레드만 블로킹하고 게이트웨이/다른 서비스로 전파되지 않도록 커넥션
+    # 타임아웃을 짧게 설정(SC-001) — Spring Boot 완화 바인딩으로 코드 변경 없이 적용됨
+    SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT: ${DB_HIKARI_CONNECTION_TIMEOUT:-3000}
     REDIS_HOST: redis
     REDIS_PORT: 6379
     KAFKA_BOOTSTRAP_SERVERS: kafka:29092
@@ -46,6 +46,152 @@ services:
       - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  # ─── 서비스별 MySQL 인스턴스 (database-per-service, 아직 어떤 서비스도 연결되지 않음) ──────
+
+  mysql-auth:
+    image: mysql:8.0
+    container_name: wespeak-mysql-auth
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_auth
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-auth-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-user:
+    image: mysql:8.0
+    container_name: wespeak-mysql-user
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_user
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-user-data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-voca:
+    image: mysql:8.0
+    container_name: wespeak-mysql-voca
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_voca
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-voca-data:/var/lib/mysql
+    ports:
+      - "3309:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-writing:
+    image: mysql:8.0
+    container_name: wespeak-mysql-writing
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_writing
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-writing-data:/var/lib/mysql
+    ports:
+      - "3310:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-reading:
+    image: mysql:8.0
+    container_name: wespeak-mysql-reading
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_reading
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-reading-data:/var/lib/mysql
+    ports:
+      - "3311:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+    restart: unless-stopped
+
+  mysql-conversation:
+    image: mysql:8.0
+    container_name: wespeak-mysql-conversation
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Abcd123@}
+      MYSQL_DATABASE: wespeak_conversation
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
+    volumes:
+      - mysql-conversation-data:/var/lib/mysql
+    ports:
+      - "3312:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-Abcd123@}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -113,10 +259,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-auth
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9001:9001"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-auth:3306/wespeak_auth?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 1
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     healthcheck:
@@ -133,10 +287,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-user
+    depends_on:
+      mysql-user:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9002:9002"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-user:3306/wespeak_user?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 2
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9002/actuator/health"]
@@ -152,11 +314,22 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-voca
+    depends_on:
+      mysql-voca:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9003:9003"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-voca:3306/wespeak_voca?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 3
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9003/actuator/health"]
       interval: 30s
@@ -171,10 +344,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-writing
+    depends_on:
+      mysql-writing:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9004:9004"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-writing:3306/wespeak_writing?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 4
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9004/actuator/health"]
@@ -190,11 +371,23 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-reading
+    depends_on:
+      mysql-reading:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9005:9005"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-reading:3306/wespeak_reading?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 5
+      USER_SERVICE_URL: http://user-service:9002
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_ACCOUNT_ID: ${R2_ACCOUNT_ID}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9005/actuator/health"]
       interval: 30s
@@ -209,10 +402,18 @@ services:
       context: .
       args:
         MODULE_PATH: modules/module-conversation
+    depends_on:
+      mysql-conversation:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      kafka:
+        condition: service_started
     ports:
       - "9006:9006"
     environment:
       <<: *common-env
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-conversation:3306/wespeak_conversation?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
       NODE_ID: 6
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9006/actuator/health"]
@@ -373,6 +574,12 @@ networks:
 
 volumes:
   mysql-data:
+  mysql-auth-data:
+  mysql-user-data:
+  mysql-voca-data:
+  mysql-writing-data:
+  mysql-reading-data:
+  mysql-conversation-data:
   redis-data:
   prometheus-data:
   grafana-data:
