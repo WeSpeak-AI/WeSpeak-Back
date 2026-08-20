@@ -2,30 +2,25 @@ package backend.module.conversation.websocket;
 
 import backend.core.common.dataserializer.DataSerializer;
 import backend.module.conversation.dto.AiChatResponse;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class AiClient {
 
-    private RestClient restClient;
-
-    @Value("${ai.server.url}")
-    private String aiServerUrl;
-
-    @PostConstruct
-    public void init() {
-        restClient = RestClient.create(aiServerUrl);
-    }
+    @Qualifier("aiWebClient")
+    private final WebClient aiWebClient;
 
     public AiChatResponse chat(byte[] audioBytes, List<Map<String, String>> history) {
         String historyJson = DataSerializer.serialize(history);
@@ -35,15 +30,17 @@ public class AiClient {
             public String getFilename() { return "audio.wav"; }
         };
 
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", audioResource);
-        body.add("history", historyJson);
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+        bodyBuilder.part("file", audioResource);
+        bodyBuilder.part("history", historyJson);
 
-        return restClient.post()
+        return aiWebClient.post()
                 .uri("/chat")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(body)
+                .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
                 .retrieve()
-                .body(AiChatResponse.class);
+                .bodyToMono(AiChatResponse.class)
+                .timeout(Duration.ofSeconds(60))
+                .block();
     }
 }
