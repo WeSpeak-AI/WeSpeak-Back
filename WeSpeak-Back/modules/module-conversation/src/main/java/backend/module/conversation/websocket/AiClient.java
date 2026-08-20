@@ -22,12 +22,13 @@ public class AiClient {
     @Qualifier("aiWebClient")
     private final WebClient aiWebClient;
 
+    //Todo: gRPC 사용하도록 변경
     public AiChatResponse chat(byte[] audioBytes, List<Map<String, String>> history) {
         String historyJson = DataSerializer.serialize(history);
 
         ByteArrayResource audioResource = new ByteArrayResource(audioBytes) {
             @Override
-            public String getFilename() { return "audio.wav"; }
+            public String getFilename() { return "audio.m4a"; }
         };
 
         MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
