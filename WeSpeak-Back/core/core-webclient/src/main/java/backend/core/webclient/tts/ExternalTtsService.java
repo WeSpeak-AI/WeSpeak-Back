@@ -19,6 +19,7 @@ public class ExternalTtsService implements TtsService {
         this.aiWebClient = aiWebClient;
     }
 
+    //Todo: gRPC 사용하도록 변경
     @Override
     public String generateUrl(String text) {
         return aiWebClient.post()
@@ -30,6 +31,7 @@ public class ExternalTtsService implements TtsService {
                 .block();
     }
 
+    //Todo: gRPC 사용하도록 변경?
     @Override
     public void stream(String text, OutputStream outputStream) throws IOException {
         byte[] audioBytes = aiWebClient.post()

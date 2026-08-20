@@ -28,6 +28,7 @@ public class AiCorrectionHandler implements EventHandler<AiCorrectionEventPayloa
     private final WebClient aiWebClient;
     private final AiCorrectionSaveService aiCorrectionSaveService;
 
+    //Todo: gRPC를 사용하도록 변경
     @Override
     public void handle(Event<AiCorrectionEventPayload> event) {
         AiCorrectionEventPayload payload = event.getPayload();

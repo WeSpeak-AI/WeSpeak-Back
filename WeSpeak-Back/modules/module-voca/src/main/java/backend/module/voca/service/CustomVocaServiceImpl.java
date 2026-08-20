@@ -67,6 +67,7 @@ public class CustomVocaServiceImpl implements CustomVocaService {
         return CustomWordResponse.from(word);
     }
 
+    //todo: 시나리오 부하 테스트
     @Override
     public List<CustomWordResponse> getWords(String email, Long customVocaBookId) {
         findBookByIdAndEmail(customVocaBookId, email);

@@ -28,6 +28,7 @@ public class VocaGenerationHandler implements EventHandler<VocaGenerationEventPa
     private final WebClient aiWebClient;
     private final VocaSaveService vocaSaveService;
 
+    //Todo: gRPC 사용하도록 변경
     @Override
     public void handle(Event<VocaGenerationEventPayload> event) {
         VocaGenerationEventPayload payload = event.getPayload();

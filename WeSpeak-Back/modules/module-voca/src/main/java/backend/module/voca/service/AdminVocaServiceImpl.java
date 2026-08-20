@@ -170,6 +170,7 @@ public class AdminVocaServiceImpl implements AdminVocaService {
         wordRepository.delete(word);
     }
 
+    //Todo: gRPC 사용하도록 변경
     @Override
     public void ingestVoca(IngestRequest request) {
         aiWebClient.post()

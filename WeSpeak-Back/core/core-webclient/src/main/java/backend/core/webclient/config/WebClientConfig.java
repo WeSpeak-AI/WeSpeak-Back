@@ -13,7 +13,7 @@ public class WebClientConfig {
     @Value("${ai.server.url}")
     private String aiServerUrl;
 
-    @Bean
+    @Bean경
     public WebClient aiWebClient() {
         return WebClient.builder()
                 .baseUrl(aiServerUrl)

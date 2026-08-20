@@ -40,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     @Value("${google.client-id}")
     private String googleClientId;
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void register(RegisterRequest request) {
@@ -62,6 +63,7 @@ public class AuthServiceImpl implements AuthService {
         publishUserRegistered(credential, request.getNickname());
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     @SuppressWarnings("unchecked")
@@ -107,6 +109,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     public LoginResponse login(LoginRequest request) {
         Credential credential = credentialRepository.findByEmail(request.getEmail())

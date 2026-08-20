@@ -51,6 +51,7 @@ public class TestServiceImpl implements TestService{
                 .toList();
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void endTest(Long bookId, TestResultRequest testResultRequest, String email) {
@@ -127,6 +128,7 @@ public class TestServiceImpl implements TestService{
         incorrectWordRepository.saveAll(incorrectWords);
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     public List<TestRecordPreview> getTestRecordPreviews(String email, Long bookId) {
         if (!vocaBookRepository.existsById(bookId)) {
@@ -137,6 +139,7 @@ public class TestServiceImpl implements TestService{
                 .toList();
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     public List<WordResultResponse> getIncorrectResult(Long testId) {
         Test test = testRepository.findById(testId)
@@ -152,6 +155,7 @@ public class TestServiceImpl implements TestService{
         return results;
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void deleteMyTest(String email, Long testId) {

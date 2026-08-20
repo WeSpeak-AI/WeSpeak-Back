@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
         return UserProfileResponse.from(user);
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     public MyPageResponse getMyPage(String email) {
         User user = findByEmail(email);
@@ -63,6 +64,7 @@ public class UserServiceImpl implements UserService {
                 .build());
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void addXp(String email, int amount) {
@@ -77,6 +79,7 @@ public class UserServiceImpl implements UserService {
         user.addTicket(3);
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void consumeTicket(String email) {

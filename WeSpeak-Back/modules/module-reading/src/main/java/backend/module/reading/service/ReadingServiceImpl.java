@@ -72,6 +72,7 @@ public class ReadingServiceImpl implements ReadingService {
                 .build();
     }
 
+    //Todo: 시나리오 부하테스트
     @Override
     public Page<ReadingBookPreviewResponse> getAllBooks(int page, int size) {
         return readingBookRepository.findAll(PageRequest.of(page, size))
@@ -91,6 +92,8 @@ public class ReadingServiceImpl implements ReadingService {
                 .toList();
     }
 
+
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public ReadingBookContent getPage(String email, Long bookId, Integer pageNumber) {
@@ -122,11 +125,11 @@ public class ReadingServiceImpl implements ReadingService {
         return ReadingBookContent.from(bookPage);
     }
 
+    //Todo: 이벤트기반으로 변경 후 시나리오 부하 테스트
     @Override
     @Transactional
     public ReadingAiResponse processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
         consumeTicket(email);
-
         return getFeedback(bookPageId, audioBytes);
     }
 
@@ -143,6 +146,7 @@ public class ReadingServiceImpl implements ReadingService {
         }
     }
 
+    //Todo: gRPC로 변경 후 시나리오 부하테스트
     @Override
     public ReadingAiResponse getFeedback(Long bookPageId, byte[] audioBytes) {
         BookPage bookPage = bookPageRepository.findById(bookPageId)
@@ -173,6 +177,7 @@ public class ReadingServiceImpl implements ReadingService {
         userBookRepository.delete(userbook);
     }
 
+    //Todo: 부하 테스트
     @Override
     @Transactional
     public Long startBook(String email, ReadingRequest readingRequest) {

@@ -53,6 +53,7 @@ public class VocaServiceImpl implements VocaService {
                 .map(VocaBookResponse::from);
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void startVoca(String email, Long bookId) {
@@ -84,6 +85,7 @@ public class VocaServiceImpl implements VocaService {
                 .toList();
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     public List<VocaBookDayResponse> getAllDaysByBook(Long bookId) {
         return vocaBookDayRepository.findByVocaBook_VocaBookId(bookId).stream()
@@ -91,6 +93,7 @@ public class VocaServiceImpl implements VocaService {
                 .toList();
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public List<WordResponse> getWordsByDay(String email, Long bookId, int dayNumber) {
