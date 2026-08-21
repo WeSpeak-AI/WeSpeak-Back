@@ -27,7 +27,7 @@ public class TopicUpdateHandler implements EventHandler<TopicUpdateEventPayload>
     private final WebClient aiWebClient;
     private final TopicRepository topicRepository;
 
-    //Todo: gRPC 사용하도록 변경
+    //Todo: gRPC 전환은 우선순위 낮음 (단순 unary 호출)
     @Override
     @Transactional
     public void handle(Event<TopicUpdateEventPayload> event) {

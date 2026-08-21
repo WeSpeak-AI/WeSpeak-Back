@@ -16,7 +16,8 @@ public class WordSearchServiceImpl implements WordSearchService {
     @Qualifier("aiWebClient")
     private final WebClient aiWebClient;
 
-    //Todo: gRPC 사용하도록 변경 시나리오 부하테스트
+    //Todo: .subscribe()로 논블로킹 전환, 시나리오 부하테스트
+    //Todo: gRPC는 단순 request-response라 이득 작음 (우선순위 낮음)
     @Override
     public WordSearchResponse search(String query) {
         return aiWebClient.post()

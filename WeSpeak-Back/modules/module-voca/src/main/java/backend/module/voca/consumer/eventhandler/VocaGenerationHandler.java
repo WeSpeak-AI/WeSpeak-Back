@@ -28,7 +28,8 @@ public class VocaGenerationHandler implements EventHandler<VocaGenerationEventPa
     private final WebClient aiWebClient;
     private final VocaSaveService vocaSaveService;
 
-    //Todo: gRPC 사용하도록 변경
+    //Todo: gRPC 전환은 우선순위 낮음 (단순 unary 호출, 진행률 streaming 필요할 때만 이득)
+    //Todo: .subscribe() 불필요 (Kafka 컨슈머 전용 스레드로 격리됨, max.poll.interval.ms 이미 튜닝됨)
     @Override
     public void handle(Event<VocaGenerationEventPayload> event) {
         VocaGenerationEventPayload payload = event.getPayload();

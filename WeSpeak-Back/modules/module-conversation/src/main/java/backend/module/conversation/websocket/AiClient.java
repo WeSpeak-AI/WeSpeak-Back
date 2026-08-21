@@ -22,7 +22,8 @@ public class AiClient {
     @Qualifier("aiWebClient")
     private final WebClient aiWebClient;
 
-    //Todo: gRPC 사용하도록 변경
+    //Todo: gRPC 전환 (오디오/응답 스트리밍 재설계, 최우선)
+    //Todo: .subscribe()로 논블로킹 전환 (WS 세션 스레드 점유 중, 최우선)
     public AiChatResponse chat(byte[] audioBytes, List<Map<String, String>> history) {
         String historyJson = DataSerializer.serialize(history);
 

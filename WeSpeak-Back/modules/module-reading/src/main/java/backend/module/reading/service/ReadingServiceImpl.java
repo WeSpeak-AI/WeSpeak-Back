@@ -146,7 +146,8 @@ public class ReadingServiceImpl implements ReadingService {
         }
     }
 
-    //Todo: gRPC로 변경 후 시나리오 부하테스트
+    //Todo: gRPC로 변경(오디오 업로드 스트리밍 재설계 필요) 후 시나리오 부하테스트
+    //Todo: .subscribe()로 논블로킹 전환 (서블릿 스레드 점유 중)
     @Override
     public ReadingAiResponse getFeedback(Long bookPageId, byte[] audioBytes) {
         BookPage bookPage = bookPageRepository.findById(bookPageId)
