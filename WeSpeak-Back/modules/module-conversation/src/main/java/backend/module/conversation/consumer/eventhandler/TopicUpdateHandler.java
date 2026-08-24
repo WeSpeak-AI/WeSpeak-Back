@@ -23,7 +23,6 @@ public class TopicUpdateHandler implements EventHandler<TopicUpdateEventPayload>
     private final WebClient aiWebClient;
     private final TopicSaveService topicSaveService;
 
-    //Todo: gRPC 전환은 우선순위 낮음 (단순 unary 호출)
     @Override
     public void handle(Event<TopicUpdateEventPayload> event) {
         TopicUpdateEventPayload payload = event.getPayload();

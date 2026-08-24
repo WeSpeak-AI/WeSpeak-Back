@@ -29,7 +29,6 @@ public class ImageGenerationHandler implements EventHandler<ImageGenerationEvent
     private final WebClient aiWebClient;
     private final VocaSaveService vocaSaveService;
 
-    //Todo: gRPC 사용하도록 변경
     @Override
     public void handle(Event<ImageGenerationEventPayload> event) {
         Long vocaBookId = event.getPayload().getVocaBookId();
