@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/search")
@@ -17,7 +18,7 @@ public class WordSearchController {
     private final WordSearchService wordSearchService;
 
     @GetMapping("/word")
-    public ApiResponse<WordSearchResponse> searchWord(@RequestParam("query") String query) {
-        return ApiResponse.ok(wordSearchService.search(query));
+    public Mono<ApiResponse<WordSearchResponse>> searchWord(@RequestParam("query") String query) {
+        return wordSearchService.search(query).map(ApiResponse::ok);
     }
 }
