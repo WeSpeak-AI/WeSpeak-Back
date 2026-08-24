@@ -1,12 +1,12 @@
 package backend.module.reading.handler;
 
-import backend.module.reading.dto.ReadingAiResponse;
 import backend.module.reading.service.ReadingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
+import reactor.core.Disposable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import java.io.IOException;
 public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
 
     private static final String AUDIO_BUFFER = "audioBuffer";
+    private static final String ACTIVE_FEEDBACK_SUBSCRIPTION = "activeFeedbackSubscription";
 
     private final ReadingService readingService;
 
@@ -36,7 +37,7 @@ public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) {
         if (!"END".equals(message.getPayload())) return;
 
         ByteArrayOutputStream buffer = getBuffer(session);
@@ -47,14 +48,32 @@ public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
         byte[] audioBytes = buffer.toByteArray();
         buffer.reset();
 
-        ReadingAiResponse response = readingService.processUserSummary(email, bookPageId, audioBytes);
+        Disposable subscription = readingService.processUserSummary(email, bookPageId, audioBytes)
+                .subscribe(
+                        response -> {
+                            try {
+                                session.sendMessage(new TextMessage(response.userText()));
+                                session.sendMessage(new TextMessage(response.feedbackText()));
+                            } catch (IOException e) {
+                                log.error("[ReadingWebSocketHandler] failed to send message: {}", e.getMessage());
+                            }
+                        },
+                        error -> {
+                            log.error("[ReadingWebSocketHandler] AI feedback call failed: {}", error.getMessage());
+                            try {
+                                session.close(CloseStatus.SERVER_ERROR);
+                            } catch (IOException e) {
+                                log.error("[ReadingWebSocketHandler] failed to close session after error: {}", e.getMessage());
+                            }
+                        }
+                );
 
-        session.sendMessage(new TextMessage(response.userText()));
-        session.sendMessage(new TextMessage(response.feedbackText()));
+        session.getAttributes().put(ACTIVE_FEEDBACK_SUBSCRIPTION, subscription);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        disposeActiveFeedbackSubscription(session);
         session.getAttributes().remove(AUDIO_BUFFER);
     }
 
@@ -62,6 +81,13 @@ public class ReadingWebSocketHandler extends AbstractWebSocketHandler {
     public void handleTransportError(WebSocketSession session, Throwable exception) {
         log.error("[ReadingWebSocketHandler] error: {}", exception.getMessage());
         session.getAttributes().remove(AUDIO_BUFFER);
+    }
+
+    private void disposeActiveFeedbackSubscription(WebSocketSession session) {
+        Object attribute = session.getAttributes().get(ACTIVE_FEEDBACK_SUBSCRIPTION);
+        if (attribute instanceof Disposable disposable && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
     }
 
     private ByteArrayOutputStream getBuffer(WebSocketSession session) {

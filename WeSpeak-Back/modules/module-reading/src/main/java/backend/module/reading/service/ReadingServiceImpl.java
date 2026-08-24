@@ -20,6 +20,7 @@ import backend.module.reading.repository.ReadingBookRepository;
 import backend.module.reading.repository.UserBookRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
@@ -29,10 +30,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.http.client.ReactorClientHttpRequestFactory;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
-import reactor.netty.http.client.HttpClient;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -51,9 +53,8 @@ public class ReadingServiceImpl implements ReadingService {
     private final Snowflake snowflake;
     private final OutboxEventPublisher outboxEventPublisher;
 
-    @Value("${ai.server.url}")
-    private String aiServerUrl;
-    private RestClient restClient;
+    @Qualifier("aiWebClient")
+    private final WebClient aiWebClient;
 
     @Value("${user.service.url}")
     private String userServiceUrl;
@@ -61,12 +62,6 @@ public class ReadingServiceImpl implements ReadingService {
 
     @PostConstruct
     public void init() {
-        HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(50));
-        restClient = RestClient.builder()
-                .requestFactory(new ReactorClientHttpRequestFactory(httpClient))
-                .baseUrl(aiServerUrl)
-                .build();
         userServiceClient = RestClient.builder()
                 .baseUrl(userServiceUrl)
                 .build();
@@ -127,8 +122,7 @@ public class ReadingServiceImpl implements ReadingService {
 
     //Todo: 이벤트기반으로 변경 후 시나리오 부하 테스트
     @Override
-    @Transactional
-    public ReadingAiResponse processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
+    public Mono<ReadingAiResponse> processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
         consumeTicket(email);
         return getFeedback(bookPageId, audioBytes);
     }
@@ -147,9 +141,8 @@ public class ReadingServiceImpl implements ReadingService {
     }
 
     //Todo: gRPC로 변경(오디오 업로드 스트리밍 재설계 필요) 후 시나리오 부하테스트
-    //Todo: .subscribe()로 논블로킹 전환 (서블릿 스레드 점유 중)
     @Override
-    public ReadingAiResponse getFeedback(Long bookPageId, byte[] audioBytes) {
+    public Mono<ReadingAiResponse> getFeedback(Long bookPageId, byte[] audioBytes) {
         BookPage bookPage = bookPageRepository.findById(bookPageId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
 
@@ -162,12 +155,13 @@ public class ReadingServiceImpl implements ReadingService {
         body.add("file", audioResource);
         body.add("book_content", bookPage.getContent());
 
-        return restClient.post()
+        return aiWebClient.post()
                 .uri("/feedback")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(body)
+                .body(BodyInserters.fromMultipartData(body))
                 .retrieve()
-                .body(ReadingAiResponse.class);
+                .bodyToMono(ReadingAiResponse.class)
+                .timeout(Duration.ofSeconds(50));
     }
 
     @Override

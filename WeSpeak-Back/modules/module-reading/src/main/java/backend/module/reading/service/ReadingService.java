@@ -6,6 +6,7 @@ import backend.module.reading.dto.ReadingBookContent;
 import backend.module.reading.dto.ReadingBookPreviewResponse;
 import backend.module.reading.dto.ReadingRequest;
 import org.springframework.data.domain.Page;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -21,9 +22,9 @@ public interface ReadingService {
 
     Long startBook(String email, ReadingRequest readingRequest);
 
-    ReadingAiResponse processUserSummary(String email, Long bookPageId, byte[] audioBytes);
+    Mono<ReadingAiResponse> processUserSummary(String email, Long bookPageId, byte[] audioBytes);
 
-    ReadingAiResponse getFeedback(Long bookPageId, byte[] audioBytes);
+    Mono<ReadingAiResponse> getFeedback(Long bookPageId, byte[] audioBytes);
 
     void deleteMyBook(Long bookId, String email);
 }
