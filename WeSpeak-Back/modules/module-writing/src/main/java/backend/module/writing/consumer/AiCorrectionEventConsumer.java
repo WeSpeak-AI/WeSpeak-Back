@@ -17,7 +17,7 @@ public class AiCorrectionEventConsumer {
 
     @KafkaListener(topics = {
         EventType.EventTopic.WRITING
-    })
+    }, containerFactory = "aiCorrectionKafkaListenerContainerFactory")
     public void listen(String message, Acknowledgment ack) {
         log.info("[AiCorrectionEventConsumer.listen] received message={}", message);
         try {
