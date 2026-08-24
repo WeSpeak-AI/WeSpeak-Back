@@ -10,6 +10,7 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
@@ -23,8 +24,7 @@ public class AiClient {
     private final WebClient aiWebClient;
 
     //Todo: gRPC 전환 (오디오/응답 스트리밍 재설계, 최우선)
-    //Todo: .subscribe()로 논블로킹 전환 (WS 세션 스레드 점유 중, 최우선)
-    public AiChatResponse chat(byte[] audioBytes, List<Map<String, String>> history) {
+    public Mono<AiChatResponse> chat(byte[] audioBytes, List<Map<String, String>> history) {
         String historyJson = DataSerializer.serialize(history);
 
         ByteArrayResource audioResource = new ByteArrayResource(audioBytes) {
@@ -42,7 +42,6 @@ public class AiClient {
                 .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
                 .retrieve()
                 .bodyToMono(AiChatResponse.class)
-                .timeout(Duration.ofSeconds(60))
-                .block();
+                .timeout(Duration.ofSeconds(60));
     }
 }

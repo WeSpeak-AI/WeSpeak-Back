@@ -2,7 +2,6 @@ package backend.module.conversation.websocket;
 
 import backend.core.common.dataserializer.DataSerializer;
 import backend.module.conversation.domain.Conversation;
-import backend.module.conversation.dto.AiChatResponse;
 import backend.module.conversation.repository.ConversationMessageRepository;
 import backend.module.conversation.service.ConversationMessageService;
 import backend.module.conversation.service.ConversationService;
@@ -15,7 +14,9 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
+import reactor.core.Disposable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -34,6 +35,7 @@ public class ConversationWebSocketHandler extends AbstractWebSocketHandler {
     private final AiClient aiClient;
 
     private static final String REDIS_KEY = "conversation:history:";
+    private static final String ACTIVE_CHAT_SUBSCRIPTION = "activeChatSubscription";
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -46,7 +48,7 @@ public class ConversationWebSocketHandler extends AbstractWebSocketHandler {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         String sessionId = extractSessionId(session);
         String redisKey = REDIS_KEY + sessionId;
         Conversation conversation = conversationService.getConversation(sessionId);
@@ -54,23 +56,52 @@ public class ConversationWebSocketHandler extends AbstractWebSocketHandler {
         byte[] audioBytes = message.getPayload().array();
         List<Map<String, String>> history = DataSerializer.deserialize(getHistory(redisKey, conversation), List.class);
 
-        AiChatResponse response = aiClient.chat(audioBytes, history);
+        Disposable subscription = aiClient.chat(audioBytes, history)
+                .subscribe(
+                        response -> {
+                            conversationMessageService.saveUserMessageToDB(conversation, response.userText());
+                            conversationMessageService.saveAiMessageToDB(conversation, response.aiText());
 
-        conversationMessageService.saveUserMessageToDB(conversation, response.userText());
-        conversationMessageService.saveAiMessageToDB(conversation, response.aiText());
+                            history.add(Map.of("role", "user", "content", response.userText()));
+                            history.add(Map.of("role", "assistant", "content", response.aiText()));
+                            redisTemplate.opsForValue().set(redisKey, DataSerializer.serialize(history));
 
-        history.add(Map.of("role", "user", "content", response.userText()));
-        history.add(Map.of("role", "assistant", "content", response.aiText()));
-        redisTemplate.opsForValue().set(redisKey, DataSerializer.serialize(history));
+                            try {
+                                session.sendMessage(new TextMessage(response.userText()));
+                                session.sendMessage(new TextMessage(response.aiText()));
+                                session.sendMessage(new BinaryMessage(Base64.getDecoder().decode(response.audioData())));
+                            } catch (IOException e) {
+                                log.error("[ConversationWebSocketHandler] failed to send message: {}", e.getMessage());
+                            }
+                        },
+                        error -> {
+                            log.error("[ConversationWebSocketHandler] AI chat call failed: {}", error.getMessage());
+                            try {
+                                session.close(CloseStatus.SERVER_ERROR);
+                            } catch (IOException e) {
+                                log.error("[ConversationWebSocketHandler] failed to close session after error: {}", e.getMessage());
+                            }
+                        }
+                );
 
-        session.sendMessage(new TextMessage(response.userText()));
-        session.sendMessage(new TextMessage(response.aiText()));
-        session.sendMessage(new BinaryMessage(Base64.getDecoder().decode(response.audioData())));
+        session.getAttributes().put(ACTIVE_CHAT_SUBSCRIPTION, subscription);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        disposeActiveChatSubscription(session);
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) {
         log.error("[ConversationWebSocketHandler] error: {}", exception.getMessage());
+    }
+
+    private void disposeActiveChatSubscription(WebSocketSession session) {
+        Object attribute = session.getAttributes().get(ACTIVE_CHAT_SUBSCRIPTION);
+        if (attribute instanceof Disposable disposable && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
     }
 
     @SuppressWarnings("unchecked")
