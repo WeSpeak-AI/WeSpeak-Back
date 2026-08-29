@@ -6,7 +6,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "conversation_sessions", indexes = @Index(columnList = "user_email"))
+@Table(name = "conversation_sessions", indexes = {
+        @Index(columnList = "user_email"),
+        @Index(columnList = "status, started_at")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder

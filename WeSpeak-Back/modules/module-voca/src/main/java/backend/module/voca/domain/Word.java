@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "words", indexes = {@Index(columnList = "voca_book_day_id"), @Index(columnList = "term")})
+@Table(name = "words", indexes = {@Index(columnList = "voca_book_day_id"), @Index(columnList = "voca_book_id, day")})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder

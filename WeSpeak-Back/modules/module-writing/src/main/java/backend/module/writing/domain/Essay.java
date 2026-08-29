@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "essays", indexes = {@Index(columnList = "user_email, created_at") })
+@Table(name = "essays", indexes = {@Index(columnList = "user_email") })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder

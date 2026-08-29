@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", indexes = @Index(columnList = "email"))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
