@@ -3,11 +3,16 @@ apply plugin: 'org.springframework.boot'
 dependencies {
     implementation project(':core:core-common')
     implementation project(':core:core-infra')
-    implementation project(':core:core-webclient')
+    implementation project(':core:core-grpc')
+    implementation project(':core:core-data-serializer')
     implementation project(':core:core-outbox-message-relay')
     implementation 'software.amazon.awssdk:s3:2.25.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // in-process gRPC 목업 서버 검증(spec 004 T023) — core-grpc의 grpc-netty-shaded와 버전 통일
+    testImplementation 'io.grpc:grpc-inprocess:1.68.1'
+    testImplementation 'io.grpc:grpc-testing:1.68.1'
 }
