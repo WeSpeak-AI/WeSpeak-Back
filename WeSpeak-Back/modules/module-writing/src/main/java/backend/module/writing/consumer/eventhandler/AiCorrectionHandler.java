@@ -28,7 +28,6 @@ public class AiCorrectionHandler implements EventHandler<AiCorrectionEventPayloa
     private final WebClient aiWebClient;
     private final AiCorrectionSaveService aiCorrectionSaveService;
 
-    //Todo: max.poll.interval.ms 설정 확인 필요 (block timeout 5분 = Kafka 기본 poll interval 5분, rebalance 위험)
     @Override
     public void handle(Event<AiCorrectionEventPayload> event) {
         AiCorrectionEventPayload payload = event.getPayload();

@@ -1,12 +1,12 @@
 package backend.module.reading.service;
 
+import backend.core.grpc.ai.v1.FeedbackChunk;
 import backend.module.reading.domain.Book.Level;
-import backend.module.reading.dto.ReadingAiResponse;
 import backend.module.reading.dto.ReadingBookContent;
 import backend.module.reading.dto.ReadingBookPreviewResponse;
 import backend.module.reading.dto.ReadingRequest;
 import org.springframework.data.domain.Page;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -22,9 +22,9 @@ public interface ReadingService {
 
     Long startBook(String email, ReadingRequest readingRequest);
 
-    Mono<ReadingAiResponse> processUserSummary(String email, Long bookPageId, byte[] audioBytes);
+    Flux<FeedbackChunk> processUserSummary(String email, Long bookPageId, byte[] audioBytes);
 
-    Mono<ReadingAiResponse> getFeedback(Long bookPageId, byte[] audioBytes);
+    Flux<FeedbackChunk> getFeedback(Long bookPageId, byte[] audioBytes);
 
     void deleteMyBook(Long bookId, String email);
 }

@@ -1,4 +1,4 @@
-package backend.module.reading.consumer.eventhandler;
+package backend.module.reading.handler;
 
 import backend.core.common.dataserializer.DataSerializer;
 import backend.core.common.exception.BusinessException;
