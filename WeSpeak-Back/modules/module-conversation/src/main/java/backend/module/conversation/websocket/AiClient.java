@@ -1,47 +1,54 @@
 package backend.module.conversation.websocket;
 
 import backend.core.common.dataserializer.DataSerializer;
-import backend.module.conversation.dto.AiChatResponse;
+import backend.core.grpc.ai.v1.ChatChunk;
+import backend.core.grpc.ai.v1.ChatMetadata;
+import backend.core.grpc.ai.v1.ChatUploadChunk;
+import backend.core.grpc.ai.v1.ReactorChatServiceGrpc;
+import com.google.protobuf.ByteString;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
 public class AiClient {
 
-    @Qualifier("aiWebClient")
-    private final WebClient aiWebClient;
+    private static final int AUDIO_CHUNK_SIZE = 64 * 1024;
 
-    //Todo: gRPC 전환 (오디오/응답 스트리밍 재설계, 최우선)
-    public Mono<AiChatResponse> chat(byte[] audioBytes, List<Map<String, String>> history) {
+    private final ReactorChatServiceGrpc.ReactorChatServiceStub chatServiceStub;
+
+    public Flux<ChatChunk> chat(byte[] audioBytes, List<Map<String, String>> history) {
         String historyJson = DataSerializer.serialize(history);
 
-        ByteArrayResource audioResource = new ByteArrayResource(audioBytes) {
-            @Override
-            public String getFilename() { return "audio.m4a"; }
-        };
+        ChatUploadChunk metadataChunk = ChatUploadChunk.newBuilder()
+                .setMetadata(ChatMetadata.newBuilder().setHistoryJson(historyJson).build())
+                .build();
 
-        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
-        bodyBuilder.part("file", audioResource);
-        bodyBuilder.part("history", historyJson);
+        Flux<ChatUploadChunk> audioChunks = Flux.fromIterable(splitIntoChunks(audioBytes))
+                .map(chunk -> ChatUploadChunk.newBuilder().setAudioChunk(chunk).build());
 
-        return aiWebClient.post()
-                .uri("/chat")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
-                .retrieve()
-                .bodyToMono(AiChatResponse.class)
-                .timeout(Duration.ofSeconds(60));
+        Flux<ChatUploadChunk> upload = Flux.concat(Flux.just(metadataChunk), audioChunks);
+
+        return chatServiceStub
+                .withDeadlineAfter(60, TimeUnit.SECONDS)
+                .chat(upload);
+    }
+
+    private List<ByteString> splitIntoChunks(byte[] audioBytes) {
+        List<ByteString> chunks = new ArrayList<>();
+        for (int offset = 0; offset < audioBytes.length; offset += AUDIO_CHUNK_SIZE) {
+            int end = Math.min(offset + AUDIO_CHUNK_SIZE, audioBytes.length);
+            chunks.add(ByteString.copyFrom(audioBytes, offset, end - offset));
+        }
+        if (chunks.isEmpty()) {
+            chunks.add(ByteString.EMPTY);
+        }
+        return chunks;
     }
 }

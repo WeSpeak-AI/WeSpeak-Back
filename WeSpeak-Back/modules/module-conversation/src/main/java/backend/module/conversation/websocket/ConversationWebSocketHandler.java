@@ -1,6 +1,7 @@
 package backend.module.conversation.websocket;
 
 import backend.core.common.dataserializer.DataSerializer;
+import backend.core.grpc.ai.v1.ChatChunk;
 import backend.module.conversation.domain.Conversation;
 import backend.module.conversation.repository.ConversationMessageRepository;
 import backend.module.conversation.service.ConversationMessageService;
@@ -18,9 +19,9 @@ import reactor.core.Disposable;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,35 +57,78 @@ public class ConversationWebSocketHandler extends AbstractWebSocketHandler {
         byte[] audioBytes = message.getPayload().array();
         List<Map<String, String>> history = DataSerializer.deserialize(getHistory(redisKey, conversation), List.class);
 
+        StringBuilder userTextAccumulator = new StringBuilder();
+        StringBuilder aiTextAccumulator = new StringBuilder();
+        AtomicBoolean errorOccurred = new AtomicBoolean(false);
+
         Disposable subscription = aiClient.chat(audioBytes, history)
                 .subscribe(
-                        response -> {
-                            conversationMessageService.saveUserMessageToDB(conversation, response.userText());
-                            conversationMessageService.saveAiMessageToDB(conversation, response.aiText());
-
-                            history.add(Map.of("role", "user", "content", response.userText()));
-                            history.add(Map.of("role", "assistant", "content", response.aiText()));
-                            redisTemplate.opsForValue().set(redisKey, DataSerializer.serialize(history));
-
-                            try {
-                                session.sendMessage(new TextMessage(response.userText()));
-                                session.sendMessage(new TextMessage(response.aiText()));
-                                session.sendMessage(new BinaryMessage(Base64.getDecoder().decode(response.audioData())));
-                            } catch (IOException e) {
-                                log.error("[ConversationWebSocketHandler] failed to send message: {}", e.getMessage());
-                            }
-                        },
-                        error -> {
-                            log.error("[ConversationWebSocketHandler] AI chat call failed: {}", error.getMessage());
-                            try {
-                                session.close(CloseStatus.SERVER_ERROR);
-                            } catch (IOException e) {
-                                log.error("[ConversationWebSocketHandler] failed to close session after error: {}", e.getMessage());
-                            }
-                        }
+                        chunk -> handleChatChunk(session, chunk, userTextAccumulator, aiTextAccumulator, errorOccurred),
+                        error -> handleChatFailure(session, error.getMessage(), errorOccurred),
+                        () -> handleChatComplete(session, conversation, redisKey, history,
+                                userTextAccumulator, aiTextAccumulator, errorOccurred)
                 );
 
         session.getAttributes().put(ACTIVE_CHAT_SUBSCRIPTION, subscription);
+    }
+
+    private void handleChatChunk(WebSocketSession session, ChatChunk chunk, StringBuilder userTextAccumulator,
+                                  StringBuilder aiTextAccumulator, AtomicBoolean errorOccurred) {
+        try {
+            switch (chunk.getPayloadCase()) {
+                case USER_TEXT_FINAL -> {
+                    userTextAccumulator.append(chunk.getUserTextFinal());
+                    session.sendMessage(new TextMessage(DataSerializer.serialize(
+                            Map.of("type", "user_text", "text", chunk.getUserTextFinal()))));
+                }
+                case AI_TEXT_DELTA -> {
+                    aiTextAccumulator.append(chunk.getAiTextDelta());
+                    session.sendMessage(new TextMessage(DataSerializer.serialize(
+                            Map.of("type", "ai_text_delta", "text", chunk.getAiTextDelta()))));
+                }
+                case STREAM_ERROR -> handleChatFailure(session, chunk.getStreamError().getMessage(), errorOccurred);
+                case PAYLOAD_NOT_SET -> log.warn("[ConversationWebSocketHandler] empty ChatChunk received");
+            }
+        } catch (IOException e) {
+            log.error("[ConversationWebSocketHandler] failed to send message: {}", e.getMessage());
+        }
+    }
+
+    private void handleChatFailure(WebSocketSession session, String message, AtomicBoolean errorOccurred) {
+        if (!errorOccurred.compareAndSet(false, true)) {
+            return;
+        }
+        log.error("[ConversationWebSocketHandler] AI chat stream failed: {}", message);
+        try {
+            session.sendMessage(new TextMessage(DataSerializer.serialize(
+                    Map.of("type", "error", "message", message))));
+            session.close(CloseStatus.SERVER_ERROR);
+        } catch (IOException e) {
+            log.error("[ConversationWebSocketHandler] failed to notify/close session after error: {}", e.getMessage());
+        }
+    }
+
+    private void handleChatComplete(WebSocketSession session, Conversation conversation, String redisKey,
+                                     List<Map<String, String>> history, StringBuilder userTextAccumulator,
+                                     StringBuilder aiTextAccumulator, AtomicBoolean errorOccurred) {
+        if (errorOccurred.get()) {
+            return;
+        }
+        String userText = userTextAccumulator.toString();
+        String aiText = aiTextAccumulator.toString();
+
+        conversationMessageService.saveUserMessageToDB(conversation, userText);
+        conversationMessageService.saveAiMessageToDB(conversation, aiText);
+
+        history.add(Map.of("role", "user", "content", userText));
+        history.add(Map.of("role", "assistant", "content", aiText));
+        redisTemplate.opsForValue().set(redisKey, DataSerializer.serialize(history));
+
+        try {
+            session.sendMessage(new TextMessage(DataSerializer.serialize(Map.of("type", "done"))));
+        } catch (IOException e) {
+            log.error("[ConversationWebSocketHandler] failed to send done signal: {}", e.getMessage());
+        }
     }
 
     @Override
