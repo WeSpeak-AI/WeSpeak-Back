@@ -8,6 +8,7 @@ include 'core:core-data-serializer'
 include 'core:core-event'
 include 'core:core-webclient'
 include 'core:core-outbox-message-relay'
+include 'core:core-grpc'
 
 // modules
 include 'modules:module-auth'
