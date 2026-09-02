@@ -17,7 +17,7 @@ RUN chmod +x gradlew && \
     GRADLE_TASK=$(echo "${MODULE_PATH}" | sed 's|/|:|g') && \
     ./gradlew :${GRADLE_TASK}:bootJar --no-daemon -x test
 
-FROM eclipse-temurin:21-jdk-jammy
+FROM eclipse-temurin:21-jre-alpine
 
 RUN apk add --no-cache curl
 
