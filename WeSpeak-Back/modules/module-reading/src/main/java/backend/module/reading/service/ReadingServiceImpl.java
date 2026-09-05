@@ -6,12 +6,12 @@ import backend.core.common.event.payload.UserStatEventPayload;
 import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
+import backend.core.grpc.ai.v1.FeedbackChunk;
 import backend.module.reading.domain.Book;
 import backend.module.reading.domain.Book.Level;
 import backend.module.reading.domain.BookPage;
 import backend.module.reading.domain.UserBook;
 import backend.core.infra.Snowflake;
-import backend.module.reading.dto.ReadingAiResponse;
 import backend.module.reading.dto.ReadingBookContent;
 import backend.module.reading.dto.ReadingBookPreviewResponse;
 import backend.module.reading.dto.ReadingRequest;
@@ -21,20 +21,15 @@ import backend.module.reading.repository.UserBookRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.http.client.ReactorClientHttpRequestFactory;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
-import reactor.netty.http.client.HttpClient;
+import reactor.core.publisher.Flux;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,10 +45,7 @@ public class ReadingServiceImpl implements ReadingService {
     private final UserBookRepository userBookRepository;
     private final Snowflake snowflake;
     private final OutboxEventPublisher outboxEventPublisher;
-
-    @Value("${ai.server.url}")
-    private String aiServerUrl;
-    private RestClient restClient;
+    private final FeedbackClient feedbackClient;
 
     @Value("${user.service.url}")
     private String userServiceUrl;
@@ -61,17 +53,12 @@ public class ReadingServiceImpl implements ReadingService {
 
     @PostConstruct
     public void init() {
-        HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofSeconds(50));
-        restClient = RestClient.builder()
-                .requestFactory(new ReactorClientHttpRequestFactory(httpClient))
-                .baseUrl(aiServerUrl)
-                .build();
         userServiceClient = RestClient.builder()
                 .baseUrl(userServiceUrl)
                 .build();
     }
 
+    //Todo: 시나리오 부하테스트
     @Override
     public Page<ReadingBookPreviewResponse> getAllBooks(int page, int size) {
         return readingBookRepository.findAll(PageRequest.of(page, size))
@@ -91,6 +78,8 @@ public class ReadingServiceImpl implements ReadingService {
                 .toList();
     }
 
+
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public ReadingBookContent getPage(String email, Long bookId, Integer pageNumber) {
@@ -122,11 +111,10 @@ public class ReadingServiceImpl implements ReadingService {
         return ReadingBookContent.from(bookPage);
     }
 
+    //Todo: 이벤트기반으로 변경 후 시나리오 부하 테스트
     @Override
-    @Transactional
-    public ReadingAiResponse processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
+    public Flux<FeedbackChunk> processUserSummary(String email, Long bookPageId, byte[] audioBytes) {
         consumeTicket(email);
-
         return getFeedback(bookPageId, audioBytes);
     }
 
@@ -144,25 +132,11 @@ public class ReadingServiceImpl implements ReadingService {
     }
 
     @Override
-    public ReadingAiResponse getFeedback(Long bookPageId, byte[] audioBytes) {
+    public Flux<FeedbackChunk> getFeedback(Long bookPageId, byte[] audioBytes) {
         BookPage bookPage = bookPageRepository.findById(bookPageId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.READING_BOOK_NOT_FOUND));
 
-        ByteArrayResource audioResource = new ByteArrayResource(audioBytes) {
-            @Override
-            public String getFilename() { return "audio.wav"; }
-        };
-
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", audioResource);
-        body.add("book_content", bookPage.getContent());
-
-        return restClient.post()
-                .uri("/feedback")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(body)
-                .retrieve()
-                .body(ReadingAiResponse.class);
+        return feedbackClient.feedback(bookPage.getContent(), audioBytes);
     }
 
     @Override
@@ -173,6 +147,7 @@ public class ReadingServiceImpl implements ReadingService {
         userBookRepository.delete(userbook);
     }
 
+    //Todo: 부하 테스트
     @Override
     @Transactional
     public Long startBook(String email, ReadingRequest readingRequest) {

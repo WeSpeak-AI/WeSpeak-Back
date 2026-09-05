@@ -1,0 +1,42 @@
+plugins {
+    id 'java-library'
+    id 'com.google.protobuf'
+}
+
+ext {
+    grpcVersion = '1.68.1'
+    protobufVersion = '3.25.5'
+    reactorGrpcVersion = '1.2.4'
+}
+
+dependencies {
+    api "io.grpc:grpc-netty-shaded:${grpcVersion}"
+    api "io.grpc:grpc-protobuf:${grpcVersion}"
+    api "io.grpc:grpc-stub:${grpcVersion}"
+    api "com.salesforce.servicelibs:reactor-grpc-stub:${reactorGrpcVersion}"
+    api 'io.projectreactor:reactor-core'
+    api 'org.springframework.boot:spring-boot-starter'
+    compileOnly 'jakarta.annotation:jakarta.annotation-api'
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${protobufVersion}"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+        }
+        reactor {
+            artifact = "com.salesforce.servicelibs:reactor-grpc:${reactorGrpcVersion}"
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                grpc {}
+                reactor {}
+            }
+        }
+    }
+}

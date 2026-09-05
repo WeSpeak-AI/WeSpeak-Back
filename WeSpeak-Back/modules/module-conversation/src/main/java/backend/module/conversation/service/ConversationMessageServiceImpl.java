@@ -20,6 +20,7 @@ public class ConversationMessageServiceImpl implements ConversationMessageServic
     private final Snowflake snowflake;
     private final ConversationMessageRepository conversationMessageRepository;
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void saveUserMessageToDB(Conversation conversation, String userMessage) {
@@ -34,6 +35,7 @@ public class ConversationMessageServiceImpl implements ConversationMessageServic
         conversationMessageRepository.save(conversationMessage);
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void saveAiMessageToDB(Conversation conversation, String assistantMessage) {

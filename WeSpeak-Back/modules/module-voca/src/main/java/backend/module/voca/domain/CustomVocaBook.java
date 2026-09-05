@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "custom_voca_books")
+@Table(name = "custom_voca_books", indexes = @Index(columnList = "user_email"))
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder

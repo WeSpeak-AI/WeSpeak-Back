@@ -40,6 +40,7 @@ public class ConversationServiceImpl implements ConversationService {
                 .toList();
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public Long startConversation(String email, ConversationRequest request) {
@@ -68,6 +69,7 @@ public class ConversationServiceImpl implements ConversationService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.CONVERSATION_NOT_FOUND));
     }
 
+    //Todo: 시나리오 부하 테스트
     @Override
     @Transactional
     public void closeSession(Long conversationId) {

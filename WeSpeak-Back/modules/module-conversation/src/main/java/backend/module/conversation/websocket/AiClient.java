@@ -1,49 +1,54 @@
 package backend.module.conversation.websocket;
 
 import backend.core.common.dataserializer.DataSerializer;
-import backend.module.conversation.dto.AiChatResponse;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.MediaType;
+import backend.core.grpc.ai.v1.ChatChunk;
+import backend.core.grpc.ai.v1.ChatMetadata;
+import backend.core.grpc.ai.v1.ChatUploadChunk;
+import backend.core.grpc.ai.v1.ReactorChatServiceGrpc;
+import com.google.protobuf.ByteString;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClient;
+import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
+@RequiredArgsConstructor
 public class AiClient {
 
-    private RestClient restClient;
+    private static final int AUDIO_CHUNK_SIZE = 64 * 1024;
 
-    @Value("${ai.server.url}")
-    private String aiServerUrl;
+    private final ReactorChatServiceGrpc.ReactorChatServiceStub chatServiceStub;
 
-    @PostConstruct
-    public void init() {
-        restClient = RestClient.create(aiServerUrl);
-    }
-
-    public AiChatResponse chat(byte[] audioBytes, List<Map<String, String>> history) {
+    public Flux<ChatChunk> chat(byte[] audioBytes, List<Map<String, String>> history) {
         String historyJson = DataSerializer.serialize(history);
 
-        ByteArrayResource audioResource = new ByteArrayResource(audioBytes) {
-            @Override
-            public String getFilename() { return "audio.wav"; }
-        };
+        ChatUploadChunk metadataChunk = ChatUploadChunk.newBuilder()
+                .setMetadata(ChatMetadata.newBuilder().setHistoryJson(historyJson).build())
+                .build();
 
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", audioResource);
-        body.add("history", historyJson);
+        Flux<ChatUploadChunk> audioChunks = Flux.fromIterable(splitIntoChunks(audioBytes))
+                .map(chunk -> ChatUploadChunk.newBuilder().setAudioChunk(chunk).build());
 
-        return restClient.post()
-                .uri("/chat")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .body(body)
-                .retrieve()
-                .body(AiChatResponse.class);
+        Flux<ChatUploadChunk> upload = Flux.concat(Flux.just(metadataChunk), audioChunks);
+
+        return chatServiceStub
+                .withDeadlineAfter(60, TimeUnit.SECONDS)
+                .chat(upload);
+    }
+
+    private List<ByteString> splitIntoChunks(byte[] audioBytes) {
+        List<ByteString> chunks = new ArrayList<>();
+        for (int offset = 0; offset < audioBytes.length; offset += AUDIO_CHUNK_SIZE) {
+            int end = Math.min(offset + AUDIO_CHUNK_SIZE, audioBytes.length);
+            chunks.add(ByteString.copyFrom(audioBytes, offset, end - offset));
+        }
+        if (chunks.isEmpty()) {
+            chunks.add(ByteString.EMPTY);
+        }
+        return chunks;
     }
 }

@@ -28,6 +28,7 @@ public class VocaGenerationHandler implements EventHandler<VocaGenerationEventPa
     private final WebClient aiWebClient;
     private final VocaSaveService vocaSaveService;
 
+    //Todo: .subscribe() 불필요 (Kafka 컨슈머 전용 스레드로 격리됨, max.poll.interval.ms 이미 튜닝됨)
     @Override
     public void handle(Event<VocaGenerationEventPayload> event) {
         VocaGenerationEventPayload payload = event.getPayload();

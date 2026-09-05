@@ -170,6 +170,8 @@ public class AdminVocaServiceImpl implements AdminVocaService {
         wordRepository.delete(word);
     }
 
+    //Todo: .subscribe()로 논블로킹 전환 (관리자용, 트래픽 적어 우선순위 낮음)
+    //Todo: gRPC는 단순 request-response라 이득 작음 (우선순위 낮음)
     @Override
     public void ingestVoca(IngestRequest request) {
         aiWebClient.post()

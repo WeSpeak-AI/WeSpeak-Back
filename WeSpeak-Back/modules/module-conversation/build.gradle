@@ -4,6 +4,7 @@ dependencies {
     implementation project(':core:core-common')
     implementation project(':core:core-infra')
     implementation project(':core:core-webclient')
+    implementation project(':core:core-grpc')
     implementation project(':core:core-data-serializer')
     implementation project(':core:core-outbox-message-relay')
 
@@ -11,4 +12,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    testImplementation 'io.grpc:grpc-inprocess:1.68.1'
+    testImplementation 'io.grpc:grpc-testing:1.68.1'
 }
