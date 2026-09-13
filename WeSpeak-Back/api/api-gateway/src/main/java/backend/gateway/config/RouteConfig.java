@@ -49,7 +49,10 @@ public class RouteConfig {
                 .route("voca-service", r -> r
                         .path("/api/voca/**", "/api/custom-voca/**", "/api/test/**")
                         .uri(vocaServiceUrl))
-                // Writing
+                // Writing (admin routes before generic)
+                .route("writing-admin", r -> r
+                        .path("/api/admin/essays/**")
+                        .uri(writingServiceUrl))
                 .route("writing-service", r -> r
                         .path("/api/writing/**")
                         .uri(writingServiceUrl))
