@@ -46,6 +46,7 @@ public enum ErrorCode {
     ESSAY_NOT_FOUND(HttpStatus.NOT_FOUND, "W001", "에세이를 찾을 수 없습니다."),
     AI_CORRECTION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "W002", "AI 교정 중 오류가 발생했습니다."),
     WRITING_TOPIC_NOT_FOUND(HttpStatus.NOT_FOUND, "W003", "작문 토픽을 찾을 수 없습니다."),
+    ESSAY_CORRECTION_NOT_FAILED(HttpStatus.CONFLICT, "W004", "AI 교정에 실패한 에세이만 재요청할 수 있습니다."),
 
     // Reading
     READING_BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "R001", "지문을 찾을 수 없습니다."),
