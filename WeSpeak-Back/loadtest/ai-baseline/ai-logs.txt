@@ -1,0 +1,347 @@
+2026-09-13T06:54:34.375013596Z 2026-09-13 06:54:34 [INFO] faster_whisper - Processing audio with duration 00:02.228
+2026-09-13T06:54:34.378104416Z 2026-09-13 06:54:34 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:54:34.661222731Z 2026-09-13 06:54:34 [INFO] AI.stt - transcribe done - lang=en duration=2.2s elapsed=377.4ms chars=44
+2026-09-13T06:54:34.661537987Z 2026-09-13 06:54:34 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:54:36.375916712Z 2026-09-13 06:54:36 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:54:37.199923497Z 2026-09-13 06:54:37 [INFO] wespeak.chat - chat completed (stream) - 2538.3ms
+2026-09-13T06:54:38.211814897Z 2026-09-13 06:54:38 [INFO] wespeak.correction - correction request - content_length=85
+2026-09-13T06:54:38.632040962Z 2026-09-13 06:54:38 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:54:54.546277261Z 2026-09-13 06:54:54 [INFO] wespeak.correction - correction completed - 16334.4ms
+2026-09-13T06:54:54.546444632Z 2026-09-13 06:54:54 [INFO] wespeak.http - POST /correct 200 16335.5ms
+2026-09-13T06:54:54.546475730Z 2026-09-13 06:54:54 [INFO] uvicorn.access - 127.0.0.1:58504 - "POST /correct HTTP/1.1" 200
+2026-09-13T06:54:55.641391178Z 2026-09-13 06:54:55 [INFO] faster_whisper - Processing audio with duration 00:02.228
+2026-09-13T06:54:55.644741090Z 2026-09-13 06:54:55 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:54:55.919052030Z 2026-09-13 06:54:55 [INFO] AI.stt - transcribe done - lang=en duration=2.2s elapsed=368.8ms chars=44
+2026-09-13T06:54:55.919457254Z 2026-09-13 06:54:55 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:54:56.202314483Z 2026-09-13 06:54:56 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:54:57.300176733Z 2026-09-13 06:54:57 [INFO] wespeak.chat - chat completed (stream) - 1380.6ms
+2026-09-13T06:54:58.396570572Z 2026-09-13 06:54:58 [INFO] faster_whisper - Processing audio with duration 00:02.228
+2026-09-13T06:54:58.399598545Z 2026-09-13 06:54:58 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:54:58.672837771Z 2026-09-13 06:54:58 [INFO] AI.stt - transcribe done - lang=en duration=2.2s elapsed=370.1ms chars=44
+2026-09-13T06:54:58.673076745Z 2026-09-13 06:54:58 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:54:58.846719195Z 2026-09-13 06:54:58 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:54:59.549775870Z 2026-09-13 06:54:59 [INFO] wespeak.chat - chat completed (stream) - 876.6ms
+2026-09-13T06:55:00.647882174Z 2026-09-13 06:55:00 [INFO] faster_whisper - Processing audio with duration 00:02.228
+2026-09-13T06:55:00.651410718Z 2026-09-13 06:55:00 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:00.923512278Z 2026-09-13 06:55:00 [INFO] AI.stt - transcribe done - lang=en duration=2.2s elapsed=371.0ms chars=44
+2026-09-13T06:55:00.923889600Z 2026-09-13 06:55:00 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:01.083451254Z 2026-09-13 06:55:01 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:02.106245590Z 2026-09-13 06:55:02 [INFO] wespeak.chat - chat completed (stream) - 1182.3ms
+2026-09-13T06:55:03.203866191Z 2026-09-13 06:55:03 [INFO] faster_whisper - Processing audio with duration 00:02.228
+2026-09-13T06:55:03.206957843Z 2026-09-13 06:55:03 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:03.480109586Z 2026-09-13 06:55:03 [INFO] AI.stt - transcribe done - lang=en duration=2.2s elapsed=371.1ms chars=44
+2026-09-13T06:55:03.480410556Z 2026-09-13 06:55:03 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:03.653458219Z 2026-09-13 06:55:03 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:04.729911511Z 2026-09-13 06:55:04 [INFO] wespeak.chat - chat completed (stream) - 1249.4ms
+2026-09-13T06:55:05.827040571Z 2026-09-13 06:55:05 [INFO] faster_whisper - Processing audio with duration 00:02.228
+2026-09-13T06:55:05.830040542Z 2026-09-13 06:55:05 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:06.102576630Z 2026-09-13 06:55:06 [INFO] AI.stt - transcribe done - lang=en duration=2.2s elapsed=370.9ms chars=44
+2026-09-13T06:55:06.102836734Z 2026-09-13 06:55:06 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:06.280768463Z 2026-09-13 06:55:06 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:07.318218525Z 2026-09-13 06:55:07 [INFO] wespeak.chat - chat completed (stream) - 1215.3ms
+2026-09-13T06:55:08.433106662Z 2026-09-13 06:55:08 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:55:08.444269749Z 2026-09-13 06:55:08 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:08.950531214Z 2026-09-13 06:55:08 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=629.3ms chars=168
+2026-09-13T06:55:08.950777762Z 2026-09-13 06:55:08 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:09.212846507Z 2026-09-13 06:55:09 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:11.061170396Z 2026-09-13 06:55:11 [INFO] wespeak.chat - chat completed (stream) - 2110.3ms
+2026-09-13T06:55:12.162754903Z 2026-09-13 06:55:12 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:55:12.173964087Z 2026-09-13 06:55:12 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:12.681679827Z 2026-09-13 06:55:12 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=617.6ms chars=168
+2026-09-13T06:55:12.681921436Z 2026-09-13 06:55:12 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:12.839231591Z 2026-09-13 06:55:12 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:14.721621045Z 2026-09-13 06:55:14 [INFO] wespeak.chat - chat completed (stream) - 2039.6ms
+2026-09-13T06:55:15.829257551Z 2026-09-13 06:55:15 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:55:15.840858564Z 2026-09-13 06:55:15 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:16.347053935Z 2026-09-13 06:55:16 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=622.6ms chars=168
+2026-09-13T06:55:16.347575425Z 2026-09-13 06:55:16 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:16.549342848Z 2026-09-13 06:55:16 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:18.455732362Z 2026-09-13 06:55:18 [INFO] wespeak.chat - chat completed (stream) - 2108.1ms
+2026-09-13T06:55:19.562488883Z 2026-09-13 06:55:19 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:55:19.573468529Z 2026-09-13 06:55:19 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:20.081477104Z 2026-09-13 06:55:20 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=622.9ms chars=168
+2026-09-13T06:55:20.081729574Z 2026-09-13 06:55:20 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:20.260961302Z 2026-09-13 06:55:20 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:22.307583151Z 2026-09-13 06:55:22 [INFO] wespeak.chat - chat completed (stream) - 2225.8ms
+2026-09-13T06:55:23.414788086Z 2026-09-13 06:55:23 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:55:23.425823095Z 2026-09-13 06:55:23 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:23.931614075Z 2026-09-13 06:55:23 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=620.5ms chars=168
+2026-09-13T06:55:23.932070474Z 2026-09-13 06:55:23 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:24.122824037Z 2026-09-13 06:55:24 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:26.652128206Z 2026-09-13 06:55:26 [INFO] wespeak.chat - chat completed (stream) - 2720.0ms
+2026-09-13T06:55:27.785918099Z 2026-09-13 06:55:27 [INFO] faster_whisper - Processing audio with duration 00:22.313
+2026-09-13T06:55:27.812286323Z 2026-09-13 06:55:27 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:28.775699451Z 2026-09-13 06:55:28 [INFO] AI.stt - transcribe done - lang=en duration=22.3s elapsed=1119.7ms chars=403
+2026-09-13T06:55:28.776190154Z 2026-09-13 06:55:28 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:29.078655232Z 2026-09-13 06:55:29 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:32.873354259Z 2026-09-13 06:55:32 [INFO] wespeak.chat - chat completed (stream) - 4097.1ms
+2026-09-13T06:55:33.998562669Z 2026-09-13 06:55:33 [INFO] faster_whisper - Processing audio with duration 00:22.313
+2026-09-13T06:55:34.024865803Z 2026-09-13 06:55:34 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:34.987353910Z 2026-09-13 06:55:34 [INFO] AI.stt - transcribe done - lang=en duration=22.3s elapsed=1109.9ms chars=403
+2026-09-13T06:55:34.987371303Z 2026-09-13 06:55:34 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:35.164195342Z 2026-09-13 06:55:35 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:40.172628351Z 2026-09-13 06:55:40 [INFO] wespeak.chat - chat completed (stream) - 5185.3ms
+2026-09-13T06:55:41.298527916Z 2026-09-13 06:55:41 [INFO] faster_whisper - Processing audio with duration 00:22.313
+2026-09-13T06:55:41.325264887Z 2026-09-13 06:55:41 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:42.289514072Z 2026-09-13 06:55:42 [INFO] AI.stt - transcribe done - lang=en duration=22.3s elapsed=1112.7ms chars=403
+2026-09-13T06:55:42.289950964Z 2026-09-13 06:55:42 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:42.487839942Z 2026-09-13 06:55:42 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:46.442728497Z 2026-09-13 06:55:46 [INFO] wespeak.chat - chat completed (stream) - 4152.7ms
+2026-09-13T06:55:47.569955772Z 2026-09-13 06:55:47 [INFO] faster_whisper - Processing audio with duration 00:22.313
+2026-09-13T06:55:47.596721216Z 2026-09-13 06:55:47 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:48.561972546Z 2026-09-13 06:55:48 [INFO] AI.stt - transcribe done - lang=en duration=22.3s elapsed=1115.8ms chars=403
+2026-09-13T06:55:48.562246145Z 2026-09-13 06:55:48 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:48.748662419Z 2026-09-13 06:55:48 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:53.486132472Z 2026-09-13 06:55:53 [INFO] wespeak.chat - chat completed (stream) - 4923.8ms
+2026-09-13T06:55:54.609949654Z 2026-09-13 06:55:54 [INFO] faster_whisper - Processing audio with duration 00:22.313
+2026-09-13T06:55:54.636646951Z 2026-09-13 06:55:54 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:55:55.598664225Z 2026-09-13 06:55:55 [INFO] AI.stt - transcribe done - lang=en duration=22.3s elapsed=1108.9ms chars=403
+2026-09-13T06:55:55.598936301Z 2026-09-13 06:55:55 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:55:55.789643047Z 2026-09-13 06:55:55 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:55:59.982582251Z 2026-09-13 06:55:59 [INFO] wespeak.chat - chat completed (stream) - 4383.5ms
+2026-09-13T06:56:01.090249077Z 2026-09-13 06:56:01 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:01.101162831Z 2026-09-13 06:56:01 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:01.611271344Z 2026-09-13 06:56:01 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=624.6ms chars=168
+2026-09-13T06:56:01.611556425Z 2026-09-13 06:56:01 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:01.723652926Z 2026-09-13 06:56:01 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:01.736477625Z 2026-09-13 06:56:01 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:02.066431063Z 2026-09-13 06:56:02 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:02.397085675Z 2026-09-13 06:56:02 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=785.5ms chars=168
+2026-09-13T06:56:02.398021125Z 2026-09-13 06:56:02 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:02.809987448Z 2026-09-13 06:56:02 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:04.339902856Z 2026-09-13 06:56:04 [INFO] wespeak.chat - chat completed (stream) - 2727.8ms
+2026-09-13T06:56:05.100144893Z 2026-09-13 06:56:05 [INFO] wespeak.chat - chat completed (stream) - 2702.2ms
+2026-09-13T06:56:06.207461110Z 2026-09-13 06:56:06 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:06.219030122Z 2026-09-13 06:56:06 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:06.725699689Z 2026-09-13 06:56:06 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=621.9ms chars=168
+2026-09-13T06:56:06.725979179Z 2026-09-13 06:56:06 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:06.859300507Z 2026-09-13 06:56:06 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:06.873719702Z 2026-09-13 06:56:06 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:06.877077759Z 2026-09-13 06:56:06 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:07.613235179Z 2026-09-13 06:56:07 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=887.4ms chars=168
+2026-09-13T06:56:07.614270125Z 2026-09-13 06:56:07 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:07.882615268Z 2026-09-13 06:56:07 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:08.904781542Z 2026-09-13 06:56:08 [INFO] wespeak.chat - chat completed (stream) - 2178.4ms
+2026-09-13T06:56:10.146323559Z 2026-09-13 06:56:10 [INFO] wespeak.chat - chat completed (stream) - 2532.1ms
+2026-09-13T06:56:11.247212106Z 2026-09-13 06:56:11 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:11.258236596Z 2026-09-13 06:56:11 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:11.764367320Z 2026-09-13 06:56:11 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=615.3ms chars=168
+2026-09-13T06:56:11.764664042Z 2026-09-13 06:56:11 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:11.857209582Z 2026-09-13 06:56:11 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:11.875828079Z 2026-09-13 06:56:11 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:12.001991891Z 2026-09-13 06:56:12 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:12.549257893Z 2026-09-13 06:56:12 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=784.1ms chars=168
+2026-09-13T06:56:12.550749508Z 2026-09-13 06:56:12 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:12.835029556Z 2026-09-13 06:56:12 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:14.028381691Z 2026-09-13 06:56:14 [INFO] wespeak.chat - chat completed (stream) - 2263.3ms
+2026-09-13T06:56:14.781816234Z 2026-09-13 06:56:14 [INFO] wespeak.chat - chat completed (stream) - 2231.0ms
+2026-09-13T06:56:15.889394337Z 2026-09-13 06:56:15 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:15.900527569Z 2026-09-13 06:56:15 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:16.412385138Z 2026-09-13 06:56:16 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=626.8ms chars=168
+2026-09-13T06:56:16.412703600Z 2026-09-13 06:56:16 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:16.512449575Z 2026-09-13 06:56:16 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:16.530867089Z 2026-09-13 06:56:16 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:16.676947033Z 2026-09-13 06:56:16 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:17.318906610Z 2026-09-13 06:56:17 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=906.0ms chars=168
+2026-09-13T06:56:17.320159892Z 2026-09-13 06:56:17 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:17.625303945Z 2026-09-13 06:56:17 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:17.626810137Z 2026-09-13 06:56:17 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:17.642201170Z 2026-09-13 06:56:17 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:18.346069251Z 2026-09-13 06:56:18 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=1026.5ms chars=168
+2026-09-13T06:56:18.347349152Z 2026-09-13 06:56:18 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:18.779018770Z 2026-09-13 06:56:18 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:19.422921824Z 2026-09-13 06:56:19 [INFO] wespeak.chat - chat completed (stream) - 3009.9ms
+2026-09-13T06:56:19.876163304Z 2026-09-13 06:56:19 [INFO] wespeak.chat - chat completed (stream) - 2556.1ms
+2026-09-13T06:56:20.798676778Z 2026-09-13 06:56:20 [INFO] wespeak.chat - chat completed (stream) - 2451.3ms
+2026-09-13T06:56:21.907702958Z 2026-09-13 06:56:21 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:21.918420547Z 2026-09-13 06:56:21 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:22.425135679Z 2026-09-13 06:56:22 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=622.3ms chars=168
+2026-09-13T06:56:22.425620150Z 2026-09-13 06:56:22 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:22.517211244Z 2026-09-13 06:56:22 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:22.528287861Z 2026-09-13 06:56:22 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:22.695193088Z 2026-09-13 06:56:22 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:23.187239681Z 2026-09-13 06:56:23 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=761.8ms chars=168
+2026-09-13T06:56:23.188637802Z 2026-09-13 06:56:23 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:23.492219549Z 2026-09-13 06:56:23 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:23.492457852Z 2026-09-13 06:56:23 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:23.505964159Z 2026-09-13 06:56:23 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:24.173271022Z 2026-09-13 06:56:24 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=985.3ms chars=168
+2026-09-13T06:56:24.174733914Z 2026-09-13 06:56:24 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:24.414045504Z 2026-09-13 06:56:24 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:25.117862891Z 2026-09-13 06:56:25 [INFO] wespeak.chat - chat completed (stream) - 2692.1ms
+2026-09-13T06:56:25.798310831Z 2026-09-13 06:56:25 [INFO] wespeak.chat - chat completed (stream) - 2609.1ms
+2026-09-13T06:56:26.448972589Z 2026-09-13 06:56:26 [INFO] wespeak.chat - chat completed (stream) - 2274.2ms
+2026-09-13T06:56:27.547657191Z 2026-09-13 06:56:27 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:27.558669858Z 2026-09-13 06:56:27 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:28.074382028Z 2026-09-13 06:56:28 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=621.5ms chars=168
+2026-09-13T06:56:28.074765201Z 2026-09-13 06:56:28 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:28.166663908Z 2026-09-13 06:56:28 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:28.180515537Z 2026-09-13 06:56:28 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:28.332920829Z 2026-09-13 06:56:28 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:28.849733606Z 2026-09-13 06:56:28 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=775.7ms chars=168
+2026-09-13T06:56:28.851083387Z 2026-09-13 06:56:28 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:29.161195253Z 2026-09-13 06:56:29 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:29.161612219Z 2026-09-13 06:56:29 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:29.175421239Z 2026-09-13 06:56:29 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:29.836968177Z 2026-09-13 06:56:29 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=987.1ms chars=168
+2026-09-13T06:56:29.837250692Z 2026-09-13 06:56:29 [INFO] wespeak.chat - chat request (stream) - history_length=1
+2026-09-13T06:56:30.094448989Z 2026-09-13 06:56:30 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:30.740194520Z 2026-09-13 06:56:30 [INFO] wespeak.chat - chat completed (stream) - 2665.3ms
+2026-09-13T06:56:31.366924666Z 2026-09-13 06:56:31 [INFO] wespeak.chat - chat completed (stream) - 2515.4ms
+2026-09-13T06:56:32.397681454Z 2026-09-13 06:56:32 [INFO] wespeak.chat - chat completed (stream) - 2560.3ms
+2026-09-13T06:56:33.498638804Z 2026-09-13 06:56:33 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:33.509775362Z 2026-09-13 06:56:33 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:34.020481128Z 2026-09-13 06:56:34 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=619.8ms chars=168
+2026-09-13T06:56:34.020863720Z 2026-09-13 06:56:34 [INFO] wespeak.feedback - feedback request (stream)
+2026-09-13T06:56:36.306830546Z 2026-09-13 06:56:36 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:41.309622148Z 2026-09-13 06:56:41 [INFO] wespeak.feedback - feedback completed (stream) - 7288.6ms
+2026-09-13T06:56:42.412258803Z 2026-09-13 06:56:42 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:42.423330961Z 2026-09-13 06:56:42 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:42.930615704Z 2026-09-13 06:56:42 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=618.0ms chars=168
+2026-09-13T06:56:42.930937823Z 2026-09-13 06:56:42 [INFO] wespeak.feedback - feedback request (stream)
+2026-09-13T06:56:43.222655839Z 2026-09-13 06:56:43 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:46.678518267Z 2026-09-13 06:56:46 [INFO] wespeak.feedback - feedback completed (stream) - 3747.4ms
+2026-09-13T06:56:47.783275176Z 2026-09-13 06:56:47 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:47.794174943Z 2026-09-13 06:56:47 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:48.300028604Z 2026-09-13 06:56:48 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=618.5ms chars=168
+2026-09-13T06:56:48.300281264Z 2026-09-13 06:56:48 [INFO] wespeak.feedback - feedback request (stream)
+2026-09-13T06:56:48.617017213Z 2026-09-13 06:56:48 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:51.754638944Z 2026-09-13 06:56:51 [INFO] wespeak.feedback - feedback completed (stream) - 3454.2ms
+2026-09-13T06:56:52.854953359Z 2026-09-13 06:56:52 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:52.866322450Z 2026-09-13 06:56:52 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:56:53.371001185Z 2026-09-13 06:56:53 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=613.3ms chars=168
+2026-09-13T06:56:53.371466681Z 2026-09-13 06:56:53 [INFO] wespeak.feedback - feedback request (stream)
+2026-09-13T06:56:53.671694970Z 2026-09-13 06:56:53 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:56:58.789744584Z 2026-09-13 06:56:58 [INFO] wespeak.feedback - feedback completed (stream) - 5418.2ms
+2026-09-13T06:56:59.896355993Z 2026-09-13 06:56:59 [INFO] faster_whisper - Processing audio with duration 00:09.101
+2026-09-13T06:56:59.907251964Z 2026-09-13 06:56:59 [INFO] faster_whisper - VAD filter removed 00:00.000 of audio
+2026-09-13T06:57:00.416321027Z 2026-09-13 06:57:00 [INFO] AI.stt - transcribe done - lang=en duration=9.1s elapsed=623.7ms chars=168
+2026-09-13T06:57:00.416751618Z 2026-09-13 06:57:00 [INFO] wespeak.feedback - feedback request (stream)
+2026-09-13T06:57:00.723354546Z 2026-09-13 06:57:00 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:57:04.739951430Z 2026-09-13 06:57:04 [INFO] wespeak.feedback - feedback completed (stream) - 4323.1ms
+2026-09-13T06:57:05.744433599Z 2026-09-13 06:57:05 [INFO] wespeak.correction - correction request - content_length=85
+2026-09-13T06:57:06.179266574Z 2026-09-13 06:57:06 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:57:22.109232629Z 2026-09-13 06:57:22 [INFO] wespeak.correction - correction completed - 16364.7ms
+2026-09-13T06:57:22.109392416Z 2026-09-13 06:57:22 [INFO] wespeak.http - POST /correct 200 16365.4ms
+2026-09-13T06:57:22.109434805Z 2026-09-13 06:57:22 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T06:57:23.113481798Z 2026-09-13 06:57:23 [INFO] wespeak.correction - correction request - content_length=85
+2026-09-13T06:57:23.344691957Z 2026-09-13 06:57:23 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:57:39.281337009Z 2026-09-13 06:57:39 [INFO] wespeak.correction - correction completed - 16167.8ms
+2026-09-13T06:57:39.281467262Z 2026-09-13 06:57:39 [INFO] wespeak.http - POST /correct 200 16168.8ms
+2026-09-13T06:57:39.281497748Z 2026-09-13 06:57:39 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T06:57:40.285008567Z 2026-09-13 06:57:40 [INFO] wespeak.correction - correction request - content_length=85
+2026-09-13T06:57:40.497491256Z 2026-09-13 06:57:40 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:57:56.430732357Z 2026-09-13 06:57:56 [INFO] wespeak.correction - correction completed - 16145.7ms
+2026-09-13T06:57:56.430855657Z 2026-09-13 06:57:56 [INFO] wespeak.http - POST /correct 200 16146.6ms
+2026-09-13T06:57:56.430880192Z 2026-09-13 06:57:56 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T06:57:57.434591042Z 2026-09-13 06:57:57 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T06:57:57.740336426Z 2026-09-13 06:57:57 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:58:30.761771348Z 2026-09-13 06:58:30 [INFO] wespeak.correction - correction completed - 33327.1ms
+2026-09-13T06:58:30.761901270Z 2026-09-13 06:58:30 [INFO] wespeak.http - POST /correct 200 33328.1ms
+2026-09-13T06:58:30.761927769Z 2026-09-13 06:58:30 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T06:58:31.765707028Z 2026-09-13 06:58:31 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T06:58:31.978031715Z 2026-09-13 06:58:31 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:59:03.571717325Z 2026-09-13 06:59:03 [INFO] wespeak.correction - correction completed - 31806.0ms
+2026-09-13T06:59:03.571835555Z 2026-09-13 06:59:03 [INFO] wespeak.http - POST /correct 200 31807.0ms
+2026-09-13T06:59:03.571864739Z 2026-09-13 06:59:03 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T06:59:04.576814319Z 2026-09-13 06:59:04 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T06:59:04.800805771Z 2026-09-13 06:59:04 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T06:59:37.824831143Z 2026-09-13 06:59:37 [INFO] wespeak.correction - correction completed - 33248.0ms
+2026-09-13T06:59:37.824970312Z 2026-09-13 06:59:37 [INFO] wespeak.http - POST /correct 200 33248.9ms
+2026-09-13T06:59:37.824995048Z 2026-09-13 06:59:37 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T06:59:38.828914794Z 2026-09-13 06:59:38 [INFO] wespeak.correction - correction request - content_length=806
+2026-09-13T06:59:39.178069439Z 2026-09-13 06:59:39 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:00:10.805618433Z 2026-09-13 07:00:10 [INFO] wespeak.correction - correction completed - 31976.6ms
+2026-09-13T07:00:10.805744508Z 2026-09-13 07:00:10 [INFO] wespeak.http - POST /correct 200 31977.7ms
+2026-09-13T07:00:10.805772400Z 2026-09-13 07:00:10 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:00:11.809283066Z 2026-09-13 07:00:11 [INFO] wespeak.correction - correction request - content_length=806
+2026-09-13T07:00:12.014304928Z 2026-09-13 07:00:12 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:00:44.890953353Z 2026-09-13 07:00:44 [INFO] wespeak.correction - correction completed - 33081.7ms
+2026-09-13T07:00:44.891079928Z 2026-09-13 07:00:44 [INFO] wespeak.http - POST /correct 200 33082.6ms
+2026-09-13T07:00:44.891104965Z 2026-09-13 07:00:44 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:00:45.894002251Z 2026-09-13 07:00:45 [INFO] wespeak.correction - correction request - content_length=806
+2026-09-13T07:00:46.114613987Z 2026-09-13 07:00:46 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:01:20.131091590Z 2026-09-13 07:01:20 [INFO] wespeak.correction - correction completed - 34237.0ms
+2026-09-13T07:01:20.131243723Z 2026-09-13 07:01:20 [INFO] wespeak.http - POST /correct 200 34238.0ms
+2026-09-13T07:01:20.131273999Z 2026-09-13 07:01:20 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:01:21.135489941Z 2026-09-13 07:01:21 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:01:21.138025679Z 2026-09-13 07:01:21 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:01:21.449769456Z 2026-09-13 07:01:21 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:01:22.095095801Z 2026-09-13 07:01:22 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:02:01.459645672Z 2026-09-13 07:02:01 [INFO] wespeak.correction - correction completed - 40321.1ms
+2026-09-13T07:02:01.460014719Z 2026-09-13 07:02:01 [INFO] wespeak.http - POST /correct 200 40322.4ms
+2026-09-13T07:02:01.460240288Z 2026-09-13 07:02:01 [INFO] uvicorn.access - 127.0.0.1:35604 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:02:05.297719267Z 2026-09-13 07:02:05 [INFO] wespeak.correction - correction completed - 44162.2ms
+2026-09-13T07:02:05.297861522Z 2026-09-13 07:02:05 [INFO] wespeak.http - POST /correct 200 44163.2ms
+2026-09-13T07:02:05.297883493Z 2026-09-13 07:02:05 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:02:06.302363096Z 2026-09-13 07:02:06 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:02:06.304181338Z 2026-09-13 07:02:06 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:02:06.528173884Z 2026-09-13 07:02:06 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:02:06.685030691Z 2026-09-13 07:02:06 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:02:50.297574594Z 2026-09-13 07:02:50 [INFO] wespeak.correction - correction completed - 43993.4ms
+2026-09-13T07:02:50.297748918Z 2026-09-13 07:02:50 [INFO] wespeak.http - POST /correct 200 43996.0ms
+2026-09-13T07:02:50.297802688Z 2026-09-13 07:02:50 [INFO] uvicorn.access - 127.0.0.1:35604 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:02:51.037158879Z 2026-09-13 07:02:51 [INFO] wespeak.correction - correction completed - 44734.7ms
+2026-09-13T07:02:51.037289612Z 2026-09-13 07:02:51 [INFO] wespeak.http - POST /correct 200 44736.2ms
+2026-09-13T07:02:51.037319688Z 2026-09-13 07:02:51 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:02:52.042374075Z 2026-09-13 07:02:52 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:02:52.044255886Z 2026-09-13 07:02:52 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:02:52.269672221Z 2026-09-13 07:02:52 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:02:52.416328701Z 2026-09-13 07:02:52 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:03:31.327415545Z 2026-09-13 07:03:31 [INFO] wespeak.correction - correction completed - 39285.0ms
+2026-09-13T07:03:31.327604176Z 2026-09-13 07:03:31 [INFO] wespeak.http - POST /correct 200 39286.7ms
+2026-09-13T07:03:31.327644882Z 2026-09-13 07:03:31 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:03:35.101525306Z 2026-09-13 07:03:35 [INFO] wespeak.correction - correction completed - 43057.4ms
+2026-09-13T07:03:35.101649778Z 2026-09-13 07:03:35 [INFO] wespeak.http - POST /correct 200 43060.0ms
+2026-09-13T07:03:35.101678792Z 2026-09-13 07:03:35 [INFO] uvicorn.access - 127.0.0.1:35604 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:03:36.107470210Z 2026-09-13 07:03:36 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:03:36.109530773Z 2026-09-13 07:03:36 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:03:36.111588632Z 2026-09-13 07:03:36 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:03:36.331354936Z 2026-09-13 07:03:36 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:03:36.736575861Z 2026-09-13 07:03:36 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:03:36.998279766Z 2026-09-13 07:03:36 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:03:59.859665168Z 2026-09-13 07:03:59 [INFO] wespeak.http - GET / 404 0.4ms
+2026-09-13T07:03:59.859699432Z 2026-09-13 07:03:59 [INFO] uvicorn.access - 3.130.168.2:41564 - "GET / HTTP/1.1" 404
+2026-09-13T07:04:24.850217735Z 2026-09-13 07:04:24 [INFO] wespeak.correction - correction completed - 48740.2ms
+2026-09-13T07:04:24.850854390Z 2026-09-13 07:04:24 [INFO] wespeak.http - POST /correct 200 48744.0ms
+2026-09-13T07:04:24.850948755Z 2026-09-13 07:04:24 [INFO] uvicorn.access - 127.0.0.1:35604 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:04:27.055579624Z 2026-09-13 07:04:27 [INFO] wespeak.correction - correction completed - 50947.6ms
+2026-09-13T07:04:27.056438181Z 2026-09-13 07:04:27 [INFO] wespeak.http - POST /correct 200 50950.1ms
+2026-09-13T07:04:27.056492192Z 2026-09-13 07:04:27 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:04:28.071418938Z 2026-09-13 07:04:28 [INFO] wespeak.correction - correction completed - 51959.8ms
+2026-09-13T07:04:28.071532239Z 2026-09-13 07:04:28 [INFO] wespeak.http - POST /correct 200 51961.0ms
+2026-09-13T07:04:28.071557186Z 2026-09-13 07:04:28 [INFO] uvicorn.access - 127.0.0.1:46810 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:04:29.074962619Z 2026-09-13 07:04:29 [INFO] wespeak.http - GET / 404 0.4ms
+2026-09-13T07:04:29.074990381Z 2026-09-13 07:04:29 [INFO] uvicorn.access - 3.130.168.2:43304 - "GET / HTTP/1.1" 404
+2026-09-13T07:04:29.075938755Z 2026-09-13 07:04:29 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:04:29.078906015Z 2026-09-13 07:04:29 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:04:29.079955428Z 2026-09-13 07:04:29 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:04:29.291468368Z 2026-09-13 07:04:29 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:04:29.449097582Z 2026-09-13 07:04:29 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:04:29.458436536Z 2026-09-13 07:04:29 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:05:08.621218096Z 2026-09-13 07:05:08 [WARNING] uvicorn.error - Invalid HTTP request received.
+2026-09-13T07:05:15.934335299Z 2026-09-13 07:05:15 [INFO] wespeak.correction - correction completed - 46857.8ms
+2026-09-13T07:05:15.934780767Z 2026-09-13 07:05:15 [INFO] wespeak.http - POST /correct 200 46859.2ms
+2026-09-13T07:05:15.934904918Z 2026-09-13 07:05:15 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:05:18.300022232Z 2026-09-13 07:05:18 [INFO] wespeak.correction - correction completed - 49219.5ms
+2026-09-13T07:05:18.300413821Z 2026-09-13 07:05:18 [INFO] wespeak.http - POST /correct 200 49222.5ms
+2026-09-13T07:05:18.300545686Z 2026-09-13 07:05:18 [INFO] uvicorn.access - 127.0.0.1:46810 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:05:19.174135219Z 2026-09-13 07:05:19 [INFO] wespeak.correction - correction completed - 50095.3ms
+2026-09-13T07:05:19.174287974Z 2026-09-13 07:05:19 [INFO] wespeak.http - POST /correct 200 50096.8ms
+2026-09-13T07:05:19.174319252Z 2026-09-13 07:05:19 [INFO] uvicorn.access - 127.0.0.1:35604 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:05:20.178369766Z 2026-09-13 07:05:20 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:05:20.179948653Z 2026-09-13 07:05:20 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:05:20.180824423Z 2026-09-13 07:05:20 [INFO] wespeak.correction - correction request - content_length=371
+2026-09-13T07:05:20.348887248Z 2026-09-13 07:05:20 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:05:20.502424641Z 2026-09-13 07:05:20 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:05:20.512074443Z 2026-09-13 07:05:20 [INFO] httpx - HTTP Request: POST http://host-gateway:11434/api/chat "HTTP/1.1 200 OK"
+2026-09-13T07:06:10.902012288Z 2026-09-13 07:06:10 [WARNING] uvicorn.error - Invalid HTTP request received.
+2026-09-13T07:06:11.956083222Z 2026-09-13 07:06:11 [INFO] wespeak.correction - correction completed - 51776.0ms
+2026-09-13T07:06:11.956244041Z 2026-09-13 07:06:11 [INFO] wespeak.http - POST /correct 200 51778.4ms
+2026-09-13T07:06:11.956281601Z 2026-09-13 07:06:11 [INFO] uvicorn.access - 127.0.0.1:35604 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:06:12.977664051Z 2026-09-13 07:06:12 [INFO] wespeak.correction - correction completed - 52798.7ms
+2026-09-13T07:06:12.977913104Z 2026-09-13 07:06:12 [INFO] wespeak.http - POST /correct 200 52800.2ms
+2026-09-13T07:06:12.977995758Z 2026-09-13 07:06:12 [INFO] uvicorn.access - 127.0.0.1:43300 - "POST /correct HTTP/1.1" 200
+2026-09-13T07:06:13.192269014Z 2026-09-13 07:06:13 [INFO] wespeak.correction - correction completed - 53011.3ms
+2026-09-13T07:06:13.192396692Z 2026-09-13 07:06:13 [INFO] wespeak.http - POST /correct 200 53014.4ms
+2026-09-13T07:06:13.192426377Z 2026-09-13 07:06:13 [INFO] uvicorn.access - 127.0.0.1:46810 - "POST /correct HTTP/1.1" 200

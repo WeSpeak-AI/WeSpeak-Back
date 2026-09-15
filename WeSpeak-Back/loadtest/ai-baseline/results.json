@@ -1,0 +1,856 @@
+{
+  "measurement_started_at": "2026-09-13T06:54:34.247334+00:00",
+  "measurement_ended_at": "2026-09-13T07:06:17.197886+00:00",
+  "audio_bytes": {
+    "short": 29322,
+    "medium": 112936,
+    "long": 286385
+  },
+  "scenarios": [
+    {
+      "name": "warmup-chat",
+      "started_at": "2026-09-13T06:54:34.281896+00:00",
+      "ended_at": "2026-09-13T06:54:38.201375+00:00",
+      "results": [
+        {
+          "scenario": "warmup-chat",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 379.73236199468374,
+          "ttft_ms": 1715.5305976048112,
+          "llm_total_ms": 2484.553622081876,
+          "e2e_ms": 2918.2151835411787,
+          "delta_count": 15,
+          "output_chars": 72,
+          "user_text": "I went to the park with my friend yesterday."
+        }
+      ]
+    },
+    {
+      "name": "warmup-correct",
+      "started_at": "2026-09-13T06:54:38.201401+00:00",
+      "ended_at": "2026-09-13T06:54:55.548699+00:00",
+      "results": [
+        {
+          "scenario": "warmup-correct",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 16346.023310907185,
+          "status": 200,
+          "output_chars": 705
+        }
+      ]
+    },
+    {
+      "name": "chat-c1-short",
+      "started_at": "2026-09-13T06:54:55.548723+00:00",
+      "ended_at": "2026-09-13T06:55:08.319591+00:00",
+      "results": [
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 370.73943205177784,
+          "ttft_ms": 284.17100477963686,
+          "llm_total_ms": 1325.9577425196767,
+          "e2e_ms": 1751.5721628442407,
+          "delta_count": 20,
+          "output_chars": 77,
+          "user_text": "I went to the park with my friend yesterday."
+        },
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 371.53050396591425,
+          "ttft_ms": 175.5661377683282,
+          "llm_total_ms": 822.51185644418,
+          "e2e_ms": 1248.4137006103992,
+          "delta_count": 13,
+          "output_chars": 52,
+          "user_text": "I went to the park with my friend yesterday."
+        },
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 372.79196083545685,
+          "ttft_ms": 160.88848188519478,
+          "llm_total_ms": 1129.027378745377,
+          "e2e_ms": 1555.162988603115,
+          "delta_count": 19,
+          "output_chars": 84,
+          "user_text": "I went to the park with my friend yesterday."
+        },
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 372.88595736026764,
+          "ttft_ms": 174.72616489976645,
+          "llm_total_ms": 1196.4295115321875,
+          "e2e_ms": 1622.4722601473331,
+          "delta_count": 20,
+          "output_chars": 77,
+          "user_text": "I went to the park with my friend yesterday."
+        },
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 372.6222552359104,
+          "ttft_ms": 179.55060116946697,
+          "llm_total_ms": 1161.1161176115274,
+          "e2e_ms": 1588.1280275061727,
+          "delta_count": 19,
+          "output_chars": 86,
+          "user_text": "I went to the park with my friend yesterday."
+        }
+      ]
+    },
+    {
+      "name": "chat-c1-medium",
+      "started_at": "2026-09-13T06:55:08.319615+00:00",
+      "ended_at": "2026-09-13T06:55:27.653573+00:00",
+      "results": [
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 631.2031419947743,
+          "ttft_ms": 263.2551630958915,
+          "llm_total_ms": 2056.23135343194,
+          "e2e_ms": 2741.692596115172,
+          "delta_count": 34,
+          "output_chars": 178,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 619.3594885990024,
+          "ttft_ms": 159.14030000567436,
+          "llm_total_ms": 1986.7804693058133,
+          "e2e_ms": 2659.185933880508,
+          "delta_count": 35,
+          "output_chars": 182,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 624.6494902297854,
+          "ttft_ms": 203.36642675101757,
+          "llm_total_ms": 2054.247323423624,
+          "e2e_ms": 2732.950745150447,
+          "delta_count": 35,
+          "output_chars": 181,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 624.629613943398,
+          "ttft_ms": 180.61828706413507,
+          "llm_total_ms": 2172.4654948338866,
+          "e2e_ms": 2850.5705930292606,
+          "delta_count": 38,
+          "output_chars": 197,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 623.1221985071898,
+          "ttft_ms": 192.82713998109102,
+          "llm_total_ms": 2667.0509297400713,
+          "e2e_ms": 3343.404147773981,
+          "delta_count": 47,
+          "output_chars": 225,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        }
+      ]
+    },
+    {
+      "name": "chat-c1-long",
+      "started_at": "2026-09-13T06:55:27.653598+00:00",
+      "ended_at": "2026-09-13T06:56:00.984255+00:00",
+      "results": [
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1122.466405853629,
+          "ttft_ms": 303.5247093066573,
+          "llm_total_ms": 4042.604112997651,
+          "e2e_ms": 5219.894391484559,
+          "delta_count": 70,
+          "output_chars": 370,
+          "user_text": "I have been studying English for about three years, but speaking is still the hardest part for me. When I talk with foreigners, I often forget simple words because I get nervous. Recently I started practicing every morning by describing my plans for the day out loud, and I think my confidence is slowly getting better. My goal is to have a comfortable conversation during my trip to Canada next summer."
+        },
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1112.776800058782,
+          "ttft_ms": 178.24651580303907,
+          "llm_total_ms": 5130.259070545435,
+          "e2e_ms": 6298.007929697633,
+          "delta_count": 92,
+          "output_chars": 477,
+          "user_text": "I have been studying English for about three years, but speaking is still the hardest part for me. When I talk with foreigners, I often forget simple words because I get nervous. Recently I started practicing every morning by describing my plans for the day out loud, and I think my confidence is slowly getting better. My goal is to have a comfortable conversation during my trip to Canada next summer."
+        },
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1115.9358592703938,
+          "ttft_ms": 199.3398666381836,
+          "llm_total_ms": 4098.71553722769,
+          "e2e_ms": 5268.870663829148,
+          "delta_count": 73,
+          "output_chars": 378,
+          "user_text": "I have been studying English for about three years, but speaking is still the hardest part for me. When I talk with foreigners, I often forget simple words because I get nervous. Recently I started practicing every morning by describing my plans for the day out loud, and I think my confidence is slowly getting better. My goal is to have a comfortable conversation during my trip to Canada next summer."
+        },
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1118.2127157226205,
+          "ttft_ms": 188.25726956129074,
+          "llm_total_ms": 4869.0277291461825,
+          "e2e_ms": 6042.239103466272,
+          "delta_count": 87,
+          "output_chars": 455,
+          "user_text": "I have been studying English for about three years, but speaking is still the hardest part for me. When I talk with foreigners, I often forget simple words because I get nervous. Recently I started practicing every morning by describing my plans for the day out loud, and I think my confidence is slowly getting better. My goal is to have a comfortable conversation during my trip to Canada next summer."
+        },
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1111.4287851378322,
+          "ttft_ms": 192.46173091232777,
+          "llm_total_ms": 4328.5621125251055,
+          "e2e_ms": 5495.212761685252,
+          "delta_count": 77,
+          "output_chars": 402,
+          "user_text": "I have been studying English for about three years, but speaking is still the hardest part for me. When I talk with foreigners, I often forget simple words because I get nervous. Recently I started practicing every morning by describing my plans for the day out loud, and I think my confidence is slowly getting better. My goal is to have a comfortable conversation during my trip to Canada next summer."
+        }
+      ]
+    },
+    {
+      "name": "chat-c2-medium",
+      "started_at": "2026-09-13T06:56:00.984281+00:00",
+      "ended_at": "2026-09-13T06:56:15.783177+00:00",
+      "results": [
+        {
+          "scenario": "chat-c2-medium",
+          "label": "medium#0",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "stt_ms": 627.2635478526354,
+          "ttft_ms": 455.83449210971594,
+          "llm_total_ms": 2670.022335834801,
+          "e2e_ms": 3356.194294989109,
+          "delta_count": 37,
+          "output_chars": 189,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c2-medium",
+          "label": "medium#1",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1414.2635324969888,
+          "ttft_ms": 411.68789472430944,
+          "llm_total_ms": 2647.29015622288,
+          "e2e_ms": 4115.876219235361,
+          "delta_count": 41,
+          "output_chars": 215,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c2-medium",
+          "label": "medium#0",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "stt_ms": 624.4877818971872,
+          "ttft_ms": 149.29818082600832,
+          "llm_total_ms": 2120.679753832519,
+          "e2e_ms": 2803.8425436243415,
+          "delta_count": 33,
+          "output_chars": 155,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c2-medium",
+          "label": "medium#1",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1512.8729837015271,
+          "ttft_ms": 269.09290347248316,
+          "llm_total_ms": 2477.529658935964,
+          "e2e_ms": 4044.8454562574625,
+          "delta_count": 41,
+          "output_chars": 202,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c2-medium",
+          "label": "medium#0",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "stt_ms": 617.7536239847541,
+          "ttft_ms": 238.83133754134178,
+          "llm_total_ms": 2205.3529787808657,
+          "e2e_ms": 2882.0974491536617,
+          "delta_count": 35,
+          "output_chars": 177,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c2-medium",
+          "label": "medium#1",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1403.6423452198505,
+          "ttft_ms": 284.6689410507679,
+          "llm_total_ms": 2178.0145782977343,
+          "e2e_ms": 3634.7387162968516,
+          "delta_count": 35,
+          "output_chars": 193,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        }
+      ]
+    },
+    {
+      "name": "chat-c3-medium",
+      "started_at": "2026-09-13T06:56:15.783201+00:00",
+      "ended_at": "2026-09-13T06:56:33.399094+00:00",
+      "results": [
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 629.471193999052,
+          "ttft_ms": 265.8927012234926,
+          "llm_total_ms": 2950.123935006559,
+          "e2e_ms": 3639.8347076028585,
+          "delta_count": 41,
+          "output_chars": 212,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1537.1305830776691,
+          "ttft_ms": 307.2045873850584,
+          "llm_total_ms": 2497.5610580295324,
+          "e2e_ms": 4093.008942902088,
+          "delta_count": 34,
+          "output_chars": 178,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 2564.5912075415254,
+          "ttft_ms": 431.15909956395626,
+          "llm_total_ms": 2396.4622067287564,
+          "e2e_ms": 5015.410248190165,
+          "delta_count": 36,
+          "output_chars": 177,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 625.3068568184972,
+          "ttft_ms": 270.8368794992566,
+          "llm_total_ms": 2632.3771281167865,
+          "e2e_ms": 3317.697041667998,
+          "delta_count": 39,
+          "output_chars": 212,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1388.2089033722878,
+          "ttft_ms": 304.0044838562608,
+          "llm_total_ms": 2550.996398553252,
+          "e2e_ms": 3998.103645630181,
+          "delta_count": 38,
+          "output_chars": 196,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 2374.515666626394,
+          "ttft_ms": 239.19418174773455,
+          "llm_total_ms": 2219.7967935353518,
+          "e2e_ms": 4648.587191477418,
+          "delta_count": 36,
+          "output_chars": 187,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 624.4929237291217,
+          "ttft_ms": 259.968469850719,
+          "llm_total_ms": 2605.510987341404,
+          "e2e_ms": 3289.9387925863266,
+          "delta_count": 38,
+          "output_chars": 194,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 1400.530407205224,
+          "ttft_ms": 310.9633596614003,
+          "llm_total_ms": 2457.048360258341,
+          "e2e_ms": 3917.287139222026,
+          "delta_count": 36,
+          "output_chars": 189,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "stt_ms": 2386.896612122655,
+          "ttft_ms": 257.48108234256506,
+          "llm_total_ms": 2505.5851582437754,
+          "e2e_ms": 4947.407804429531,
+          "delta_count": 41,
+          "output_chars": 223,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        }
+      ]
+    },
+    {
+      "name": "feedback-c1-medium",
+      "started_at": "2026-09-13T06:56:33.399121+00:00",
+      "ended_at": "2026-09-13T06:57:05.741414+00:00",
+      "results": [
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 621.6626586392522,
+          "ttft_ms": 2286.6174560040236,
+          "llm_total_ms": 7218.892440199852,
+          "e2e_ms": 7910.665741190314,
+          "delta_count": 73,
+          "output_chars": 381,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 619.8732191696763,
+          "ttft_ms": 292.38561913371086,
+          "llm_total_ms": 3678.413236513734,
+          "e2e_ms": 4367.667160928249,
+          "delta_count": 51,
+          "output_chars": 262,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 620.3266540542245,
+          "ttft_ms": 317.5507355481386,
+          "llm_total_ms": 3385.172128677368,
+          "e2e_ms": 4074.878364801407,
+          "delta_count": 46,
+          "output_chars": 222,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 615.2783213183284,
+          "ttft_ms": 300.8713163435459,
+          "llm_total_ms": 5349.063207395375,
+          "e2e_ms": 6033.890486694872,
+          "delta_count": 75,
+          "output_chars": 386,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        },
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "stt_ms": 625.5357665941119,
+          "ttft_ms": 307.31208715587854,
+          "llm_total_ms": 4254.732386209071,
+          "e2e_ms": 4948.919150047004,
+          "delta_count": 59,
+          "output_chars": 289,
+          "user_text": "last weekend i visited my grandparents in the countryside we cooked dinner together and after that we took a long walk near the river while talking about my school life"
+        }
+      ]
+    },
+    {
+      "name": "correct-c1-short",
+      "started_at": "2026-09-13T06:57:05.741442+00:00",
+      "ended_at": "2026-09-13T06:57:57.432714+00:00",
+      "results": [
+        {
+          "scenario": "correct-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 16368.758004158735,
+          "status": 200,
+          "output_chars": 705
+        },
+        {
+          "scenario": "correct-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 16170.556848868728,
+          "status": 200,
+          "output_chars": 705
+        },
+        {
+          "scenario": "correct-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 16148.290635086596,
+          "status": 200,
+          "output_chars": 705
+        }
+      ]
+    },
+    {
+      "name": "correct-c1-medium",
+      "started_at": "2026-09-13T06:57:57.432739+00:00",
+      "ended_at": "2026-09-13T06:59:38.826923+00:00",
+      "results": [
+        {
+          "scenario": "correct-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 33329.8018630594,
+          "status": 200,
+          "output_chars": 1723
+        },
+        {
+          "scenario": "correct-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 31808.66414308548,
+          "status": 200,
+          "output_chars": 1595
+        },
+        {
+          "scenario": "correct-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 33252.06173956394,
+          "status": 200,
+          "output_chars": 1686
+        }
+      ]
+    },
+    {
+      "name": "correct-c1-long",
+      "started_at": "2026-09-13T06:59:38.826947+00:00",
+      "ended_at": "2026-09-13T07:01:21.133067+00:00",
+      "results": [
+        {
+          "scenario": "correct-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 31979.373386129737,
+          "status": 200,
+          "output_chars": 1599
+        },
+        {
+          "scenario": "correct-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 33084.13150627166,
+          "status": 200,
+          "output_chars": 1678
+        },
+        {
+          "scenario": "correct-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 34239.64015301317,
+          "status": 200,
+          "output_chars": 1807
+        }
+      ]
+    },
+    {
+      "name": "correct-c2-medium",
+      "started_at": "2026-09-13T07:01:21.133093+00:00",
+      "ended_at": "2026-09-13T07:03:36.103885+00:00",
+      "results": [
+        {
+          "scenario": "correct-c2-medium",
+          "label": "medium#0",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 44165.32993409783,
+          "status": 200,
+          "output_chars": 1760
+        },
+        {
+          "scenario": "correct-c2-medium",
+          "label": "medium#1",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 40328.70287168771,
+          "status": 200,
+          "output_chars": 1486
+        },
+        {
+          "scenario": "correct-c2-medium",
+          "label": "medium#0",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 44738.31501044333,
+          "status": 200,
+          "output_chars": 1726
+        },
+        {
+          "scenario": "correct-c2-medium",
+          "label": "medium#1",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 43998.35000745952,
+          "status": 200,
+          "output_chars": 1712
+        },
+        {
+          "scenario": "correct-c2-medium",
+          "label": "medium#0",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 39289.016384631395,
+          "status": 200,
+          "output_chars": 1494
+        },
+        {
+          "scenario": "correct-c2-medium",
+          "label": "medium#1",
+          "concurrency": 2,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 43062.52099946141,
+          "status": 200,
+          "output_chars": 1729
+        }
+      ]
+    },
+    {
+      "name": "correct-c3-medium",
+      "started_at": "2026-09-13T07:03:36.103917+00:00",
+      "ended_at": "2026-09-13T07:06:14.194298+00:00",
+      "results": [
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 50955.5509891361,
+          "status": 200,
+          "output_chars": 1641
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 48749.46276843548,
+          "status": 200,
+          "output_chars": 1520
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 51967.41778310388,
+          "status": 200,
+          "output_chars": 1694
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 46863.58834337443,
+          "status": 200,
+          "output_chars": 1502
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 50101.045914925635,
+          "status": 200,
+          "output_chars": 1648
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 49228.3099591732,
+          "status": 200,
+          "output_chars": 1599
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 52804.61186822504,
+          "status": 200,
+          "output_chars": 1668
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 51780.27748595923,
+          "status": 200,
+          "output_chars": 1626
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "e2e_ms": 53016.26118179411,
+          "status": 200,
+          "output_chars": 1723
+        }
+      ]
+    }
+  ]
+}
