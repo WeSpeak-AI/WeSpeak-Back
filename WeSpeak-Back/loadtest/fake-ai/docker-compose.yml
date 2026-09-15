@@ -1,0 +1,30 @@
+# 가짜 모드 AI 서버. 실행: loadtest/fake-ai 에서 `docker compose up -d --build`
+# WESPEAK_AI_DIR: 실제 WeSpeak-AI 저장소 경로 (기본값은 WeSpeak/ 아래 형제 디렉터리 구조 기준)
+services:
+  wespeak-ai:
+    build: .
+    container_name: wespeak-ai
+    ports:
+      - "8000:8000"
+      - "50051:50051"
+    environment:
+      PROVIDER: ollama
+      # 실제 키는 절대 넣지 않는다 — 교체가 빠진 곳이 있어도 유료 호출은 인증 실패로 끝나게 한다
+      ANTHROPIC_API_KEY: fake-not-used
+      OPENAI_API_KEY: fake-not-used
+      OLLAMA_BASE_URL: http://127.0.0.1:9
+      FAKE_TIME_SCALE: ${FAKE_TIME_SCALE:-1.0}
+      FAKE_STT_SERIAL: ${FAKE_STT_SERIAL:-true}
+    volumes:
+      # app/ 과 .git 만 마운트한다 (.env 등 비밀 파일은 마운트하지 않음)
+      - ${WESPEAK_AI_DIR:-../../../../WeSpeak-AI}/app:/ai/app:ro
+      - ${WESPEAK_AI_DIR:-../../../../WeSpeak-AI}/.git:/ai/.git:ro
+      - ${WESPEAK_AI_DIR:-../../../../WeSpeak-AI}/requirements.txt:/ai/requirements.txt:ro
+      - ../ai-baseline:/loadtest/ai-baseline:ro
+
+# WeSpeak-Back docker-compose와 같은 external 네트워크(wespeak-ai_default)에 붙는다.
+# 네트워크가 없으면 먼저 `docker network create wespeak-ai_default`
+networks:
+  default:
+    name: wespeak-ai_default
+    external: true
