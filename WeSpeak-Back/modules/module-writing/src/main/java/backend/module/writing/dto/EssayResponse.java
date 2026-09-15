@@ -17,6 +17,7 @@ public class EssayResponse {
     private String content;
     private String type;
     private boolean hasCorrected;
+    private String correctionStatus;   // PENDING | COMPLETED | FAILED
     private LocalDateTime createdAt;
 
     public static EssayResponse from(Essay essay) {
@@ -26,6 +27,7 @@ public class EssayResponse {
                 .content(essay.getContent())
                 .type(essay.getType().name())
                 .hasCorrected(essay.isHasCorrected())
+                .correctionStatus(essay.getCorrectionStatus().name())
                 .createdAt(essay.getCreatedAt())
                 .build();
     }

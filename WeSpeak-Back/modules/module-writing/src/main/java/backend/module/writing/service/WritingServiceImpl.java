@@ -8,6 +8,7 @@ import backend.core.common.exception.BusinessException;
 import backend.core.common.exception.ErrorCode;
 import backend.core.common.outboxmessagerelay.pub.OutboxEventPublisher;
 import backend.core.infra.Snowflake;
+import backend.module.writing.domain.CorrectionStatus;
 import backend.module.writing.domain.Essay;
 import backend.module.writing.repository.EssayRepository;
 import backend.module.writing.repository.TopicSummaryRepository;
@@ -63,6 +64,7 @@ public class WritingServiceImpl implements WritingService {
                 .content(request.getContent())
                 .type(request.getType())
                 .hasCorrected(false)
+                .correctionStatus(CorrectionStatus.PENDING)
                 .build();
         Essay saved = essayRepository.save(essay);
         outboxEventPublisher.publish(EventType.AI_CORRECTION, AiCorrectionEventPayload.builder()
