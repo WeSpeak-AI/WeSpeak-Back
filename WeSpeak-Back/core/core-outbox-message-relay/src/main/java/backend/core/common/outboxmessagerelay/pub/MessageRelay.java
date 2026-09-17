@@ -44,8 +44,12 @@ public class MessageRelay {
 
     private void publishEvent(Outbox outbox) {
         try {
+            // 키 없이 보내면 프로듀서의 sticky partitioner가 짧은 시간에 몰린 메시지를 한 파티션에 넣어,
+            // 파티션을 늘리고 컨슈머 concurrency를 올려도 한 컨슈머만 일하게 된다. outboxId를 키로 해시 분산한다.
+            // (이벤트 간 순서 보장은 원래 없었으므로 영향 없음)
             messageRelayKafkaTemplate.send(
                     outbox.getEventType().getTopic(),
+                    String.valueOf(outbox.getOutboxId()),
                     outbox.getPayload()
             ).get(1, TimeUnit.SECONDS);
             outboxRepository.delete(outbox);
