@@ -25,11 +25,11 @@ public class ConversationController {
 
     @PostMapping("/sessions")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Long> startConversation(
+    public ApiResponse<String> startConversation(
             @RequestHeader("X-Username") String email,
             @Valid @RequestBody ConversationRequest request
     ) {
-        return ApiResponse.ok(conversationService.startConversation(email, request));
+        return ApiResponse.ok(String.valueOf(conversationService.startConversation(email, request)));
     }
 
     @PatchMapping("/sessions/{conversationId}/close")

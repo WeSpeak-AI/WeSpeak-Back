@@ -1,0 +1,181 @@
+
+▶ warmup-chat (rounds=1, concurrency=1) started 2026-09-13T06:54:34.281896+00:00
+  round 1 [short] e2e=2,918ms ok
+
+▶ warmup-correct (rounds=1, concurrency=1) started 2026-09-13T06:54:38.201401+00:00
+  round 1 [short] e2e=16,346ms ok
+
+▶ chat-c1-short (rounds=5, concurrency=1) started 2026-09-13T06:54:55.548723+00:00
+  round 1 [short] e2e=1,752ms ok
+  round 2 [short] e2e=1,248ms ok
+  round 3 [short] e2e=1,555ms ok
+  round 4 [short] e2e=1,622ms ok
+  round 5 [short] e2e=1,588ms ok
+
+▶ chat-c1-medium (rounds=5, concurrency=1) started 2026-09-13T06:55:08.319615+00:00
+  round 1 [medium] e2e=2,742ms ok
+  round 2 [medium] e2e=2,659ms ok
+  round 3 [medium] e2e=2,733ms ok
+  round 4 [medium] e2e=2,851ms ok
+  round 5 [medium] e2e=3,343ms ok
+
+▶ chat-c1-long (rounds=5, concurrency=1) started 2026-09-13T06:55:27.653598+00:00
+  round 1 [long] e2e=5,220ms ok
+  round 2 [long] e2e=6,298ms ok
+  round 3 [long] e2e=5,269ms ok
+  round 4 [long] e2e=6,042ms ok
+  round 5 [long] e2e=5,495ms ok
+
+▶ chat-c2-medium (rounds=3, concurrency=2) started 2026-09-13T06:56:00.984281+00:00
+  round 1 [medium#0] e2e=3,356ms ok
+  round 1 [medium#1] e2e=4,116ms ok
+  round 2 [medium#0] e2e=2,804ms ok
+  round 2 [medium#1] e2e=4,045ms ok
+  round 3 [medium#0] e2e=2,882ms ok
+  round 3 [medium#1] e2e=3,635ms ok
+
+▶ chat-c3-medium (rounds=3, concurrency=3) started 2026-09-13T06:56:15.783201+00:00
+  round 1 [medium#0] e2e=3,640ms ok
+  round 1 [medium#1] e2e=4,093ms ok
+  round 1 [medium#2] e2e=5,015ms ok
+  round 2 [medium#0] e2e=3,318ms ok
+  round 2 [medium#1] e2e=3,998ms ok
+  round 2 [medium#2] e2e=4,649ms ok
+  round 3 [medium#0] e2e=3,290ms ok
+  round 3 [medium#1] e2e=3,917ms ok
+  round 3 [medium#2] e2e=4,947ms ok
+
+▶ feedback-c1-medium (rounds=5, concurrency=1) started 2026-09-13T06:56:33.399121+00:00
+  round 1 [medium] e2e=7,911ms ok
+  round 2 [medium] e2e=4,368ms ok
+  round 3 [medium] e2e=4,075ms ok
+  round 4 [medium] e2e=6,034ms ok
+  round 5 [medium] e2e=4,949ms ok
+
+▶ correct-c1-short (rounds=3, concurrency=1) started 2026-09-13T06:57:05.741442+00:00
+  round 1 [short] e2e=16,369ms ok
+  round 2 [short] e2e=16,171ms ok
+  round 3 [short] e2e=16,148ms ok
+
+▶ correct-c1-medium (rounds=3, concurrency=1) started 2026-09-13T06:57:57.432739+00:00
+  round 1 [medium] e2e=33,330ms ok
+  round 2 [medium] e2e=31,809ms ok
+  round 3 [medium] e2e=33,252ms ok
+
+▶ correct-c1-long (rounds=3, concurrency=1) started 2026-09-13T06:59:38.826947+00:00
+  round 1 [long] e2e=31,979ms ok
+  round 2 [long] e2e=33,084ms ok
+  round 3 [long] e2e=34,240ms ok
+
+▶ correct-c2-medium (rounds=3, concurrency=2) started 2026-09-13T07:01:21.133093+00:00
+  round 1 [medium#0] e2e=44,165ms ok
+  round 1 [medium#1] e2e=40,329ms ok
+  round 2 [medium#0] e2e=44,738ms ok
+  round 2 [medium#1] e2e=43,998ms ok
+  round 3 [medium#0] e2e=39,289ms ok
+  round 3 [medium#1] e2e=43,063ms ok
+
+▶ correct-c3-medium (rounds=3, concurrency=3) started 2026-09-13T07:03:36.103917+00:00
+  round 1 [medium#0] e2e=50,956ms ok
+  round 1 [medium#1] e2e=48,749ms ok
+  round 1 [medium#2] e2e=51,967ms ok
+  round 2 [medium#0] e2e=46,864ms ok
+  round 2 [medium#1] e2e=50,101ms ok
+  round 2 [medium#2] e2e=49,228ms ok
+  round 3 [medium#0] e2e=52,805ms ok
+  round 3 [medium#1] e2e=51,780ms ok
+  round 3 [medium#2] e2e=53,016ms ok
+
+==================== SUMMARY (client-side) ====================
+
+[chat-c1-short / short] n=5 ok=5 fail=0
+  stt_ms        p50=      373ms  p95=      373ms  min=      371ms  max=      373ms
+  ttft_ms       p50=      176ms  p95=      263ms  min=      161ms  max=      284ms
+  llm_total_ms  p50=    1,161ms  p95=    1,300ms  min=      823ms  max=    1,326ms
+  e2e_ms        p50=    1,588ms  p95=    1,726ms  min=    1,248ms  max=    1,752ms
+  chunks/sec    p50=     16.4      (chunks=19, chars=77)
+
+[chat-c1-medium / medium] n=5 ok=5 fail=0
+  stt_ms        p50=      625ms  p95=      630ms  min=      619ms  max=      631ms
+  ttft_ms       p50=      193ms  p95=      251ms  min=      159ms  max=      263ms
+  llm_total_ms  p50=    2,056ms  p95=    2,568ms  min=    1,987ms  max=    2,667ms
+  e2e_ms        p50=    2,742ms  p95=    3,245ms  min=    2,659ms  max=    3,343ms
+  chunks/sec    p50=     17.5      (chunks=35, chars=182)
+
+[chat-c1-long / long] n=5 ok=5 fail=0
+  stt_ms        p50=    1,116ms  p95=    1,122ms  min=    1,111ms  max=    1,122ms
+  ttft_ms       p50=      192ms  p95=      283ms  min=      178ms  max=      304ms
+  llm_total_ms  p50=    4,329ms  p95=    5,078ms  min=    4,043ms  max=    5,130ms
+  e2e_ms        p50=    5,495ms  p95=    6,247ms  min=    5,220ms  max=    6,298ms
+  chunks/sec    p50=     17.8      (chunks=77, chars=402)
+
+[chat-c2-medium / medium#0] n=3 ok=3 fail=0
+  stt_ms        p50=      624ms  p95=      627ms  min=      618ms  max=      627ms
+  ttft_ms       p50=      239ms  p95=      434ms  min=      149ms  max=      456ms
+  llm_total_ms  p50=    2,205ms  p95=    2,624ms  min=    2,121ms  max=    2,670ms
+  e2e_ms        p50=    2,882ms  p95=    3,309ms  min=    2,804ms  max=    3,356ms
+  chunks/sec    p50=     15.6      (chunks=35, chars=177)
+
+[chat-c2-medium / medium#1] n=3 ok=3 fail=0
+  stt_ms        p50=    1,414ms  p95=    1,503ms  min=    1,404ms  max=    1,513ms
+  ttft_ms       p50=      285ms  p95=      399ms  min=      269ms  max=      412ms
+  llm_total_ms  p50=    2,478ms  p95=    2,630ms  min=    2,178ms  max=    2,647ms
+  e2e_ms        p50=    4,045ms  p95=    4,109ms  min=    3,635ms  max=    4,116ms
+  chunks/sec    p50=     16.1      (chunks=41, chars=202)
+
+[chat-c3-medium / medium#0] n=3 ok=3 fail=0
+  stt_ms        p50=      625ms  p95=      629ms  min=      624ms  max=      629ms
+  ttft_ms       p50=      266ms  p95=      270ms  min=      260ms  max=      271ms
+  llm_total_ms  p50=    2,632ms  p95=    2,918ms  min=    2,606ms  max=    2,950ms
+  e2e_ms        p50=    3,318ms  p95=    3,608ms  min=    3,290ms  max=    3,640ms
+  chunks/sec    p50=     14.6      (chunks=39, chars=212)
+
+[chat-c3-medium / medium#1] n=3 ok=3 fail=0
+  stt_ms        p50=    1,401ms  p95=    1,523ms  min=    1,388ms  max=    1,537ms
+  ttft_ms       p50=      307ms  p95=      311ms  min=      304ms  max=      311ms
+  llm_total_ms  p50=    2,498ms  p95=    2,546ms  min=    2,457ms  max=    2,551ms
+  e2e_ms        p50=    3,998ms  p95=    4,084ms  min=    3,917ms  max=    4,093ms
+  chunks/sec    p50=     14.7      (chunks=36, chars=189)
+
+[chat-c3-medium / medium#2] n=3 ok=3 fail=0
+  stt_ms        p50=    2,387ms  p95=    2,547ms  min=    2,375ms  max=    2,565ms
+  ttft_ms       p50=      257ms  p95=      414ms  min=      239ms  max=      431ms
+  llm_total_ms  p50=    2,396ms  p95=    2,495ms  min=    2,220ms  max=    2,506ms
+  e2e_ms        p50=    4,947ms  p95=    5,009ms  min=    4,649ms  max=    5,015ms
+  chunks/sec    p50=     16.2      (chunks=36, chars=187)
+
+[feedback-c1-medium / medium] n=5 ok=5 fail=0
+  stt_ms        p50=      620ms  p95=      625ms  min=      615ms  max=      626ms
+  ttft_ms       p50=      307ms  p95=    1,893ms  min=      292ms  max=    2,287ms
+  llm_total_ms  p50=    4,255ms  p95=    6,845ms  min=    3,385ms  max=    7,219ms
+  e2e_ms        p50=    4,949ms  p95=    7,535ms  min=    4,075ms  max=    7,911ms
+  chunks/sec    p50=     13.9      (chunks=59, chars=289)
+
+[correct-c1-short / short] n=3 ok=3 fail=0
+  e2e_ms        p50=   16,171ms  p95=   16,349ms  min=   16,148ms  max=   16,369ms
+
+[correct-c1-medium / medium] n=3 ok=3 fail=0
+  e2e_ms        p50=   33,252ms  p95=   33,322ms  min=   31,809ms  max=   33,330ms
+
+[correct-c1-long / long] n=3 ok=3 fail=0
+  e2e_ms        p50=   33,084ms  p95=   34,124ms  min=   31,979ms  max=   34,240ms
+
+[correct-c2-medium / medium#0] n=3 ok=3 fail=0
+  e2e_ms        p50=   44,165ms  p95=   44,681ms  min=   39,289ms  max=   44,738ms
+
+[correct-c2-medium / medium#1] n=3 ok=3 fail=0
+  e2e_ms        p50=   43,063ms  p95=   43,905ms  min=   40,329ms  max=   43,998ms
+
+[correct-c3-medium / medium#0] n=3 ok=3 fail=0
+  e2e_ms        p50=   50,956ms  p95=   52,620ms  min=   46,864ms  max=   52,805ms
+
+[correct-c3-medium / medium#1] n=3 ok=3 fail=0
+  e2e_ms        p50=   50,101ms  p95=   51,612ms  min=   48,749ms  max=   51,780ms
+
+[correct-c3-medium / medium#2] n=3 ok=3 fail=0
+  e2e_ms        p50=   51,967ms  p95=   52,911ms  min=   49,228ms  max=   53,016ms
+
+결과 저장: /tmp/ai-baseline/results.json
+
+다음 명령으로 측정 구간의 서버 로그를 저장하세요 (호스트에서 실행):
+  docker logs -t --since 2026-09-13T06:54:34.247334+00:00 --until 2026-09-13T07:06:17.197886+00:00 wespeak-ai > ai-logs.txt 2>&1

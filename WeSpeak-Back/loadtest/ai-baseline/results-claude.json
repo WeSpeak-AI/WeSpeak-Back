@@ -1,0 +1,460 @@
+{
+  "measured_at": "2026-09-13T08:06:49.938089+00:00",
+  "claude_model": "claude-haiku-4-5-20251001",
+  "scenarios": [
+    {
+      "name": "warmup-chat",
+      "results": [
+        {
+          "scenario": "warmup-chat",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 813.2101157680154,
+          "total_ms": 957.6551681384444,
+          "chunk_count": 8,
+          "output_chars": 75
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "chat-c1-short",
+      "results": [
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 559.2177109792829,
+          "total_ms": 716.8143959715962,
+          "chunk_count": 7,
+          "output_chars": 75
+        },
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 637.5767504796386,
+          "total_ms": 817.7171545103192,
+          "chunk_count": 8,
+          "output_chars": 81
+        },
+        {
+          "scenario": "chat-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 642.4350077286363,
+          "total_ms": 840.5777970328927,
+          "chunk_count": 9,
+          "output_chars": 81
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "chat-c1-medium",
+      "results": [
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 503.78367863595486,
+          "total_ms": 940.4639480635524,
+          "chunk_count": 20,
+          "output_chars": 223
+        },
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 539.699180983007,
+          "total_ms": 1005.441902205348,
+          "chunk_count": 20,
+          "output_chars": 242
+        },
+        {
+          "scenario": "chat-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 546.6009732335806,
+          "total_ms": 1047.752064652741,
+          "chunk_count": 18,
+          "output_chars": 191
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "chat-c1-long",
+      "results": [
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 488.99914883077145,
+          "total_ms": 1841.2852874025702,
+          "chunk_count": 50,
+          "output_chars": 522
+        },
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 614.0337623655796,
+          "total_ms": 2079.8321031033993,
+          "chunk_count": 57,
+          "output_chars": 549
+        },
+        {
+          "scenario": "chat-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 524.6831187978387,
+          "total_ms": 1811.2267656251788,
+          "chunk_count": 49,
+          "output_chars": 518
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "chat-c3-medium",
+      "results": [
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 575.9112387895584,
+          "total_ms": 879.4349851086736,
+          "chunk_count": 14,
+          "output_chars": 206
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 797.7647827938199,
+          "total_ms": 1090.0184912607074,
+          "chunk_count": 14,
+          "output_chars": 178
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 592.6058944314718,
+          "total_ms": 1064.605393446982,
+          "chunk_count": 19,
+          "output_chars": 220
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 551.311481744051,
+          "total_ms": 935.1002713665366,
+          "chunk_count": 17,
+          "output_chars": 198
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 506.01834896951914,
+          "total_ms": 837.8087179735303,
+          "chunk_count": 14,
+          "output_chars": 191
+        },
+        {
+          "scenario": "chat-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 586.428290233016,
+          "total_ms": 1047.1636457368731,
+          "chunk_count": 20,
+          "output_chars": 218
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "feedback-c1-medium",
+      "results": [
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 635.6334835290909,
+          "total_ms": 1090.3817787766457,
+          "chunk_count": 21,
+          "output_chars": 254
+        },
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 529.6141291037202,
+          "total_ms": 1157.9654356464744,
+          "chunk_count": 25,
+          "output_chars": 226
+        },
+        {
+          "scenario": "feedback-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": 516.3854863494635,
+          "total_ms": 1224.76608119905,
+          "chunk_count": 29,
+          "output_chars": 263
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "correct-c1-short",
+      "results": [
+        {
+          "scenario": "correct-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 3922.4595241248608,
+          "chunk_count": 1,
+          "output_chars": 1054
+        },
+        {
+          "scenario": "correct-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 3938.422200269997,
+          "chunk_count": 1,
+          "output_chars": 1064
+        },
+        {
+          "scenario": "correct-c1-short",
+          "label": "short",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 3834.71167832613,
+          "chunk_count": 1,
+          "output_chars": 1054
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "correct-c1-medium",
+      "results": [
+        {
+          "scenario": "correct-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5676.50396283716,
+          "chunk_count": 1,
+          "output_chars": 1519
+        },
+        {
+          "scenario": "correct-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5516.878759488463,
+          "chunk_count": 1,
+          "output_chars": 1441
+        },
+        {
+          "scenario": "correct-c1-medium",
+          "label": "medium",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5911.919738166034,
+          "chunk_count": 1,
+          "output_chars": 1510
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "correct-c1-long",
+      "results": [
+        {
+          "scenario": "correct-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5217.63670258224,
+          "chunk_count": 1,
+          "output_chars": 1577
+        },
+        {
+          "scenario": "correct-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5354.476597160101,
+          "chunk_count": 1,
+          "output_chars": 1564
+        },
+        {
+          "scenario": "correct-c1-long",
+          "label": "long",
+          "concurrency": 1,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5162.9309784621,
+          "chunk_count": 1,
+          "output_chars": 1526
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    },
+    {
+      "name": "correct-c3-medium",
+      "results": [
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5691.733761690557,
+          "chunk_count": 1,
+          "output_chars": 1520
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 6140.140577219427,
+          "chunk_count": 1,
+          "output_chars": 1513
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 6119.132907129824,
+          "chunk_count": 1,
+          "output_chars": 1634
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#0",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 6065.876239910722,
+          "chunk_count": 1,
+          "output_chars": 1567
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#1",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 5531.817126087844,
+          "chunk_count": 1,
+          "output_chars": 1475
+        },
+        {
+          "scenario": "correct-c3-medium",
+          "label": "medium#2",
+          "concurrency": 3,
+          "ok": true,
+          "error": null,
+          "ttft_ms": null,
+          "total_ms": 6091.245354153216,
+          "chunk_count": 1,
+          "output_chars": 1557
+        }
+      ],
+      "claude_calls": 0,
+      "other_calls": 0,
+      "fallbacks": 0
+    }
+  ]
+}
