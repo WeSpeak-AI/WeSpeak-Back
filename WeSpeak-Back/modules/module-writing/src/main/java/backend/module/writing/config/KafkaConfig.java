@@ -1,5 +1,6 @@
 package backend.module.writing.config;
 
+import backend.core.common.event.EventType;
 import backend.core.common.exception.BusinessException;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -42,6 +43,16 @@ public class KafkaConfig {
 
     @Value("${writing.ai-correction.retry.max-interval-ms:30000}")
     private long aiCorrectionMaxIntervalMs;
+
+    // AI 교정 컨슈머 수. AI 서버(Ollama)는 동시에 3건까지 처리하고 나머지는 대기열에 넣으므로(2026-09-15 실측) 3에 맞춘다.
+    // writing 토픽 파티션 수보다 크면 남는 컨슈머는 놀기 때문에 partitions와 함께 맞춘다.
+    // 파티션 수가 AI 동시 호출의 상한이 된다 — 인스턴스를 늘려도 넘지 않지만, 파티션을 늘리면 Ollama 한도를 넘어 Claude로 넘어간다.
+    @Value("${writing.ai-correction.consumer.concurrency:3}")
+    private int aiCorrectionConcurrency;
+
+    // writing 토픽 파티션 수. KafkaAdmin이 기동 시 기존 토픽의 파티션이 이보다 적으면 늘린다(Kafka는 파티션을 줄일 수 없음).
+    @Value("${writing.ai-correction.topic.partitions:3}")
+    private int aiCorrectionPartitions;
 
     @Bean
     public DefaultKafkaConsumerFactory<String, String> consumerFactory() {
@@ -92,8 +103,14 @@ public class KafkaConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(props));
         factory.setCommonErrorHandler(errorHandler);
+        factory.setConcurrency(aiCorrectionConcurrency);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         return factory;
+    }
+
+    @Bean
+    public NewTopic writingTopic() {
+        return TopicBuilder.name(EventType.EventTopic.WRITING).partitions(aiCorrectionPartitions).replicas(1).build();
     }
 
     /**
