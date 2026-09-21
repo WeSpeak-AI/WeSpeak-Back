@@ -15,6 +15,7 @@ x-service-common: &service-common
       max-size: "20m"
       max-file: "3"
   environment: &common-env
+    MANAGEMENT_METRICS_DISTRIBUTION_PERCENTILES_HISTOGRAM_HTTP_SERVER_REQUESTS: "true"
     DB_USERNAME: ${DB_USERNAME:-root}
     DB_PASSWORD: ${DB_PASSWORD:-Abcd123@}
     # DB 장애가 해당 서비스 스레드만 블로킹하고 게이트웨이/다른 서비스로 전파되지 않도록 커넥션
