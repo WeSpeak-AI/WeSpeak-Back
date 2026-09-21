@@ -7,34 +7,7 @@ Spring Boot 기반 멀티모듈 마이크로서비스 아키텍처로 구성되�
 
 ## 시스템 아키텍처
 
-```
-[React Native App]
-        │
-        ▼
-     [Nginx]  ← Reverse Proxy
-        │
-        ▼
-  [API Gateway]  :9000  ← JWT 인증 / 라우팅
-        │
-   ┌────┼────────────────────────────────┐
-   │    │                                │
-   ▼    ▼    ▼      ▼      ▼      ▼     ▼
- Auth  User  Voca  Write  Read  Conv  Search
- 9001  9002  9003  9004   9005  9006   9007
-   │    │    │      │      │      │
-   └────┴────┴──────┴──────┴──────┘
-                    │
-                 [MySQL]  [Redis]  [Kafka]
-
-                          [Reading Service]
-                                 │ WebSocket
-                          [AI Server (FastAPI)]
-                           STT + Feedback 생성
-
-                   [Cloudflare R2]
-                   도서/단어장 표지 이미지
-```
-
+<img width="2061" height="1022" alt="Image" src="https://github.com/user-attachments/assets/6188481f-bb67-4f46-8709-5a36b9633a80" />
 ---
 
 ## 기술 스택
